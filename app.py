@@ -14,6 +14,16 @@ from flask import Flask, request, jsonify, Response, send_from_directory
 
 app = Flask(__name__, static_folder="static")
 
+@app.before_request
+def handle_options():
+    if request.method == "OPTIONS":
+        res = Response(status=200)
+        res.headers["Access-Control-Allow-Origin"] = "*"
+        res.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        res.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, Range"
+        res.headers["Access-Control-Expose-Headers"] = "Content-Length, Content-Range"
+        return res
+
 @app.after_request
 def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
@@ -136,7 +146,13 @@ DRAGONBALL_CARD = {
 
 def is_anime_subject(subject_id: str) -> bool:
     s = str(subject_id).lower()
-    return s.startswith("anime_") or s in DRAGONBALL_IDS or "dragonball" in s
+    if s.startswith("anime_") or s in DRAGONBALL_IDS or "dragonball" in s:
+        return True
+    if s.isdigit():
+        num_id = int(s)
+        if str(num_id) in DRAGONBALL_IDS or num_id == 223 or num_id in anime_engine._local_id_map:
+            return True
+    return False
 
 def parse_anime_id(subject_id: str) -> int:
     s = str(subject_id).lower()
@@ -564,24 +580,43 @@ def api_dubs(subject_id):
     if is_anime_subject(subject_id):
         aid = parse_anime_id(subject_id)
         base_id = f"anime_{aid}" if not str(subject_id).startswith("dragonball") else "dragonball"
+        
+        has_dub = False
+        if str(aid) in DRAGONBALL_IDS or aid == 223 or "dragonball" in str(subject_id).lower():
+            has_dub = True
+        elif anime_engine._dub_set:
+            has_dub = aid in anime_engine._dub_set
+        else:
+            has_dub = True
+
+        dubs = []
+        if has_dub:
+            dubs.append({
+                "subjectId": f"{base_id}_dub" if base_id != "dragonball" else "dragonball",
+                "lanName": "English Dub",
+                "lanCode": "en",
+                "original": True,
+                "type": 0
+            })
+            dubs.append({
+                "subjectId": f"{base_id}_sub",
+                "lanName": "Japanese (Original)",
+                "lanCode": "ja",
+                "original": False,
+                "type": 0
+            })
+        else:
+            dubs.append({
+                "subjectId": f"{base_id}_sub",
+                "lanName": "Japanese (Original Audio)",
+                "lanCode": "ja",
+                "original": True,
+                "type": 0
+            })
+            
         return jsonify({
             "code": 0,
-            "dubs": [
-                {
-                    "subjectId": f"{base_id}_dub" if base_id != "dragonball" else "dragonball",
-                    "lanName": "English Dub",
-                    "lanCode": "en",
-                    "original": True,
-                    "type": 0
-                },
-                {
-                    "subjectId": f"{base_id}_sub",
-                    "lanName": "Japanese (English Sub)",
-                    "lanCode": "ja",
-                    "original": False,
-                    "type": 0
-                }
-            ]
+            "dubs": dubs
         })
     try:
         data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={subject_id}")
@@ -703,13 +738,15 @@ def api_stream_mp4(subject_id):
             res_list = [r.strip() for r in str(stream.get("resolutions", "")).split(",") if r.strip()]
             headers_flag = f"Cookie: {cookie}\r\nUser-Agent: okhttp/4.12.0\r\n"
         
+        # For anime HLS streams, allocate sufficient analyzeduration & probesize so audio stream is detected with full codec parameters
+        probe_val = "1500000" if is_anime_subject(subject_id) else "100000"
         cmd = [
             "ffmpeg",
             "-headers", headers_flag,
             "-multiple_requests", "1",
             "-fflags", "+nobuffer+flush_packets+fastseek+discardcorrupt",
-            "-analyzeduration", "100000",
-            "-probesize", "100000",
+            "-analyzeduration", probe_val,
+            "-probesize", probe_val,
             "-fpsprobesize", "0",
         ]
         
@@ -728,35 +765,44 @@ def api_stream_mp4(subject_id):
         if seek_sec > 0:
             cmd += ["-ss", "0"]
         
-        # Map specific resolution if requested and available for DASH
-        if not is_anime_subject(subject_id):
+        if is_anime_subject(subject_id):
+            # Explicitly map video 0 and audio 0 with bitstream filter for pristine, audible sound
+            cmd += [
+                "-map", "0:v:0",
+                "-map", "0:a:0?",
+                "-c:v", "copy",
+                "-c:a", "copy",
+                "-bsf:a", "aac_adtstoasc"
+            ]
+        else:
+            # Map specific resolution if requested and available for DASH
             if requested_res and requested_res in res_list:
                 v_idx = res_list.index(requested_res)
                 cmd += ["-map", f"0:v:{v_idx}", "-map", "0:a:0?"]
             elif res_list:
                 cmd += ["-map", "0:v:0", "-map", "0:a:0?"]
             
-        # Base audio sync filter: aresample with async=1 dynamically locks audio PTS to video timeline,
-        # preventing packet jitter and timeline gaps across DASH segments.
-        af_filters = ["aresample=async=1"]
+            # Base audio sync filter: aresample with async=1 dynamically locks audio PTS to video timeline,
+            # preventing packet jitter and timeline gaps across DASH segments.
+            af_filters = ["aresample=async=1"]
 
-        # Handle fine-grained audio sync delay (in milliseconds)
-        try:
-            del_ms = int(adelay)
-            if del_ms > 0:
-                af_filters.append(f"adelay={del_ms}|{del_ms}")
-            elif del_ms < 0:
-                adv_s = abs(del_ms) / 1000.0
-                af_filters.append(f"atrim=start={adv_s},asetpts=PTS-STARTPTS")
-        except Exception:
-            pass
+            # Handle fine-grained audio sync delay (in milliseconds)
+            try:
+                del_ms = int(adelay)
+                if del_ms > 0:
+                    af_filters.append(f"adelay={del_ms}|{del_ms}")
+                elif del_ms < 0:
+                    adv_s = abs(del_ms) / 1000.0
+                    af_filters.append(f"atrim=start={adv_s},asetpts=PTS-STARTPTS")
+            except Exception:
+                pass
 
-        cmd += [
-            "-c:v", "copy",
-            "-af", ",".join(af_filters),
-            "-c:a", "aac",
-            "-b:a", "128k"
-        ]
+            cmd += [
+                "-c:v", "copy",
+                "-af", ",".join(af_filters),
+                "-c:a", "aac",
+                "-b:a", "128k"
+            ]
 
         cmd += [
             "-movflags", "frag_keyframe+empty_moov+default_base_moof",

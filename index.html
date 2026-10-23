@@ -12,7 +12,13 @@
     const BACKEND_STORAGE_KEY = 'cineflow_backend_url';
     const DEFAULT_RENDER_BACKEND = 'https://cineflow-2ftd.onrender.com';
     function getApiBase() {
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      if (typeof window === 'undefined') return '';
+      const hostname = window.location.hostname || '';
+      if (hostname === 'localhost' || 
+          hostname === '127.0.0.1' || 
+          hostname.endsWith('vercel.app') ||
+          hostname.includes('vercel.app') ||
+          hostname.includes('now.sh')) {
         return '';
       }
       const saved = localStorage.getItem(BACKEND_STORAGE_KEY);
@@ -385,10 +391,6 @@
           <button id="hero-detail-btn" onclick="openHeroDetail()" class="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs tracking-wider uppercase px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-white/20 transition flex items-center space-x-1.5 cursor-pointer">
             <span class="material-symbols-outlined text-base">info</span>
             <span>DETAILS</span>
-          </button>
-          <button onclick="playDragonBall()" class="bg-gradient-to-r from-amber-500/25 to-orange-500/35 hover:from-amber-500/35 hover:to-orange-500/45 text-amber-300 font-semibold text-xs tracking-wider uppercase px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-amber-400/40 transition flex items-center space-x-2 cursor-pointer shadow-lg shadow-amber-500/10">
-            <span class="text-sm">⚡</span>
-            <span>PLAY DRAGON BALL EP 1</span>
           </button>
         </div>
       </div>
@@ -2513,25 +2515,28 @@
       return card;
     }
 
-    // Global Dub Tracking
+    // Global Dub Tracking & Race Condition Prevention
     let activeRootSubjectId = null;
     let activePlaybackSubjectId = null;
     let activeDubItem = null;
+    let activeDetailRequestId = 0;
 
     // -------------------------------------------------------------
     // SCREEN 2: MOVIE & SERIES DETAIL POPULATION & ARC DIAL
     // -------------------------------------------------------------
     async function populateDetailScreen(subject) {
-      const subjectId = subject.subjectId || subject.id;
+      const currentReqId = ++activeDetailRequestId;
+      const subjectId = subject.subjectId || (subject.isAnime ? `anime_${subject.id}` : subject.id);
       activeRootSubjectId = subjectId;
       activePlaybackSubjectId = subjectId;
       activeDubItem = null;
 
       const title = subject.title || subject.subjectName || "Title";
-      const year = subject.year || "2023";
+      const year = subject.year || "2024";
       const poster = subject.cover?.url || subject.thumbnail || "";
-      const isSeries = subject.subjectType === 2;
+      const isSeries = subject.subjectType === 2 || subject.isAnime || (subject.format && subject.format !== 'MOVIE');
 
+      // Update text & media immediately with selected anime info
       document.getElementById('detail-title').textContent = title;
       document.getElementById('detail-year').textContent = year;
       document.getElementById('detail-type-tag').textContent = isSeries ? "TV SERIES" : "FULL FEATURE";
@@ -2541,45 +2546,26 @@
       document.getElementById('detail-synopsis').textContent = subject.description || subject.synopsis || "Streaming now in cinematic high definition.";
       document.getElementById('detail-btn-play-label').textContent = "WATCH NOW";
 
+      // Reset genres & runtime immediately to current subject's info or clean defaults
+      const genresText = Array.isArray(subject.genres) ? subject.genres.join(", ") : (subject.genre || (subject.isAnime ? "Anime, Animation" : ""));
+      document.getElementById('detail-genres').textContent = genresText;
+      document.getElementById('detail-runtime').textContent = subject.duration ? formatTime(subject.duration) : (subject.isAnime ? "24m" : "");
+
+      // Reset dub badges immediately to avoid displaying stale dub badges from the previous anime
+      renderDubBadges([]);
+
       // Reset relations and recommendations initially
       renderDetailRelations([]);
       renderDetailRecommendations([]);
 
-      // Fetch Full Subject Details from API
-      try {
-        const res = await fetch(apiUrl(`/api/subject/${subjectId}`));
-        const data = await res.json();
-        const sub = data.data?.subject || data.data || {};
-        if (sub.title || sub.subjectName) document.getElementById('detail-title').textContent = sub.title || sub.subjectName;
-        if (sub.description || sub.synopsis) document.getElementById('detail-synopsis').textContent = sub.description || sub.synopsis;
-        if (sub.genres) document.getElementById('detail-genres').textContent = Array.isArray(sub.genres) ? sub.genres.join(", ") : sub.genres;
-        if (sub.duration) document.getElementById('detail-runtime').textContent = formatTime(sub.duration);
-        if (sub.banner || sub.backdrop || sub.cover?.url || sub.thumbnail) {
-          const bg = sub.banner || sub.backdrop || sub.cover?.url || sub.thumbnail;
-          document.getElementById('detail-bg-img').src = bg;
-        }
-
-        renderDetailRelations(sub.relations || []);
-        renderDetailRecommendations(sub.recommendations || []);
-      } catch (e) {
-        renderDetailRelations([]);
-        renderDetailRecommendations([]);
-      }
-
-      // Fetch Dubbing Tracks from API
-      try {
-        const dubRes = await fetch(apiUrl(`/api/dubs/${subjectId}`));
-        const dubData = await dubRes.json();
-        currentDubs = dubData.dubs || [];
-        renderDubBadges(currentDubs);
-      } catch (e) {
-        renderDubBadges([]);
-      }
-
-      // Check if Series -> Load Seasons and build Arc Episode Dial
+      // Reset episode selection state
       selectedSe = 1;
       selectedEp = 1;
       activeDrawerSeason = 1;
+      currentEpisodeSkipTimes = [];
+      allSeriesSeasons = [{ se: 1, maxEp: 1 }];
+      seriesEpisodesBySeason = {};
+      carouselEpisodesList = [];
       drawerSearchQuery = '';
       const searchInput = document.getElementById('drawer-search-input');
       if (searchInput) searchInput.value = '';
@@ -2595,13 +2581,59 @@
         seriesDial.classList.remove('hidden');
         movieCard.classList.add('hidden');
         if (detailEpBtn) detailEpBtn.classList.remove('hidden');
-        if (detailNavBadge) detailNavBadge.textContent = "Browse & Search";
+        if (detailNavBadge) detailNavBadge.textContent = "Loading...";
+
+        const stage = document.getElementById('arc-carousel-stage');
+        if (stage) {
+          stage.innerHTML = '<div class="absolute left-10 top-1/2 -translate-y-1/2 text-xs font-mono text-white/50">Loading episodes...</div>';
+        }
+        const drawerList = document.getElementById('drawer-episodes-list');
+        if (drawerList) {
+          drawerList.innerHTML = '<div class="p-6 text-center text-xs font-mono text-white/40">Loading episodes...</div>';
+        }
+
         updateCarouselResponsiveScale();
-        loadSeriesEpisodesDial(subjectId, poster);
+        loadSeriesEpisodesDial(subjectId, poster, currentReqId);
       } else {
         seriesDial.classList.add('hidden');
         movieCard.classList.remove('hidden');
         if (detailEpBtn) detailEpBtn.classList.add('hidden');
+      }
+
+      // Fetch Full Subject Details from API
+      try {
+        const res = await fetch(apiUrl(`/api/subject/${subjectId}`));
+        const data = await res.json();
+        if (currentReqId !== activeDetailRequestId) return;
+
+        const sub = data.data?.subject || data.data || {};
+        if (sub.title || sub.subjectName) document.getElementById('detail-title').textContent = sub.title || sub.subjectName;
+        if (sub.description || sub.synopsis) document.getElementById('detail-synopsis').textContent = sub.description || sub.synopsis;
+        if (sub.genres) document.getElementById('detail-genres').textContent = Array.isArray(sub.genres) ? sub.genres.join(", ") : sub.genres;
+        if (sub.duration) document.getElementById('detail-runtime').textContent = formatTime(sub.duration);
+        if (sub.banner || sub.backdrop || sub.cover?.url || sub.thumbnail) {
+          const bg = sub.banner || sub.backdrop || sub.cover?.url || sub.thumbnail;
+          document.getElementById('detail-bg-img').src = bg;
+        }
+
+        renderDetailRelations(sub.relations || []);
+        renderDetailRecommendations(sub.recommendations || []);
+      } catch (e) {
+        if (currentReqId !== activeDetailRequestId) return;
+        renderDetailRelations([]);
+        renderDetailRecommendations([]);
+      }
+
+      // Fetch Dubbing Tracks from API
+      try {
+        const dubRes = await fetch(apiUrl(`/api/dubs/${subjectId}`));
+        const dubData = await dubRes.json();
+        if (currentReqId !== activeDetailRequestId) return;
+        currentDubs = dubData.dubs || [];
+        renderDubBadges(currentDubs);
+      } catch (e) {
+        if (currentReqId !== activeDetailRequestId) return;
+        renderDubBadges([]);
       }
     }
 
@@ -2682,7 +2714,7 @@
       return { x, y, scale: slot.scale, opacity: slot.opacity, deg: slot.deg };
     }
 
-    async function loadSeriesEpisodesDial(subjectId, fallbackPoster) {
+    async function loadSeriesEpisodesDial(subjectId, fallbackPoster, reqId = null) {
       const stage = document.getElementById('arc-carousel-stage');
       if (stage) {
         stage.innerHTML = '<div class="absolute left-10 top-1/2 -translate-y-1/2 text-xs font-mono text-white/50">Loading episodes...</div>';
@@ -2699,6 +2731,7 @@
           try {
             const epRes = await fetch(apiUrl(`/api/anime/episodes/${subjectId}`));
             const epJson = await epRes.json();
+            if (reqId && reqId !== activeDetailRequestId) return;
             if (epJson.data && epJson.data.episodes && epJson.data.episodes.length > 0) {
               animeEpisodes = epJson.data.episodes;
               seasons = [{ se: 1, maxEp: animeEpisodes.length }];
@@ -2708,15 +2741,20 @@
           }
         }
 
+        if (reqId && reqId !== activeDetailRequestId) return;
+
         if (!seasons || seasons.length === 0) {
           const res = await fetch(apiUrl(`/api/seasons/${subjectId}`));
           const json = await res.json();
+          if (reqId && reqId !== activeDetailRequestId) return;
           seasons = json.data?.seasons || [];
 
           if (!seasons || seasons.length === 0) {
             seasons = [{ se: 1, maxEp: 8 }];
           }
         }
+
+        if (reqId && reqId !== activeDetailRequestId) return;
 
         allSeriesSeasons = seasons;
         seriesEpisodesBySeason = {};
@@ -2757,6 +2795,8 @@
           });
         }
 
+        if (reqId && reqId !== activeDetailRequestId) return;
+
         // Set active season & carousel items
         activeDrawerSeason = selectedSe || 1;
         let epList1 = seriesEpisodesBySeason[activeDrawerSeason] || [];
@@ -2778,6 +2818,8 @@
             });
           }
         }
+
+        if (reqId && reqId !== activeDetailRequestId) return;
 
         carouselEpisodesList = carouselList;
         carouselWindowStart = 0;
@@ -3362,6 +3404,16 @@
 
       showPlayerView();
 
+      // Ensure audio is unmuted and at 100% volume for playback upon user interaction
+      const video = document.getElementById('videoElement');
+      if (video) {
+        video.muted = false;
+        video.volume = 1.0;
+        updateVolumeIcon(1.0);
+        const vf = document.getElementById('volume-fill');
+        if (vf) vf.style.width = '100%';
+      }
+
       // Set Header Info
       document.getElementById('player-header-title').textContent = title;
       const epBadge = document.getElementById('player-header-ep');
@@ -3505,6 +3557,23 @@
             isPlaying = true;
             updatePlayIcons(true);
             updateVolumeIcon(0);
+            const vf = document.getElementById('volume-fill');
+            if (vf) vf.style.width = '0%';
+
+            // Unmute automatically on first click/touch/keypress on the player
+            const unmuteOnTap = () => {
+              video.muted = false;
+              if (video.volume === 0) video.volume = 1.0;
+              updateVolumeIcon(video.volume);
+              const volFill = document.getElementById('volume-fill');
+              if (volFill) volFill.style.width = (video.volume * 100) + '%';
+              window.removeEventListener('click', unmuteOnTap, true);
+              window.removeEventListener('touchstart', unmuteOnTap, true);
+              window.removeEventListener('keydown', unmuteOnTap, true);
+            };
+            window.addEventListener('click', unmuteOnTap, true);
+            window.addEventListener('touchstart', unmuteOnTap, true);
+            window.addEventListener('keydown', unmuteOnTap, true);
           }).catch(() => {});
         }
       });
