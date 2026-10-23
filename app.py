@@ -9,6 +9,7 @@ import ssl
 import urllib.request
 import urllib.parse
 import subprocess
+import gzip
 from flask import Flask, request, jsonify, Response, send_from_directory
 
 app = Flask(__name__, static_folder="static")
@@ -109,6 +110,97 @@ def srt_to_vtt(srt_text):
         vtt.append(line)
     return "\n".join(vtt)
 
+# ==============================================================================
+# ANILILI / MIRURO ANIME STREAMING ENGINE (DRAGON BALL & ANIME INTEGRATION)
+# ==============================================================================
+DRAGONBALL_IDS = {"dragonball", "223", "dragonball_dub", "dragonball_sub", "rqxAbYshiv3CtbJ4cetuZ-yKIe2Cyjqr"}
+
+DRAGONBALL_CARD = {
+    "subjectId": "dragonball",
+    "title": "Dragon Ball",
+    "subjectName": "Dragon Ball",
+    "subjectType": 2,  # TV Series
+    "year": "1986",
+    "releaseDate": "1986-02-26",
+    "genre": "Animation, Action & Adventure, Comedy, Anime",
+    "genres": ["Animation", "Action & Adventure", "Comedy", "Anime"],
+    "score": "8.8",
+    "cover": {
+        "url": "https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg"
+    },
+    "thumbnail": "https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg",
+    "description": "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball. Together, they embark on an epic quest across the world.",
+    "synopsis": "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball.",
+    "duration": 1450,
+    "corner": "Anime",
+    "country": "Japan"
+}
+
+_db_stream_cache = {}
+
+def resolve_dragonball_stream(ep=1, is_dub=True):
+    """
+    Dynamically resolves Dragon Ball episode stream from Miruro/Anilili reverse-engineered API with resilient fallback.
+    """
+    cache_key = f"{ep}_{is_dub}"
+    now = time.time()
+    if cache_key in _db_stream_cache:
+        cached_time, cached_val = _db_stream_cache[cache_key]
+        if now - cached_time < 1800:
+            return cached_val
+            
+    try:
+        host = "https://www.miruro.bz"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "Referer": "https://www.miruro.bz/",
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-Fetch-Mode": "cors",
+            "Accept": "application/json, application/octet-stream;q=0.9, */*;q=0.8"
+        }
+        miruro_id = "rqxAbYshiv3CtbJ4cetuZ-yKIe2Cyjqr"
+        url = f"{host}/api/v1/anime/{miruro_id}/episodes/{ep}/play"
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=7) as r:
+            ct = r.headers.get("Content-Type", "")
+            raw = r.read()
+            if "application/octet-stream" in ct:
+                key = b"miruro/catalog"
+                decrypted = bytes([b ^ key[i % len(key)] for i, b in enumerate(raw)])
+                payload_str = gzip.decompress(decrypted).decode("utf-8")
+            else:
+                payload_str = raw.decode("utf-8")
+            payload = json.loads(payload_str)
+            wanted_track = "dub" if is_dub else "sub"
+            for t in payload.get("tracks", []):
+                if t.get("track") == wanted_track:
+                    for p in t.get("providers", []):
+                        if p.get("provider") == "icarus":
+                            for s in p.get("servers", []):
+                                if s.get("streams"):
+                                    st_url = s["streams"][0]["url"]
+                                    h = s.get("headers", {})
+                                    res = {
+                                        "url": st_url,
+                                        "origin": h.get("Origin", "https://ultracloud.cc"),
+                                        "referer": h.get("Referer", "https://ultracloud.cc/")
+                                    }
+                                    _db_stream_cache[cache_key] = (now, res)
+                                    return res
+    except Exception as e:
+        print(f"[Miruro API] Resolver fallback for Dragon Ball ep {ep}: {e}")
+        
+    fallback_url = (
+        "https://fielddewice-31.trail29.top/m/ASBoHpTyH_HbHf1LpHCUWXZQ3NxDMFrGpi3cn8UMpHLxd2TW8nrT_jE_yWnSflFed1nr-Hv-wERqQclSHMZlN_Sj-nHE1ziZ23UupVFLjlIAcfmithVDi6hiUZXo-sLadDj90kQOda_LQAPOke5et4DOPla_O-w4joTGpkAHoChWdO3cp-TmbHfLpeaaurQoVBEcw7vQb9L3TcSdQNu0nzWpc-ZIPB1dXleliaRBMKXLQAvzQAokJ2Y9ZVyqATGFGFSy8wIy-ruVO4Z3D_dQcQw3n6IOHJY13ziXZvBfp6d_vOA9QIHNXAa6V7DBeokLLpT2StVW5bjBOA.m3u8"
+        if is_dub else
+        "https://fielddewice-31.trail29.top/m/AeqxIUu7M8m38YU__LyelHX8KQQH46IrAuoPcxord_g9333dUP7KWF4XrW2eRskRHVS5JoJj93gPDodBzZuwcXUibciMbtDXonFhRrZb1qHK3CiG6zNn5BmGUsC4JBDVZDjb4ab0PSwh-NmtRZB3DfFMouwmYtLgbeG-DRaK3N361W-xrEak0nm16Het8FY-fw_P8BzvAcOKRqFTsjoZW4aG09hjxVMhFYTcrbkCwBaf-JukPE8EFtqsRRCZeXf3cECTTX4qzj9jhjMLwR-AI1dGFbDv_pO1a1IdaB47yxTyUGk1SRkU6FX17m9syo4EwMC0c_mtUmrDYw.m3u8"
+    )
+    return {
+        "url": fallback_url,
+        "origin": "https://ultracloud.cc",
+        "referer": "https://ultracloud.cc/"
+    }
+
 @app.route("/")
 def index():
     if os.path.exists("index.html"):
@@ -197,6 +289,12 @@ def api_search():
             except Exception:
                 pass
                 
+        # Inject Dragon Ball if searched or if related to anime / DB
+        kw_l = keyword.lower()
+        if any(term in kw_l for term in ["dragon", "ball", "db", "goku", "anime"]):
+            if not any(it.get("subjectId") == "dragonball" for it in items):
+                items.insert(0, DRAGONBALL_CARD)
+
         return jsonify({
             "code": 0,
             "data": {
@@ -206,7 +304,7 @@ def api_search():
             }
         })
     except Exception as e:
-        return jsonify({"code": 500, "message": str(e), "data": {"items": [], "relatedKeywords": [], "recommendations": []}}), 500
+        return jsonify({"code": 500, "message": str(e), "data": {"items": [DRAGONBALL_CARD] if any(term in keyword.lower() for term in ['dragon', 'ball', 'goku']) else [], "relatedKeywords": [], "recommendations": []}}), 500
 
 @app.route("/api/search/suggest")
 def api_search_suggest():
@@ -244,6 +342,12 @@ def api_search_suggest():
                         inserted += 1
             except Exception:
                 pass
+
+        if any(term in kw_lower for term in ["drag", "ball", "db", "goku", "anim"]):
+            if "Dragon Ball" not in words:
+                words.insert(0, "Dragon Ball")
+            if "Dragon Ball English Dub" not in words:
+                words.insert(1, "Dragon Ball English Dub")
                 
         return jsonify({"code": 0, "suggestions": words[:8]})
     except Exception as e:
@@ -262,9 +366,13 @@ def api_catalog():
             query_parts.append(f"genre={urllib.parse.quote(genre)}")
         try:
             data = execute_api("/wefeed-tv-bff/filter/list", "&".join(query_parts))
+            items = data.get("data", {}).get("items", [])
+            if channel_id == "2" or (genre and "anim" in genre.lower()):
+                if not any(it.get("subjectId") == "dragonball" for it in items):
+                    items.insert(0, DRAGONBALL_CARD)
             return jsonify(data)
         except Exception as e:
-            return jsonify({"code": 500, "message": str(e), "data": {"items": []}}), 500
+            return jsonify({"code": 500, "message": str(e), "data": {"items": [DRAGONBALL_CARD]}}), 500
     else:
         # Fetch both movies and series for home feed
         try:
@@ -274,13 +382,22 @@ def api_catalog():
             movies = movies_res.get("data", {}).get("items", [])
             series = series_res.get("data", {}).get("items", [])
             
-            combined = movies + series
+            if not any(it.get("subjectId") == "dragonball" for it in series):
+                series.insert(0, DRAGONBALL_CARD)
+            combined = [DRAGONBALL_CARD] + [it for it in (movies + series) if it.get("subjectId") != "dragonball"]
             return jsonify({"code": 0, "data": {"items": combined, "movies": movies, "series": series}})
         except Exception as e:
-            return jsonify({"code": 500, "message": str(e), "data": {"items": []}}), 500
+            return jsonify({"code": 500, "message": str(e), "data": {"items": [DRAGONBALL_CARD], "movies": [], "series": [DRAGONBALL_CARD]}}), 500
 
 @app.route("/api/subject/<subject_id>")
 def api_subject(subject_id):
+    if subject_id in DRAGONBALL_IDS:
+        return jsonify({
+            "code": 0,
+            "data": {
+                "subject": DRAGONBALL_CARD
+            }
+        })
     try:
         data = execute_api("/wefeed-tv-bff/subject/get", f"subjectId={subject_id}")
         return jsonify(data)
@@ -289,6 +406,19 @@ def api_subject(subject_id):
 
 @app.route("/api/seasons/<subject_id>")
 def api_seasons(subject_id):
+    if subject_id in DRAGONBALL_IDS:
+        return jsonify({
+            "code": 0,
+            "data": {
+                "seasons": [
+                    {
+                        "se": 1,
+                        "maxEp": 153,
+                        "seasonName": "Season 1 (Classic)"
+                    }
+                ]
+            }
+        })
     try:
         data = execute_api("/wefeed-tv-bff/subject/season-info", f"subjectId={subject_id}")
         return jsonify(data)
@@ -297,6 +427,8 @@ def api_seasons(subject_id):
 
 @app.route("/api/subtitles/<subject_id>")
 def api_subtitles(subject_id):
+    if subject_id in DRAGONBALL_IDS:
+        return jsonify({"code": 0, "captions": []})
     se = request.args.get("se", "")
     ep = request.args.get("ep", "")
     queries = []
@@ -386,6 +518,22 @@ def get_cached_play_info(subject_id, se="", ep=""):
 def api_play_info(subject_id):
     se = request.args.get("se", "")
     ep = request.args.get("ep", "")
+    if subject_id in DRAGONBALL_IDS:
+        is_dub = not (subject_id == "dragonball_sub")
+        ep_val = 1
+        try:
+            ep_val = int(ep) if ep else 1
+        except Exception:
+            ep_val = 1
+        st_info = resolve_dragonball_stream(ep_val, is_dub)
+        return jsonify({
+            "code": 0,
+            "url": st_info["url"],
+            "cookie": "",
+            "duration": 1450,
+            "resolutions": "1080p,720p,480p",
+            "codec": "h264"
+        })
     try:
         data = get_cached_play_info(subject_id, se, ep)
         streams = data.get("data", {}).get("streams", [])
@@ -405,6 +553,26 @@ def api_play_info(subject_id):
 
 @app.route("/api/dubs/<subject_id>")
 def api_dubs(subject_id):
+    if subject_id in DRAGONBALL_IDS:
+        return jsonify({
+            "code": 0,
+            "dubs": [
+                {
+                    "subjectId": "dragonball",
+                    "lanName": "English Dub",
+                    "lanCode": "en",
+                    "original": True,
+                    "type": 0
+                },
+                {
+                    "subjectId": "dragonball_sub",
+                    "lanName": "Japanese (English Sub)",
+                    "lanCode": "ja",
+                    "original": False,
+                    "type": 0
+                }
+            ]
+        })
     try:
         data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={subject_id}")
         items = data.get("data", {}).get("items", [])
@@ -497,21 +665,36 @@ def api_stream_mp4(subject_id):
     terminate_previous_stream(subject_id)
     
     try:
-        data = get_cached_play_info(subject_id, se, ep)
-        streams = data.get("data", {}).get("streams", [])
-        if not streams:
-            return "Stream not found", 404
+        if subject_id in DRAGONBALL_IDS:
+            is_dub = not (subject_id == "dragonball_sub")
+            ep_val = 1
+            try:
+                ep_val = int(ep) if ep else 1
+            except Exception:
+                ep_val = 1
+            st_info = resolve_dragonball_stream(ep_val, is_dub)
+            url = st_info["url"]
+            origin = st_info.get("origin", "https://ultracloud.cc")
+            referer = st_info.get("referer", "https://ultracloud.cc/")
+            res_list = ["1080p", "720p", "480p"]
+            headers_flag = f"Origin: {origin}\r\nReferer: {referer}\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\n"
+        else:
+            data = get_cached_play_info(subject_id, se, ep)
+            streams = data.get("data", {}).get("streams", [])
+            if not streams:
+                return "Stream not found", 404
+                
+            stream = streams[0]
+            url = stream.get("url")
+            cookie = stream.get("signCookie")
             
-        stream = streams[0]
-        url = stream.get("url")
-        cookie = stream.get("signCookie")
-        
-        # Determine available resolutions
-        res_list = [r.strip() for r in str(stream.get("resolutions", "")).split(",") if r.strip()]
+            # Determine available resolutions
+            res_list = [r.strip() for r in str(stream.get("resolutions", "")).split(",") if r.strip()]
+            headers_flag = f"Cookie: {cookie}\r\nUser-Agent: okhttp/4.12.0\r\n"
         
         cmd = [
             "ffmpeg",
-            "-headers", f"Cookie: {cookie}\r\nUser-Agent: okhttp/4.12.0\r\n",
+            "-headers", headers_flag,
             "-multiple_requests", "1",
             "-fflags", "+nobuffer+flush_packets+fastseek+discardcorrupt",
             "-analyzeduration", "100000",
@@ -534,12 +717,13 @@ def api_stream_mp4(subject_id):
         if seek_sec > 0:
             cmd += ["-ss", "0"]
         
-        # Map specific resolution if requested and available
-        if requested_res and requested_res in res_list:
-            v_idx = res_list.index(requested_res)
-            cmd += ["-map", f"0:v:{v_idx}", "-map", "0:a:0?"]
-        elif res_list:
-            cmd += ["-map", "0:v:0", "-map", "0:a:0?"]
+        # Map specific resolution if requested and available for DASH
+        if subject_id not in DRAGONBALL_IDS:
+            if requested_res and requested_res in res_list:
+                v_idx = res_list.index(requested_res)
+                cmd += ["-map", f"0:v:{v_idx}", "-map", "0:a:0?"]
+            elif res_list:
+                cmd += ["-map", "0:v:0", "-map", "0:a:0?"]
             
         # Base audio sync filter: aresample with async=1 dynamically locks audio PTS to video timeline,
         # preventing packet jitter and timeline gaps across DASH segments.

@@ -386,6 +386,10 @@
             <span class="material-symbols-outlined text-base">info</span>
             <span>DETAILS</span>
           </button>
+          <button onclick="playDragonBall()" class="bg-gradient-to-r from-amber-500/25 to-orange-500/35 hover:from-amber-500/35 hover:to-orange-500/45 text-amber-300 font-semibold text-xs tracking-wider uppercase px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-amber-400/40 transition flex items-center space-x-2 cursor-pointer shadow-lg shadow-amber-500/10">
+            <span class="text-sm">⚡</span>
+            <span>PLAY DRAGON BALL EP 1</span>
+          </button>
         </div>
       </div>
 
@@ -400,6 +404,7 @@
     <!-- Category Filter Row -->
     <section class="py-4 sm:py-6 px-4 sm:px-6 md:px-14 flex items-center justify-start md:justify-center overflow-x-auto hide-scrollbar space-x-2 sm:space-x-3">
       <button onclick="filterCategory('all')" class="cat-pill active bg-[#f5c518] text-black font-semibold text-[11px] sm:text-xs uppercase px-5 sm:px-7 py-1.5 sm:py-2 rounded-full shadow-sm hover:opacity-90 transition cursor-pointer shrink-0">ALL</button>
+      <button onclick="filterCategory('anime')" class="cat-pill border border-amber-400/40 text-amber-300 hover:border-amber-400 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0 flex items-center space-x-1.5"><span class="text-xs">⚡</span><span>Anime</span></button>
       <button onclick="filterCategory('Action')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Action</button>
       <button onclick="filterCategory('Comedy')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Comedy</button>
       <button onclick="filterCategory('tv')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Series</button>
@@ -1238,7 +1243,35 @@
       setupKeyboardControls();
       setupCarouselScrollAndTouch();
       updateCarouselResponsiveScale();
+
+      // Direct testing route handler: ?play=dragonball or ?test=dragonball
+      const urlParams = new URLSearchParams(window.location.search);
+      const playTarget = urlParams.get('play') || urlParams.get('test');
+      if (playTarget && (playTarget.toLowerCase().includes('dragon') || playTarget === '223')) {
+        setTimeout(playDragonBall, 350);
+      }
     });
+
+    function playDragonBall() {
+      const dbObj = {
+        subjectId: 'dragonball',
+        title: 'Dragon Ball',
+        subjectName: 'Dragon Ball',
+        subjectType: 2,
+        year: '1986',
+        duration: 1450,
+        cover: { url: 'https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg' },
+        thumbnail: 'https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg',
+        description: "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball."
+      };
+      selectedSubject = dbObj;
+      selectedSe = 1;
+      selectedEp = 1;
+      showDetailView(dbObj);
+      setTimeout(() => {
+        playSelectedSubject();
+      }, 400);
+    }
 
     window.addEventListener('resize', () => {
       if (currentView === 'player') updateSubtitlePosition();
@@ -1295,6 +1328,26 @@
     }
 
     function showDetailView(subject) {
+      if (typeof subject === 'string') {
+        const found = [...catalogMovies, ...catalogSeries].find(s => String(s.subjectId) === subject || String(s.id) === subject);
+        if (found) {
+          subject = found;
+        } else if (subject.toLowerCase().includes('dragon') || subject === '223') {
+          subject = {
+            subjectId: 'dragonball',
+            title: 'Dragon Ball',
+            subjectName: 'Dragon Ball',
+            subjectType: 2,
+            year: '1986',
+            duration: 1450,
+            cover: { url: 'https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg' },
+            thumbnail: 'https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg',
+            description: "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball."
+          };
+        } else {
+          subject = { subjectId: subject, title: "Movie", subjectType: 1 };
+        }
+      }
       closeMobileNav();
       currentView = 'detail';
       selectedSubject = subject;
@@ -1465,6 +1518,9 @@
         renderCardsGrid('grid-most-viewed', catalogSeries.slice(0, 6));
       } else if (cat === 'movie') {
         renderCardsGrid('grid-most-viewed', catalogMovies.slice(0, 6));
+      } else if (cat === 'anime' || cat === 'Anime') {
+        const animeList = catalogSeries.filter(s => (s.genre && s.genre.includes('Anime')) || s.corner === 'Anime' || (s.title && s.title.toLowerCase().includes('dragon')));
+        renderCardsGrid('grid-most-viewed', animeList.length ? animeList : catalogSeries.slice(0, 6));
       } else {
         renderCardsGrid('grid-most-viewed', [...catalogMovies.slice(0, 3), ...catalogSeries.slice(0, 3)]);
       }
@@ -1809,12 +1865,15 @@
           const maxEp = s.maxEp || 8;
           const epList = [];
           for (let i = 1; i <= maxEp; i++) {
+            const isDbEp1 = (subjectId === 'dragonball' || subjectId === '223') && i === 1;
             epList.push({
               se: seNum,
               epNumber: i,
-              title: `${String(i).padStart(2, '0')}. Episode ${i}`,
-              runtime: epDuration,
-              synopsis: seriesSynopsis ? (seriesSynopsis.slice(0, 85) + '...') : `Episode ${i} of Season ${seNum}`,
+              title: isDbEp1 ? "01. Secret of the Dragon Balls" : `${String(i).padStart(2, '0')}. Episode ${i}`,
+              runtime: isDbEp1 ? "24 MIN" : epDuration,
+              synopsis: isDbEp1 
+                ? "Goku, an extraordinary boy living alone in Mount Paozu, meets Bulma, a city girl on a quest to gather all seven legendary Dragon Balls."
+                : (seriesSynopsis ? (seriesSynopsis.slice(0, 85) + '...') : `Episode ${i} of Season ${seNum}`),
               thumbnail: fallbackPoster || carouselFallbackThumb || "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400"
             });
           }
@@ -2517,6 +2576,7 @@
         video.removeEventListener('loadeddata', onFrameReady);
         video.removeEventListener('canplay', onFrameReady);
         video.removeEventListener('playing', onFrameReady);
+        video.removeEventListener('timeupdate', onTimeUpdateCheck);
         setPlayerLoading(false);
         unfreezeFrame();
         isSeekingOperation = false;
@@ -2524,17 +2584,29 @@
         lastVirtualSeekTime = null;
       };
 
+      const onTimeUpdateCheck = () => {
+        if (video.currentTime > 0) onFrameReady();
+      };
+
       video.addEventListener('loadeddata', onFrameReady);
       video.addEventListener('canplay', onFrameReady);
       video.addEventListener('playing', onFrameReady);
+      video.addEventListener('timeupdate', onTimeUpdateCheck);
 
       video.src = url;
       video.load();
       video.play().then(() => {
         isPlaying = true;
         updatePlayIcons(true);
-      }).catch(() => {
-        // May be interrupted if another seek is triggered immediately
+      }).catch((err) => {
+        if (err && err.name === 'NotAllowedError') {
+          video.muted = true;
+          video.play().then(() => {
+            isPlaying = true;
+            updatePlayIcons(true);
+            updateVolumeIcon(0);
+          }).catch(() => {});
+        }
       });
     }
 
