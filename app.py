@@ -845,6 +845,43 @@ def api_stream_mp4(subject_id):
     except Exception as e:
         return str(e), 500
 
+@app.route("/api/debug/ffmpeg-test")
+def api_debug_ffmpeg():
+    aid = request.args.get("aid", "16498")
+    try:
+        st_info = anime_engine.resolve_anime_stream(int(aid), ep=1, is_dub=True)
+        url = st_info["url"]
+        origin = st_info.get("origin", "https://ultracloud.cc")
+        referer = st_info.get("referer", "https://ultracloud.cc/")
+        hdr = f"Origin: {origin}\r\nReferer: {referer}\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\n"
+        cmd = [
+            "ffmpeg",
+            "-headers", hdr,
+            "-multiple_requests", "1",
+            "-fflags", "+nobuffer+flush_packets+fastseek+discardcorrupt",
+            "-analyzeduration", "1500000",
+            "-probesize", "1500000",
+            "-i", url,
+            "-map", "0:v:0",
+            "-map", "0:a:0?",
+            "-c:v", "copy",
+            "-c:a", "copy",
+            "-bsf:a", "aac_adtstoasc",
+            "-movflags", "frag_keyframe+empty_moov+default_base_moof",
+            "-flush_packets", "1",
+            "-t", "2",
+            "-f", "mp4",
+            "pipe:1"
+        ]
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=12)
+        return jsonify({
+            "returncode": res.returncode,
+            "stdout_len": len(res.stdout),
+            "stderr": res.stderr.decode("utf-8", errors="ignore")
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
     os.makedirs("static", exist_ok=True)
     port = int(os.environ.get("PORT", 5000))
