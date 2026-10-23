@@ -10,6 +10,7 @@
   <script>
     // Cloud Backend Server Resolution
     const BACKEND_STORAGE_KEY = 'cineflow_backend_url';
+    const DEFAULT_RENDER_BACKEND = 'https://cineflow-2ftd.onrender.com';
     function getApiBase() {
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         return '';
@@ -17,7 +18,7 @@
       const saved = localStorage.getItem(BACKEND_STORAGE_KEY);
       if (saved) return saved.trim().replace(/\/+$/, '');
       if (window.CINEFLOW_API_BASE) return window.CINEFLOW_API_BASE.trim().replace(/\/+$/, '');
-      return '';
+      return DEFAULT_RENDER_BACKEND;
     }
     function apiUrl(endpoint) {
       const base = getApiBase();
@@ -1342,7 +1343,7 @@
         // Live autocomplete suggest
         searchDebounceTimer = setTimeout(async () => {
           try {
-            const res = await fetch(apiUrl(`/api/search/suggest?keyword=${encodeURIComponent(val)}`);
+            const res = await fetch(apiUrl(`/api/search/suggest?keyword=${encodeURIComponent(val)}`));
             const data = await res.json();
             const suggestions = data.suggestions || [];
             if (suggestions.length > 0) {
@@ -1386,7 +1387,7 @@
     async function performFullSearch(keyword) {
       if (!keyword) return;
       try {
-        const res = await fetch(apiUrl(`/api/search?keyword=${encodeURIComponent(keyword)}`);
+        const res = await fetch(apiUrl(`/api/search?keyword=${encodeURIComponent(keyword)}`));
         const json = await res.json();
         const items = json.data?.items || [];
         const related = json.data?.relatedKeywords || [];
@@ -1451,7 +1452,7 @@
 
     async function searchAndPlay(title) {
       try {
-        const res = await fetch(apiUrl(`/api/search?keyword=${encodeURIComponent(title)}`);
+        const res = await fetch(apiUrl(`/api/search?keyword=${encodeURIComponent(title)}`));
         const json = await res.json();
         const items = json.data?.items || [];
         if (items.length > 0) {
@@ -1465,7 +1466,7 @@
 
     async function searchAndDetail(title) {
       try {
-        const res = await fetch(apiUrl(`/api/search?keyword=${encodeURIComponent(title)}`);
+        const res = await fetch(apiUrl(`/api/search?keyword=${encodeURIComponent(title)}`));
         const json = await res.json();
         const items = json.data?.items || [];
         if (items.length > 0) {
@@ -1506,7 +1507,7 @@
 
       // Fetch Full Subject Details from API
       try {
-        const res = await fetch(apiUrl(`/api/subject/${subjectId}`);
+        const res = await fetch(apiUrl(`/api/subject/${subjectId}`));
         const data = await res.json();
         const sub = data.data?.subject || data.data || {};
         if (sub.description) document.getElementById('detail-synopsis').textContent = sub.description;
@@ -1516,7 +1517,7 @@
 
       // Fetch Dubbing Tracks from API
       try {
-        const dubRes = await fetch(apiUrl(`/api/dubs/${subjectId}`);
+        const dubRes = await fetch(apiUrl(`/api/dubs/${subjectId}`));
         const dubData = await dubRes.json();
         currentDubs = dubData.dubs || [];
         renderDubBadges(currentDubs);
@@ -1637,7 +1638,7 @@
       carouselFallbackThumb = fallbackPoster || '';
 
       try {
-        const res = await fetch(apiUrl(`/api/seasons/${subjectId}`);
+        const res = await fetch(apiUrl(`/api/seasons/${subjectId}`));
         const json = await res.json();
         let seasons = json.data?.seasons || [];
 
@@ -2130,7 +2131,7 @@
 
       // 1. Fetch Stream Manifest & Available Resolutions for the target subject (dubbed or original)
       try {
-        const infoRes = await fetch(apiUrl(`/api/play-info/${targetSubjectId}?se=${selectedSe}&ep=${selectedEp}`);
+        const infoRes = await fetch(apiUrl(`/api/play-info/${targetSubjectId}?se=${selectedSe}&ep=${selectedEp}`));
         const info = await infoRes.json();
         currentTotalSeconds = info.duration || 5400; // default to 90 min if not given
         document.getElementById('timeDuration').textContent = formatTime(currentTotalSeconds);
@@ -2187,7 +2188,7 @@
       // Freeze current frame on screen so user never sees a black flash
       freezeCurrentFrame();
 
-      let url = apiUrl(`/api/stream/${targetSubjectId}/video.mp4?ss=${currentOffsetSeconds}`;
+      let url = apiUrl(`/api/stream/${targetSubjectId}/video.mp4?ss=${currentOffsetSeconds}`);
       if (isSeries) {
         url += `&se=${selectedSe}&ep=${selectedEp}`;
       }
@@ -2578,7 +2579,7 @@
       dubListContainer.innerHTML = '';
 
       try {
-        const dubRes = await fetch(apiUrl(`/api/dubs/${rootSubjectId}`);
+        const dubRes = await fetch(apiUrl(`/api/dubs/${rootSubjectId}`));
         const dubData = await dubRes.json();
         currentDubs = dubData.dubs || [];
       } catch (e) {}
@@ -2612,7 +2613,7 @@
 
       // 2. Subtitles List
       try {
-        const subRes = await fetch(apiUrl(`/api/subtitles/${rootSubjectId}?se=${selectedSe}&ep=${selectedEp}`);
+        const subRes = await fetch(apiUrl(`/api/subtitles/${rootSubjectId}?se=${selectedSe}&ep=${selectedEp}`));
         const subData = await subRes.json();
         currentCaptions = subData.captions || [];
         populateSubtitlesList(currentCaptions, rootSubjectId);
@@ -2702,7 +2703,7 @@
 
       // Re-fetch stream resolutions for this dubbed stream
       try {
-        const infoRes = await fetch(apiUrl(`/api/play-info/${activePlaybackSubjectId}?se=${selectedSe}&ep=${selectedEp}`);
+        const infoRes = await fetch(apiUrl(`/api/play-info/${activePlaybackSubjectId}?se=${selectedSe}&ep=${selectedEp}`));
         const info = await infoRes.json();
         const resStr = info.resolutions || "1080p,720p,480p";
         currentResolutions = resStr.split(',').map(s => s.trim()).filter(Boolean);
@@ -2983,7 +2984,7 @@
       activeSubtitleLang = lang;
       
       try {
-        const url = apiUrl(`/api/vtt/${subjectId}/${lang}.vtt?se=${selectedSe}&ep=${selectedEp}`;
+        const url = apiUrl(`/api/vtt/${subjectId}/${lang}.vtt?se=${selectedSe}&ep=${selectedEp}`);
         const res = await fetch(url);
         if (!res.ok) throw new Error("VTT HTTP Error " + res.status);
         const vttRaw = await res.text();
