@@ -2,7 +2,7 @@
 <html class="scroll-smooth dark" lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
   <title>Cineflow — Stream Movies & TV Series</title>
   
   <!-- Tailwind CSS with Forms and Container Queries -->
@@ -177,6 +177,42 @@
     #player-subtitle-container {
       transition: bottom 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: bottom;
+    }
+
+    /* Mobile Safe Area & Player Responsiveness */
+    #screen-player {
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
+      touch-action: manipulation;
+    }
+
+    #player-hud {
+      padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+      padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+      padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+      padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+    }
+
+    #modal-subtitles, #modal-settings, #modal-episodes-drawer {
+      padding-top: max(1rem, env(safe-area-inset-top, 0px));
+      padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+      padding-right: max(1rem, env(safe-area-inset-right, 0px));
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #scrubber-container {
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    video::-webkit-media-controls {
+      display: none !important;
+    }
+    video::-webkit-media-controls-enclosure {
+      display: none !important;
     }
   </style>
 </head>
@@ -652,75 +688,92 @@
       <video id="videoElement" 
              class="w-full h-full object-contain bg-black" 
              preload="auto" 
-             playsinline>
+             playsinline
+             webkit-playsinline
+             x5-playsinline>
       </video>
       <!-- Frame Freeze Canvas: Holds last visible frame during seeks & buffering to eliminate black screen -->
       <canvas id="video-freeze-canvas" class="hidden absolute inset-0 w-full h-full object-contain pointer-events-none z-10 transition-opacity duration-200"></canvas>
-      <!-- Center Click Area to Play/Pause -->
-      <div id="video-click-surface" onclick="togglePlayPause()" class="absolute inset-0 z-10 cursor-pointer"></div>
+      
+      <!-- Smart Video Surface Gesture / Click Area -->
+      <div id="video-click-surface" class="absolute inset-0 z-10 cursor-pointer select-none"></div>
+
+      <!-- Double-Tap Seek Ripples (Left -10s, Right +10s) -->
+      <div id="double-tap-left" class="pointer-events-none absolute left-0 top-0 bottom-0 w-1/3 flex items-center justify-center z-25 opacity-0 transition-all duration-300">
+        <div class="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-75 transition-transform">
+          <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#00dbe9]">replay_10</span>
+          <span class="text-[11px] font-bold tracking-wider mt-0.5 text-white/90">-10s</span>
+        </div>
+      </div>
+      <div id="double-tap-right" class="pointer-events-none absolute right-0 top-0 bottom-0 w-1/3 flex items-center justify-center z-25 opacity-0 transition-all duration-300">
+        <div class="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-75 transition-transform">
+          <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#00dbe9]">forward_10</span>
+          <span class="text-[11px] font-bold tracking-wider mt-0.5 text-white/90">+10s</span>
+        </div>
+      </div>
     </div>
 
     <!-- Buffering Spinner Indicator -->
-    <div id="player-loading-spinner" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none bg-black/40 backdrop-blur-sm">
-      <div class="w-14 h-14 rounded-full border-4 border-white/20 border-t-[#00dbe9] animate-spin"></div>
-      <p class="text-xs font-mono tracking-widest text-white/80 mt-4 uppercase">Buffering Stream...</p>
+    <div id="player-loading-spinner" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none bg-black/50 backdrop-blur-sm">
+      <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-4 border-white/20 border-t-[#00dbe9] animate-spin"></div>
+      <p class="text-[10px] sm:text-xs font-mono tracking-widest text-white/90 mt-4 uppercase px-3 py-1 rounded-full bg-black/70 border border-white/10 shadow-lg">Buffering Stream...</p>
     </div>
 
     <!-- Center Play/Pause Animated Pulse Indicator -->
     <div id="centerPulse" class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none opacity-0 scale-75 transition-all duration-300">
-      <div class="w-20 h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
-        <span id="centerPulseIcon" class="material-symbols-outlined text-4xl">play_arrow</span>
+      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
+        <span id="centerPulseIcon" class="material-symbols-outlined text-3xl sm:text-4xl">play_arrow</span>
       </div>
     </div>
 
     <!-- DYNAMIC CINEMATIC SUBTITLE OVERLAY CONTAINER (Elevates smoothly above controls) -->
     <div id="player-subtitle-container" 
-         class="absolute left-1/2 -translate-x-1/2 pointer-events-none z-25 max-w-[85%] w-fit text-center flex flex-col items-center select-none"
+         class="absolute left-1/2 -translate-x-1/2 pointer-events-none z-25 max-w-[92%] sm:max-w-[85%] w-fit text-center flex flex-col items-center select-none"
          style="bottom: 138px;">
       <div id="player-subtitle-text" 
-           class="inline-block px-4 py-1.5 rounded-lg text-white font-medium leading-snug tracking-wide text-center"
-           style="font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.95), 0 0 8px rgba(0,0,0,0.8); background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none;">
+           class="inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-lg text-white font-medium leading-snug tracking-wide text-center"
+           style="font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.95), 0 0 8px rgba(0,0,0,0.8); background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); display: none;">
       </div>
     </div>
 
     <!-- Player HUD Overlays Container -->
-    <div id="player-hud" class="relative z-30 flex flex-col justify-between w-full h-full p-6 md:p-8 pointer-events-none transition-opacity duration-300">
+    <div id="player-hud" class="relative z-30 flex flex-col justify-between w-full h-full p-3 sm:p-6 md:p-8 pointer-events-none transition-opacity duration-300">
       
       <!-- TOP HUD HEADER -->
-      <header class="flex items-center justify-between w-full pointer-events-auto">
-        <div class="flex items-center space-x-4">
-          <button onclick="exitPlayer()" class="group flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl transition-all duration-200 text-white cursor-pointer" title="Back">
-            <span class="material-symbols-outlined text-xl transition-transform group-hover:-translate-x-0.5">arrow_back</span>
+      <header class="flex items-center justify-between w-full pointer-events-auto gap-2">
+        <div class="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
+          <button onclick="exitPlayer()" class="group flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl shrink-0 transition-all text-white cursor-pointer" title="Back">
+            <span class="material-symbols-outlined text-lg sm:text-xl transition-transform group-hover:-translate-x-0.5">arrow_back</span>
           </button>
-          <div class="flex flex-col">
-            <div class="flex items-center space-x-2.5">
-              <h1 id="player-header-title" class="font-headline text-lg md:text-xl text-white font-bold tracking-tight">Movie Title</h1>
-              <span id="player-header-ep" class="inline-flex px-2 py-0.5 rounded-md text-[11px] font-extrabold tracking-wide bg-[#e50914] text-white shadow-md">Part 01</span>
+          <div class="flex flex-col min-w-0">
+            <div class="flex items-center space-x-2 min-w-0">
+              <h1 id="player-header-title" class="font-headline text-sm sm:text-lg md:text-xl text-white font-bold tracking-tight truncate max-w-[130px] xs:max-w-[180px] sm:max-w-xs md:max-w-md">Movie Title</h1>
+              <span id="player-header-ep" class="shrink-0 inline-flex px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-extrabold tracking-wide bg-[#e50914] text-white shadow-md">Part 01</span>
             </div>
-            <div class="flex items-center space-x-2 text-white/70 text-xs mt-0.5 font-sans" id="player-header-meta">
-              <span id="player-stream-status" class="font-medium text-white/90">Season 1 • Episode 1</span>
+            <div class="flex items-center space-x-1.5 sm:space-x-2 text-white/70 text-[10px] sm:text-xs mt-0.5 font-sans truncate" id="player-header-meta">
+              <span id="player-stream-status" class="font-medium text-white/90 truncate">Season 1 • Episode 1</span>
               <span class="text-white/40">•</span>
-              <span id="player-active-dub-label" class="text-tertiary font-medium">Original Audio</span>
+              <span id="player-active-dub-label" class="text-tertiary font-medium shrink-0">Original Audio</span>
             </div>
           </div>
         </div>
 
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
           <!-- In-Player Hamburger Menu Trigger for Episode & Season Navigation -->
-          <button id="btn-player-hamburger" onclick="toggleEpisodesDrawer()" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/15 text-xs font-medium text-white transition-all duration-200 cursor-pointer shadow-lg hover:border-white/30 hover:scale-105 active:scale-95" title="Episodes & Seasons">
+          <button id="btn-player-hamburger" onclick="toggleEpisodesDrawer()" class="flex items-center space-x-1 sm:space-x-2 px-2.5 sm:px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/15 text-xs font-medium text-white transition-all cursor-pointer shadow-lg hover:border-white/30 hover:scale-105 active:scale-95" title="Episodes & Seasons">
             <span class="material-symbols-outlined text-base">menu</span>
             <span class="hidden sm:inline font-semibold">Episodes</span>
           </button>
 
           <!-- Resolution Selector Trigger & Popover -->
           <div class="relative">
-            <button id="btn-resolution-trigger" onclick="toggleResolutionPopover()" class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-xs font-medium text-white transition-all duration-200 cursor-pointer shadow-lg hover:border-white/30">
+            <button id="btn-resolution-trigger" onclick="toggleResolutionPopover()" class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-xs font-medium text-white transition-all cursor-pointer shadow-lg hover:border-white/30">
               <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
-              <span id="active-res-label" class="font-semibold">1080p FHD</span>
+              <span id="active-res-label" class="font-semibold text-[11px] sm:text-xs">1080p FHD</span>
               <span class="material-symbols-outlined text-xs text-white/70 ml-0.5">expand_more</span>
             </button>
             <!-- Resolution Popover Dropdown -->
-            <div id="popover-resolution" class="hidden absolute right-0 top-full mt-2 w-64 bg-surface-container-low/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 z-50 text-left">
+            <div id="popover-resolution" class="hidden absolute right-0 top-full mt-2 w-56 sm:w-64 max-w-[calc(100vw-24px)] bg-surface-container-low/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 z-50 text-left">
               <div class="px-3 py-2 border-b border-white/10 mb-1 flex items-center justify-between">
                 <span class="text-[11px] font-bold uppercase tracking-wider text-white/50">Playback Quality</span>
                 <span class="text-[10px] bg-tertiary/20 text-tertiary px-1.5 py-0.5 rounded font-mono font-semibold">Adaptive</span>
@@ -730,67 +783,67 @@
           </div>
 
           <!-- Audio & Subtitles Pill Button -->
-          <button onclick="toggleAudioModal()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-xs font-medium text-white transition-colors cursor-pointer">
+          <button onclick="toggleAudioModal()" class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/10 text-xs font-medium text-white transition-colors cursor-pointer" title="Audio & Subtitles">
             <span class="material-symbols-outlined text-sm text-white/70">subtitles</span>
-            <span>Audio & CC</span>
+            <span class="hidden sm:inline">Audio & CC</span>
           </button>
         </div>
       </header>
 
       <!-- CENTER HUD AMBIENT PLAYBACK CONTROLS -->
-      <div class="flex items-center justify-center my-auto w-full py-8 pointer-events-auto">
-        <div class="flex items-center space-x-8 md:space-x-12">
+      <div id="center-hud-controls" class="flex items-center justify-center my-auto w-full py-6 sm:py-8 pointer-events-auto transition-opacity duration-200">
+        <div class="flex items-center space-x-6 sm:space-x-8 md:space-x-12">
           <!-- Rewind 10s -->
-          <button onclick="skipSeconds(-10)" class="group flex flex-col items-center justify-center w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white transition-all duration-200 hover:scale-105 active:scale-95 border border-white/10 shadow-lg cursor-pointer" title="Rewind 10s">
-            <span class="material-symbols-outlined text-2xl group-hover:-rotate-12 transition-transform">replay_10</span>
+          <button onclick="skipSeconds(-10)" class="group flex flex-col items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white transition-all duration-200 hover:scale-105 active:scale-95 border border-white/10 shadow-lg cursor-pointer" title="Rewind 10s">
+            <span class="material-symbols-outlined text-xl sm:text-2xl group-hover:-rotate-12 transition-transform">replay_10</span>
           </button>
           <!-- Center Play/Pause -->
-          <button onclick="togglePlayPause()" class="group flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-2xl text-white transition-all duration-300 hover:scale-105 active:scale-95 border border-white/20 shadow-2xl cursor-pointer" title="Play/Pause">
-            <span id="centerPlayIcon" class="material-symbols-outlined text-4xl md:text-5xl text-white transition-transform group-hover:scale-110">play_arrow</span>
+          <button onclick="togglePlayPause()" class="group flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-2xl text-white transition-all duration-300 hover:scale-105 active:scale-95 border border-white/20 shadow-2xl cursor-pointer" title="Play/Pause">
+            <span id="centerPlayIcon" class="material-symbols-outlined text-3xl sm:text-4xl md:text-5xl text-white transition-transform group-hover:scale-110">play_arrow</span>
           </button>
           <!-- Forward 10s -->
-          <button onclick="skipSeconds(10)" class="group flex flex-col items-center justify-center w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white transition-all duration-200 hover:scale-105 active:scale-95 border border-white/10 shadow-lg cursor-pointer" title="Forward 10s">
-            <span class="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform">forward_10</span>
+          <button onclick="skipSeconds(10)" class="group flex flex-col items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white transition-all duration-200 hover:scale-105 active:scale-95 border border-white/10 shadow-lg cursor-pointer" title="Forward 10s">
+            <span class="material-symbols-outlined text-xl sm:text-2xl group-hover:rotate-12 transition-transform">forward_10</span>
           </button>
         </div>
       </div>
 
       <!-- BOTTOM TIMELINE SCRUBBER & DOCK CONTROL DECK -->
-      <div class="flex flex-col w-full space-y-3 pointer-events-auto">
+      <div class="flex flex-col w-full space-y-2 sm:space-y-3 pointer-events-auto">
         
-        <!-- Precision Scrubber Bar (Zero flicker, loaded buffer bar, smooth drag) -->
-        <div id="scrubber-container" class="relative w-full group py-3 cursor-pointer select-none">
-          <!-- Hover Tooltip -->
+        <!-- Precision Scrubber Bar (Zero flicker, loaded buffer bar, smooth touch drag) -->
+        <div id="scrubber-container" class="relative w-full group py-3.5 sm:py-3 cursor-pointer select-none touch-none">
+          <!-- Hover/Touch Tooltip -->
           <div id="scrub-preview-tooltip" class="hidden absolute -top-10 left-0 -translate-x-1/2 pointer-events-none z-30 bg-black/90 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20 text-xs font-mono font-semibold text-white shadow-xl">
             00:00:00
           </div>
           <!-- Track Layer -->
-          <div class="relative w-full h-1.5 group-hover:h-2.5 bg-white/20 rounded-full transition-all duration-150 overflow-visible">
+          <div class="relative w-full h-1.5 sm:h-1.5 group-hover:h-2.5 bg-white/20 rounded-full transition-all duration-150 overflow-visible">
             <!-- Buffered Progress Bar -->
             <div id="scrub-buffered-bar" class="absolute left-0 top-0 bottom-0 bg-white/30 rounded-full transition-[width] duration-300" style="width: 0%;"></div>
             <!-- Played Progress Bar (Crimson Red) -->
             <div id="scrub-played-bar" class="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-primary-container to-[#ffb4aa] rounded-full" style="width: 0%;"></div>
-            <!-- Scrubber Pin / Thumb -->
-            <div id="scrub-pin" class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 group-hover:w-4 group-hover:h-4 rounded-full bg-white shadow-[0_0_10px_rgba(255,180,170,0.8)] border border-primary scale-0 group-hover:scale-100 transition-transform duration-150 cursor-grab active:cursor-grabbing" style="left: 0%;"></div>
+            <!-- Scrubber Pin / Thumb (Always visible on mobile touch, revealed on hover on desktop) -->
+            <div id="scrub-pin" class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-white shadow-[0_0_10px_rgba(255,180,170,0.8)] border border-primary sm:scale-0 group-hover:scale-100 transition-transform duration-150 cursor-grab active:cursor-grabbing" style="left: 0%;"></div>
           </div>
         </div>
 
         <!-- Dock Control Deck -->
-        <div class="flex items-center justify-between gap-4 w-full bg-black/60 backdrop-blur-2xl px-6 py-3 rounded-2xl border border-white/10 shadow-2xl relative">
+        <div class="flex items-center justify-between gap-2 sm:gap-4 w-full bg-black/75 backdrop-blur-2xl px-3 sm:px-6 py-2.5 sm:py-3 rounded-2xl border border-white/10 shadow-2xl relative">
           <!-- Left Controls: Play, -10s, +10s, Volume, Timers -->
-          <div class="flex items-center space-x-4">
-            <button onclick="togglePlayPause()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white transition-colors cursor-pointer" title="Play/Pause">
-              <span id="dockPlayIcon" class="material-symbols-outlined text-2xl">play_arrow</span>
+          <div class="flex items-center space-x-2 sm:space-x-4 min-w-0">
+            <button onclick="togglePlayPause()" class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full flex items-center justify-center hover:bg-white/10 text-white transition-colors cursor-pointer" title="Play/Pause">
+              <span id="dockPlayIcon" class="material-symbols-outlined text-xl sm:text-2xl">play_arrow</span>
             </button>
-            <button onclick="skipSeconds(-10)" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer" title="Rewind 10s">
+            <button onclick="skipSeconds(-10)" class="hidden sm:flex w-8 h-8 rounded-full items-center justify-center hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer" title="Rewind 10s">
               <span class="material-symbols-outlined text-xl">replay_10</span>
             </button>
-            <button onclick="skipSeconds(10)" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer" title="Forward 10s">
+            <button onclick="skipSeconds(10)" class="hidden sm:flex w-8 h-8 rounded-full items-center justify-center hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer" title="Forward 10s">
               <span class="material-symbols-outlined text-xl">forward_10</span>
             </button>
             
-            <!-- Volume Control -->
-            <div class="flex items-center space-x-2 pl-2">
+            <!-- Volume Control (Desktop/Tablet md+ only; mobile uses phone volume keys) -->
+            <div class="hidden md:flex items-center space-x-2 pl-2">
               <button onclick="toggleMute()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer" title="Mute/Unmute">
                 <span id="volumeIcon" class="material-symbols-outlined text-xl">volume_up</span>
               </button>
@@ -800,7 +853,7 @@
             </div>
 
             <!-- Time Display -->
-            <div class="flex items-center space-x-1 text-xs text-white/80 font-mono pl-3">
+            <div class="flex items-center space-x-1 text-[11px] sm:text-xs text-white/80 font-mono pl-1 sm:pl-3 shrink-0 whitespace-nowrap">
               <span id="timeCurrent" class="text-white font-medium">00:00:00</span>
               <span class="text-white/40">/</span>
               <span id="timeDuration" class="text-white/60">00:00:00</span>
@@ -808,29 +861,29 @@
           </div>
 
           <!-- Right Controls: Speed, Subtitles, Episodes, Settings, Fullscreen -->
-          <div class="flex items-center space-x-2">
-            <button id="btn-speed-badge" onclick="cycleSpeed()" class="px-2.5 py-1 rounded-lg hover:bg-white/10 text-white/80 hover:text-white text-xs font-semibold font-mono transition-colors cursor-pointer" title="Playback Speed">1.0x</button>
+          <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
+            <button id="btn-speed-badge" onclick="cycleSpeed()" class="hidden sm:inline-flex px-2 sm:px-2.5 py-1 rounded-lg hover:bg-white/10 text-white/80 hover:text-white text-xs font-semibold font-mono transition-colors cursor-pointer" title="Playback Speed">1.0x</button>
             
-            <button onclick="toggleAudioModal()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Audio & Subtitles">
-              <span class="material-symbols-outlined text-xl">closed_caption</span>
+            <button onclick="toggleAudioModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Audio & Subtitles">
+              <span class="material-symbols-outlined text-lg sm:text-xl">closed_caption</span>
             </button>
 
             <!-- Episodes Drawer Trigger (for TV series) -->
-            <button id="btn-episodes-drawer" onclick="toggleEpisodesDrawer()" class="hidden w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors relative cursor-pointer" title="Episodes">
-              <span class="material-symbols-outlined text-xl">video_library</span>
+            <button id="btn-episodes-drawer" onclick="toggleEpisodesDrawer()" class="hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors relative cursor-pointer" title="Episodes">
+              <span class="material-symbols-outlined text-lg sm:text-xl">video_library</span>
               <span class="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span>
             </button>
 
-            <button onclick="togglePip()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Picture in Picture">
-              <span class="material-symbols-outlined text-xl">picture_in_picture_alt</span>
+            <button onclick="togglePip()" class="hidden sm:flex w-8 h-8 sm:w-9 sm:h-9 rounded-full items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Picture in Picture">
+              <span class="material-symbols-outlined text-lg sm:text-xl">picture_in_picture_alt</span>
             </button>
 
-            <button onclick="toggleSettingsModal()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Settings">
-              <span class="material-symbols-outlined text-xl transition-transform hover:rotate-45">settings</span>
+            <button onclick="toggleSettingsModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Settings">
+              <span class="material-symbols-outlined text-lg sm:text-xl transition-transform hover:rotate-45">settings</span>
             </button>
 
-            <button onclick="toggleFullscreen()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white transition-colors cursor-pointer" title="Fullscreen">
-              <span id="icon-fullscreen" class="material-symbols-outlined text-xl">fullscreen</span>
+            <button onclick="toggleFullscreen()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white transition-colors cursor-pointer" title="Fullscreen">
+              <span id="icon-fullscreen" class="material-symbols-outlined text-xl sm:text-2xl text-[#f5c518]">fullscreen</span>
             </button>
           </div>
         </div>
@@ -839,19 +892,19 @@
     </div>
 
     <!-- AUDIO & SUBTITLES FLYOUT MODAL -->
-    <div id="modal-subtitles" class="fixed inset-y-0 right-0 w-full max-w-lg bg-surface-container-low/95 backdrop-blur-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-6 md:p-7 flex flex-col justify-between shadow-2xl border-l border-white/10 overflow-y-auto max-h-screen">
+    <div id="modal-subtitles" class="fixed inset-y-0 right-0 w-full max-w-lg bg-surface-container-low/95 backdrop-blur-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-4 sm:p-6 md:p-7 flex flex-col justify-between shadow-2xl border-l border-white/10 overflow-y-auto max-h-screen">
       <div>
         <div class="flex items-center justify-between pb-4 border-b border-white/10">
           <div class="flex items-center space-x-2.5">
             <span class="material-symbols-outlined text-secondary">closed_caption</span>
-            <h2 class="text-lg font-semibold text-white">Audio & Subtitles</h2>
+            <h2 class="text-base sm:text-lg font-semibold text-white">Audio & Subtitles</h2>
           </div>
           <button onclick="toggleAudioModal()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer">
             <span class="material-symbols-outlined text-lg">close</span>
           </button>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mt-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-5">
           <!-- Audio Dubbing Tracks -->
           <div class="space-y-2.5">
             <span class="text-[11px] font-semibold uppercase tracking-wider text-white/50">Audio Track</span>
@@ -1131,6 +1184,7 @@
       fetchHomeCatalog();
       setupSearchDebounce();
       setupScrubberEngine();
+      setupVideoGestures();
       setupPlayerMediaEvents();
       setupKeyboardControls();
     });
@@ -1872,6 +1926,8 @@
           if (currentView === 'detail') {
             playSelectedSubject();
             toggleEpisodesDrawer();
+          } else if (currentView === 'player') {
+            toggleEpisodesDrawer();
           }
         };
 
@@ -2232,6 +2288,14 @@
     function setPlayerLoading(loading) {
       const spinner = document.getElementById('player-loading-spinner');
       if (spinner) spinner.classList.toggle('hidden', !loading);
+      const centerControls = document.getElementById('center-hud-controls');
+      if (centerControls) {
+        if (loading) {
+          centerControls.classList.add('opacity-0', 'pointer-events-none');
+        } else if (isHudVisible) {
+          centerControls.classList.remove('opacity-0', 'pointer-events-none');
+        }
+      }
     }
 
     function updatePlayIcons(playing) {
@@ -2285,32 +2349,47 @@
 
       function calculatePos(e) {
         const rect = scrubber.getBoundingClientRect();
-        const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+        let clientX = e.clientX;
+        if (e.touches && e.touches.length > 0) {
+          clientX = e.touches[0].clientX;
+        } else if (e.changedTouches && e.changedTouches.length > 0) {
+          clientX = e.changedTouches[0].clientX;
+        }
         const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-        return { ratio, targetSec: ratio * currentTotalSeconds, clientX, rect };
+        return { ratio, targetSec: ratio * (currentTotalSeconds || 0), clientX, rect };
       }
 
       function updateScrubVisuals(ratio, targetSec) {
         const pct = Math.min(100, Math.max(0, ratio * 100));
-        document.getElementById('scrub-played-bar').style.width = pct + '%';
-        document.getElementById('scrub-pin').style.left = pct + '%';
-        document.getElementById('timeCurrent').textContent = formatTime(targetSec);
+        const played = document.getElementById('scrub-played-bar');
+        const pin = document.getElementById('scrub-pin');
+        if (played) played.style.width = pct + '%';
+        if (pin) pin.style.left = pct + '%';
+        const cur = document.getElementById('timeCurrent');
+        if (cur) cur.textContent = formatTime(targetSec);
+      }
+
+      function showTooltipAt(targetSec, clientX, rect) {
+        if (!tooltip) return;
+        tooltip.textContent = formatTime(targetSec);
+        const tipX = Math.max(30, Math.min(rect.width - 30, clientX - rect.left));
+        tooltip.style.left = `${tipX}px`;
+        tooltip.classList.remove('hidden');
       }
 
       scrubber.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         isScrubbing = true;
-        const { ratio, targetSec } = calculatePos(e);
+        const { ratio, targetSec, clientX, rect } = calculatePos(e);
         scrubTargetSec = targetSec;
         updateScrubVisuals(ratio, targetSec);
+        showTooltipAt(targetSec, clientX, rect);
       });
 
       scrubber.addEventListener('mousemove', (e) => {
         if (!currentTotalSeconds) return;
         const { ratio, targetSec, clientX, rect } = calculatePos(e);
-        tooltip.textContent = formatTime(targetSec);
-        tooltip.style.left = `${Math.max(25, Math.min(rect.width - 25, clientX - rect.left))}px`;
-        tooltip.classList.remove('hidden');
+        showTooltipAt(targetSec, clientX, rect);
 
         if (isScrubbing) {
           scrubTargetSec = targetSec;
@@ -2319,35 +2398,53 @@
       });
 
       scrubber.addEventListener('mouseleave', () => {
-        if (!isScrubbing) tooltip.classList.add('hidden');
+        if (!isScrubbing && tooltip) tooltip.classList.add('hidden');
       });
 
       window.addEventListener('mouseup', () => {
         if (!isScrubbing) return;
         isScrubbing = false;
-        tooltip.classList.add('hidden');
+        if (tooltip) tooltip.classList.add('hidden');
         smartSeek(scrubTargetSec);
       });
 
-      // Touch handlers
+      // Touch handlers (Non-passive touchmove with preventDefault to prevent browser swipe gestures)
       scrubber.addEventListener('touchstart', (e) => {
         isScrubbing = true;
-        const { ratio, targetSec } = calculatePos(e);
+        resetHudTimeout();
+        const { ratio, targetSec, clientX, rect } = calculatePos(e);
         scrubTargetSec = targetSec;
         updateScrubVisuals(ratio, targetSec);
-      }, { passive: true });
+        showTooltipAt(targetSec, clientX, rect);
+        const pin = document.getElementById('scrub-pin');
+        if (pin) pin.classList.add('scale-110');
+      }, { passive: false });
 
       window.addEventListener('touchmove', (e) => {
         if (!isScrubbing) return;
-        const { ratio, targetSec } = calculatePos(e);
+        if (e.cancelable) e.preventDefault();
+        resetHudTimeout();
+        const { ratio, targetSec, clientX, rect } = calculatePos(e);
         scrubTargetSec = targetSec;
         updateScrubVisuals(ratio, targetSec);
-      }, { passive: true });
+        showTooltipAt(targetSec, clientX, rect);
+      }, { passive: false });
 
       window.addEventListener('touchend', () => {
         if (!isScrubbing) return;
         isScrubbing = false;
+        if (tooltip) tooltip.classList.add('hidden');
+        const pin = document.getElementById('scrub-pin');
+        if (pin) pin.classList.remove('scale-110');
         smartSeek(scrubTargetSec);
+      });
+
+      window.addEventListener('touchcancel', () => {
+        if (!isScrubbing) return;
+        isScrubbing = false;
+        if (tooltip) tooltip.classList.add('hidden');
+        const pin = document.getElementById('scrub-pin');
+        if (pin) pin.classList.remove('scale-110');
       });
     }
 
@@ -2746,17 +2843,24 @@
         ? isHudVisibleParam 
         : (hud ? (hud.style.opacity !== '0' && !hud.classList.contains('opacity-0')) : true);
 
-      // Base height:
-      // When HUD is visible: base 138px ensures it completely clears the 128px control dock and progress bar
-      // When HUD is hidden: base 36px sits in the clean cinematic viewing zone
-      const baseBottom = hudVisible ? 138 : 36;
-      let targetBottom = baseBottom + (subtitleSettings.verticalOffset || 0);
+      // Detect if in mobile landscape (low viewport height < 520px)
+      const isLandscapeMobile = (window.innerHeight < 520 && window.innerWidth > window.innerHeight);
 
-      // Safety boundaries:
-      // When HUD is visible, clamp minimum to 122px so subtitles NEVER overlap the controls or scrubber
-      // When HUD is hidden, clamp minimum to 16px to prevent cutting off at screen bottom
-      const minBottom = hudVisible ? 122 : 16;
-      const maxBottom = Math.max(minBottom + 40, (window.innerHeight || 800) - 120);
+      // Base height:
+      // Desktop / Portrait: base 138px when HUD is visible, base 36px when HUD is hidden
+      // Mobile Landscape: base 82px when HUD is visible, base 18px when HUD is hidden
+      let baseBottom = 36;
+      let minBottom = 16;
+      if (isLandscapeMobile) {
+        baseBottom = hudVisible ? 82 : 18;
+        minBottom = hudVisible ? 70 : 12;
+      } else {
+        baseBottom = hudVisible ? 138 : 36;
+        minBottom = hudVisible ? 122 : 16;
+      }
+
+      let targetBottom = baseBottom + (subtitleSettings.verticalOffset || 0);
+      const maxBottom = Math.max(minBottom + 30, (window.innerHeight || 800) - 90);
       targetBottom = Math.max(minBottom, Math.min(maxBottom, targetBottom));
 
       container.style.bottom = `${targetBottom}px`;
@@ -3084,25 +3188,227 @@
       else icon.textContent = 'volume_up';
     }
 
-    function toggleFullscreen() {
-      const elem = document.getElementById('screen-player');
-      if (!document.fullscreenElement) {
-        elem.requestFullscreen?.() || elem.webkitRequestFullscreen?.();
-        document.getElementById('icon-fullscreen').textContent = 'fullscreen_exit';
-      } else {
-        document.exitFullscreen?.() || document.webkitExitFullscreen?.();
-        document.getElementById('icon-fullscreen').textContent = 'fullscreen';
+    async function lockLandscapeOrientation() {
+      try {
+        if (screen.orientation && typeof screen.orientation.lock === 'function') {
+          await screen.orientation.lock('landscape');
+        } else if (screen.lockOrientation) {
+          screen.lockOrientation('landscape');
+        } else if (screen.mozLockOrientation) {
+          screen.mozLockOrientation('landscape');
+        } else if (screen.msLockOrientation) {
+          screen.msLockOrientation('landscape');
+        }
+      } catch (err) {
+        // Silently catch: not allowed or device orientation locked by user setting
       }
     }
 
-    function togglePip() {
+    function unlockOrientation() {
+      try {
+        if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+          screen.orientation.unlock();
+        } else if (screen.unlockOrientation) {
+          screen.unlockOrientation();
+        } else if (screen.mozUnlockOrientation) {
+          screen.mozUnlockOrientation();
+        } else if (screen.msUnlockOrientation) {
+          screen.msUnlockOrientation();
+        }
+      } catch (e) {}
+    }
+
+    async function toggleFullscreen() {
+      const elem = document.getElementById('screen-player');
       const video = document.getElementById('videoElement');
-      if (document.pictureInPictureElement) {
-        document.exitPictureInPicture?.();
-      } else if (document.pictureInPictureEnabled) {
-        video.requestPictureInPicture?.();
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+
+      if (!isFs) {
+        let entered = false;
+        try {
+          if (elem.requestFullscreen) {
+            await elem.requestFullscreen({ navigationUI: 'hide' });
+            entered = true;
+          } else if (elem.webkitRequestFullscreen) {
+            await elem.webkitRequestFullscreen();
+            entered = true;
+          } else if (elem.mozRequestFullScreen) {
+            await elem.mozRequestFullScreen();
+            entered = true;
+          } else if (elem.msRequestFullscreen) {
+            await elem.msRequestFullscreen();
+            entered = true;
+          }
+        } catch (e) {
+          if (video && video.webkitEnterFullscreen) {
+            try {
+              video.webkitEnterFullscreen();
+              entered = true;
+            } catch (e2) {}
+          }
+        }
+
+        if (entered) {
+          await lockLandscapeOrientation();
+        }
+      } else {
+        unlockOrientation();
+        try {
+          if (document.exitFullscreen) {
+            await document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            await document.webkitExitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+            await document.mozCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+            await document.msExitFullscreen();
+          }
+        } catch (e) {}
       }
     }
+
+    function handleFullscreenChange() {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+      const fsIcon = document.getElementById('icon-fullscreen');
+      if (fsIcon) {
+        fsIcon.textContent = isFs ? 'fullscreen_exit' : 'fullscreen';
+      }
+      if (!isFs) {
+        unlockOrientation();
+      }
+      setTimeout(updateSubtitlePosition, 150);
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(updateSubtitlePosition, 200);
+    });
+
+    async function togglePip() {
+      const video = document.getElementById('videoElement');
+      if (!video) return;
+      try {
+        if (document.pictureInPictureElement) {
+          await document.exitPictureInPicture?.();
+        } else if (document.pictureInPictureEnabled && video.requestPictureInPicture) {
+          await video.requestPictureInPicture();
+        }
+      } catch (err) {
+        console.warn('PiP not available:', err);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // SMART MOBILE TOUCH GESTURES & DOUBLE-TAP SEEK ENGINE
+    // -------------------------------------------------------------
+    function setupVideoGestures() {
+      const surface = document.getElementById('video-click-surface');
+      if (!surface) return;
+
+      let lastTapTime = 0;
+      let tapTimeout = null;
+
+      function flashRipple(side) {
+        const el = document.getElementById(side === 'left' ? 'double-tap-left' : 'double-tap-right');
+        if (!el) return;
+        el.classList.remove('opacity-0');
+        el.classList.add('opacity-100');
+        const child = el.firstElementChild;
+        if (child) {
+          child.classList.remove('scale-75');
+          child.classList.add('scale-100');
+        }
+        setTimeout(() => {
+          el.classList.remove('opacity-100');
+          el.classList.add('opacity-0');
+          if (child) {
+            child.classList.remove('scale-100');
+            child.classList.add('scale-75');
+          }
+        }, 450);
+      }
+
+      surface.addEventListener('click', (e) => {
+        const rect = surface.getBoundingClientRect();
+        const relX = e.clientX - rect.left;
+        const width = rect.width;
+        const now = Date.now();
+        const diff = now - lastTapTime;
+        lastTapTime = now;
+
+        if (diff < 320) {
+          // Double-tap detected
+          if (tapTimeout) {
+            clearTimeout(tapTimeout);
+            tapTimeout = null;
+          }
+
+          if (relX < width * 0.36) {
+            // Left 36% -> Skip back 10s
+            skipSeconds(-10);
+            flashRipple('left');
+          } else if (relX > width * 0.64) {
+            // Right 36% -> Skip forward 10s
+            skipSeconds(10);
+            flashRipple('right');
+          } else {
+            // Center 28% -> Toggle Fullscreen
+            toggleFullscreen();
+          }
+        } else {
+          // Single tap candidate (wait to ensure it's not the first tap of a double-tap)
+          tapTimeout = setTimeout(() => {
+            // Dismiss open modals or popovers first
+            const subModal = document.getElementById('modal-subtitles');
+            const setModal = document.getElementById('modal-settings');
+            const epModal = document.getElementById('modal-episodes-drawer');
+            const resPopover = document.getElementById('popover-resolution');
+
+            let dismissed = false;
+            if (subModal && !subModal.classList.contains('translate-x-full')) {
+              subModal.classList.add('translate-x-full');
+              dismissed = true;
+            }
+            if (setModal && !setModal.classList.contains('translate-x-full')) {
+              setModal.classList.add('translate-x-full');
+              dismissed = true;
+            }
+            if (epModal && !epModal.classList.contains('translate-x-full')) {
+              epModal.classList.add('translate-x-full');
+              dismissed = true;
+            }
+            if (resPopover && !resPopover.classList.contains('hidden')) {
+              resPopover.classList.add('hidden');
+              dismissed = true;
+            }
+
+            if (dismissed) return;
+
+            // Toggle HUD visibility cleanly
+            if (isHudVisible) {
+              setHudVisibility(false);
+            } else {
+              setHudVisibility(true);
+              resetHudTimeout();
+            }
+          }, 270);
+        }
+      });
+    }
+
+    // Dismiss resolution dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const popover = document.getElementById('popover-resolution');
+      const trigger = document.getElementById('btn-resolution-trigger');
+      if (popover && !popover.classList.contains('hidden')) {
+        if (!popover.contains(e.target) && !trigger?.contains(e.target)) {
+          popover.classList.add('hidden');
+        }
+      }
+    });
 
     // -------------------------------------------------------------
     // HUD AUTO-HIDE & DYNAMIC ELEVATION TIMING ENGINE
@@ -3138,6 +3444,15 @@
     window.addEventListener('mousemove', () => {
       if (currentView === 'player') resetHudTimeout();
     });
+
+    window.addEventListener('touchstart', (e) => {
+      if (currentView === 'player') {
+        const isInteractive = e.target.closest('button, input, #scrubber-container, #modal-subtitles, #modal-settings, #modal-episodes-drawer, #popover-resolution');
+        if (isInteractive) {
+          resetHudTimeout();
+        }
+      }
+    }, { passive: true });
 
     // -------------------------------------------------------------
     // KEYBOARD SHORTCUTS
