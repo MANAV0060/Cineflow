@@ -743,6 +743,7 @@ def api_stream_mp4(subject_id):
         cmd = [
             "ffmpeg",
             "-headers", headers_flag,
+            "-allowed_segment_extensions", "ALL",
             "-multiple_requests", "1",
             "-fflags", "+nobuffer+flush_packets+fastseek+discardcorrupt",
             "-analyzeduration", probe_val,
@@ -857,6 +858,7 @@ def api_debug_ffmpeg():
         cmd = [
             "ffmpeg",
             "-headers", hdr,
+            "-allowed_segment_extensions", "ALL",
             "-multiple_requests", "1",
             "-fflags", "+nobuffer+flush_packets+fastseek+discardcorrupt",
             "-analyzeduration", "1500000",
