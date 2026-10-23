@@ -111,6 +111,8 @@ def srt_to_vtt(srt_text):
 
 @app.route("/")
 def index():
+    if os.path.exists("index.html"):
+        return send_from_directory(".", "index.html")
     return send_from_directory("static", "index.html")
 
 @app.route("/api/search")
