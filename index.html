@@ -244,7 +244,7 @@
         <a href="#" onclick="showHome(); return false;" id="nav-home" class="text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold">Home</a>
         <a href="#" onclick="filterCategory('tv'); return false;" id="nav-tv" class="text-white/80 hover:text-white transition">TV Shows</a>
         <a href="#" onclick="filterCategory('movie'); return false;" id="nav-movie" class="text-white/80 hover:text-white transition">Movies</a>
-        <a href="#" onclick="filterCategory('anime'); return false;" id="nav-anime" class="text-white/80 hover:text-white transition">Anime</a>
+        <a href="#" onclick="showAnimeSection(); return false;" id="nav-anime" class="text-white/80 hover:text-white transition cursor-pointer">Anime</a>
       </nav>
 
       <!-- Header Search Input & Profile -->
@@ -404,7 +404,7 @@
     <!-- Category Filter Row -->
     <section class="py-4 sm:py-6 px-4 sm:px-6 md:px-14 flex items-center justify-start md:justify-center overflow-x-auto hide-scrollbar space-x-2 sm:space-x-3">
       <button onclick="filterCategory('all')" class="cat-pill active bg-[#f5c518] text-black font-semibold text-[11px] sm:text-xs uppercase px-5 sm:px-7 py-1.5 sm:py-2 rounded-full shadow-sm hover:opacity-90 transition cursor-pointer shrink-0">ALL</button>
-      <button onclick="filterCategory('anime')" class="cat-pill border border-amber-400/40 text-amber-300 hover:border-amber-400 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0 flex items-center space-x-1.5"><span class="text-xs">⚡</span><span>Anime</span></button>
+      <button onclick="showAnimeSection()" class="cat-pill border border-amber-400/40 text-amber-300 hover:border-amber-400 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0 flex items-center space-x-1.5"><span class="text-xs">⚡</span><span>Anime</span></button>
       <button onclick="filterCategory('Action')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Action</button>
       <button onclick="filterCategory('Comedy')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Comedy</button>
       <button onclick="filterCategory('tv')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Series</button>
@@ -584,6 +584,242 @@
     </footer>
   </div>
 
+  <!-- ========================================================================= -->
+  <!-- SCREEN: ANILILI ANIME DISCOVERY HUB                                       -->
+  <!-- ========================================================================= -->
+  <div id="screen-anime" class="screen-view hidden w-full overflow-x-hidden min-h-screen bg-[#08080a]">
+
+    <!-- Top Navigation Header for Anime Section -->
+    <header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-3.5 sm:px-6 md:px-14 py-3 sm:py-4 bg-gradient-to-b from-black/95 via-black/80 to-transparent backdrop-blur-md border-b border-white/5 transition-all">
+      <!-- Left: Mobile Nav Toggle + Brand Logo -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <button onclick="toggleMobileNav()" class="md:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all cursor-pointer shrink-0" aria-label="Toggle Navigation Menu">
+          <span class="material-symbols-outlined text-xl">menu</span>
+        </button>
+
+        <a href="#" onclick="showHome(); return false;" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#f5c518] tracking-tight hover:opacity-90 transition flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+          <span class="material-symbols-outlined text-2xl sm:text-3xl text-[#f5c518]">movie</span>
+          <span>Cineflow</span>
+        </a>
+        <span class="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#e50914] text-white tracking-widest uppercase shadow-md">ANIME</span>
+      </div>
+
+      <!-- Main Navigation Links (Desktop md+) -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
+        <a href="#" onclick="showHome(); return false;" class="text-white/80 hover:text-white transition">Home</a>
+        <a href="#" onclick="showHome(); filterCategory('tv'); return false;" class="text-white/80 hover:text-white transition">TV Shows</a>
+        <a href="#" onclick="showHome(); filterCategory('movie'); return false;" class="text-white/80 hover:text-white transition">Movies</a>
+        <a href="#" onclick="showAnimeSection(); return false;" class="text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold">Anime</a>
+      </nav>
+
+      <!-- Anime Search Input & Profile -->
+      <div class="flex items-center space-x-2 sm:space-x-4 relative">
+        <div class="relative flex items-center">
+          <input id="anime-search-input" 
+                 type="text" 
+                 placeholder="Search Anilili anime titles..." 
+                 class="bg-black/60 border border-white/20 text-xs rounded-full pl-8 sm:pl-9 pr-7 sm:pr-8 py-1.5 sm:py-2 focus:outline-none focus:border-[#f5c518] focus:ring-1 focus:ring-[#f5c518] w-36 xs:w-48 sm:w-64 md:w-80 transition-all placeholder-white/50 text-white"
+                 autocomplete="off"/>
+          <span class="material-symbols-outlined text-sm sm:text-base text-white/60 absolute left-2.5 sm:left-3 pointer-events-none">search</span>
+          <button id="anime-search-clear-btn" onclick="clearAnimeSearch()" class="hidden absolute right-2.5 sm:right-3 text-white/50 hover:text-white cursor-pointer">
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/30 bg-white/10 flex items-center justify-center text-white ring-2 ring-transparent hover:ring-[#f5c518] transition cursor-pointer shrink-0">
+          <span class="material-symbols-outlined text-base sm:text-lg">person</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ANIME SPOTLIGHT HERO BANNER -->
+    <section id="anime-hero-section" class="relative min-h-[500px] sm:min-h-[620px] md:min-h-[760px] flex flex-col justify-end overflow-hidden pb-8 sm:pb-12 pt-20 sm:pt-28 px-4 sm:px-6 md:px-14 transition-all duration-700">
+      <!-- Hero Background Graphic with Vignette -->
+      <div class="absolute inset-0 z-0">
+        <img id="anime-hero-bg-img" 
+             src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1920" 
+             alt="Anime Spotlight" 
+             class="w-full h-full object-cover object-center filter brightness-[0.68] contrast-[1.08] transition-all duration-700"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/65 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/75 to-transparent"></div>
+        <div class="crt-scanlines absolute inset-0 opacity-20 pointer-events-none"></div>
+      </div>
+
+      <!-- Hero Main Content Grid -->
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-end max-w-7xl">
+        <div class="lg:col-span-8 flex flex-col items-start space-y-3 sm:space-y-4">
+          <!-- Spotlight Badge Row -->
+          <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+            <span class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#e50914] text-white tracking-widest uppercase shadow-md">
+              ANILILI SPOTLIGHT
+            </span>
+            <span id="anime-hero-format-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-white/10 text-white/90 border border-white/15">
+              TV SERIES
+            </span>
+            <span id="anime-hero-audio-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#00dbe9]/20 text-[#00dbe9] border border-[#00dbe9]/30">
+              DUB & SUB
+            </span>
+          </div>
+
+          <!-- Hero Anime Title -->
+          <h1 id="anime-hero-title" class="text-3xl sm:text-5xl md:text-6xl font-anton text-white tracking-wider uppercase leading-none drop-shadow-2xl">
+            SOLO LEVELING
+          </h1>
+
+          <!-- Meta Row: Year, Duration, Score -->
+          <div class="flex items-center space-x-3 text-xs font-mono text-slate-300 flex-wrap gap-y-1">
+            <span id="anime-hero-year">2024</span>
+            <span>•</span>
+            <span id="anime-hero-episodes">12 Episodes</span>
+            <span>•</span>
+            <div class="flex items-center text-[#f5c518] space-x-1 font-bold">
+              <span>★</span>
+              <span id="anime-hero-score">8.9</span>
+            </div>
+            <span>•</span>
+            <span id="anime-hero-genres" class="text-[#00dbe9]">Action, Fantasy, Adventure</span>
+          </div>
+
+          <!-- Synopsis Paragraph -->
+          <p id="anime-hero-synopsis" class="text-xs sm:text-sm text-slate-300/90 leading-relaxed max-w-2xl line-clamp-3">
+            In a world where hunters must battle deadly monsters to protect humanity, Sung Jinwoo, notoriously known as the weakest hunter of all mankind, finds himself in a mysterious double dungeon.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button onclick="openAnimeHeroPlay()" class="bg-[#e50914] hover:bg-red-700 text-white font-bold text-xs uppercase px-7 sm:px-8 py-3 rounded-full flex items-center space-x-2 shadow-xl shadow-red-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
+              <span class="material-symbols-outlined text-base">play_arrow</span>
+              <span>WATCH NOW</span>
+            </button>
+            <button onclick="openAnimeHeroDetail()" class="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs uppercase px-5 sm:px-6 py-3 rounded-full flex items-center space-x-2 backdrop-blur-md border border-white/20 transition cursor-pointer">
+              <span class="material-symbols-outlined text-base">info</span>
+              <span>DETAILS & EPISODES</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side: Trending Anime Preview Stills Strip -->
+        <div class="lg:col-span-4 hidden lg:flex flex-col space-y-2.5">
+          <span class="text-[11px] font-mono font-bold tracking-widest uppercase text-white/50">TRENDING ON ANILILI</span>
+          <div id="anime-hero-stills-strip" class="grid grid-cols-4 gap-2">
+            <!-- Dynamically populated thumbnails -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GENRE FILTER PILLS BAR -->
+    <section class="py-4 px-4 sm:px-6 md:px-14 border-y border-white/10 bg-black/40 backdrop-blur-md sticky top-[57px] sm:top-[65px] z-30">
+      <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
+        <span class="text-xs font-mono font-bold text-white/40 uppercase tracking-wider shrink-0 mr-1">GENRES:</span>
+        <button onclick="filterAnimeGenre('All')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium bg-[#f5c518] text-black shrink-0 transition cursor-pointer">All</button>
+        <button onclick="filterAnimeGenre('Action')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Action</button>
+        <button onclick="filterAnimeGenre('Shounen')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Shounen</button>
+        <button onclick="filterAnimeGenre('Fantasy')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Fantasy</button>
+        <button onclick="filterAnimeGenre('Romance')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Romance</button>
+        <button onclick="filterAnimeGenre('Isekai')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Isekai</button>
+        <button onclick="filterAnimeGenre('Comedy')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Comedy</button>
+        <button onclick="filterAnimeGenre('Sci-Fi')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Sci-Fi</button>
+        <button onclick="filterAnimeGenre('Supernatural')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Supernatural</button>
+        <button onclick="filterAnimeGenre('Adventure')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Adventure</button>
+        <button onclick="filterAnimeGenre('Drama')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Drama</button>
+        <button onclick="filterAnimeGenre('Mystery')" class="anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer">Mystery</button>
+      </div>
+    </section>
+
+    <!-- DYNAMIC GENRE FILTER RESULTS SECTION (Hidden by default, shown when filtering) -->
+    <section id="anime-genre-results-section" class="hidden py-6 sm:py-8 px-4 sm:px-6 md:px-14">
+      <div class="flex items-center justify-between mb-4 sm:mb-5">
+        <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+          <span class="material-symbols-outlined text-[#f5c518]">filter_alt</span>
+          <span id="anime-genre-results-title">Genre Anime</span>
+        </h2>
+        <button onclick="filterAnimeGenre('All')" class="text-xs text-[#00dbe9] hover:underline cursor-pointer">Show All Catalog</button>
+      </div>
+      <div id="grid-anime-genre-results" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+    </section>
+
+    <!-- ANIME MAIN CATALOG DISCOVERY SECTIONS CONTAINER -->
+    <div id="anime-main-catalog-sections">
+      <!-- ROW 1: TRENDING ANIME CAROUSEL -->
+      <section class="py-6 sm:py-8 px-4 sm:px-6 md:px-14">
+        <div class="flex items-center justify-between mb-4 sm:mb-5">
+          <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+            <span class="material-symbols-outlined text-[#e50914]">local_fire_department</span>
+            <span>Trending Anime</span>
+          </h2>
+          <div class="flex items-center space-x-2">
+            <button onclick="scrollAnimeRow('carousel-anime-trending', -1)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer" aria-label="Scroll left">
+              <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </button>
+            <button onclick="scrollAnimeRow('carousel-anime-trending', 1)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer" aria-label="Scroll right">
+              <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+          </div>
+        </div>
+        <div id="carousel-anime-trending" class="flex space-x-3 sm:space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-1"></div>
+      </section>
+
+      <!-- ROW 2: POPULAR ANIME OF ALL TIME -->
+      <section class="py-6 sm:py-8 px-4 sm:px-6 md:px-14">
+        <div class="flex items-center justify-between mb-4 sm:mb-5">
+          <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+            <span class="material-symbols-outlined text-[#f5c518]">star</span>
+            <span>Popular Anime</span>
+          </h2>
+        </div>
+        <div id="grid-anime-popular" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+      </section>
+
+      <!-- ROW 3: TOP-RATED MASTERPIECES -->
+      <section class="py-6 sm:py-8 px-4 sm:px-6 md:px-14">
+        <div class="flex items-center justify-between mb-4 sm:mb-5">
+          <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+            <span class="material-symbols-outlined text-[#00dbe9]">military_tech</span>
+            <span>Top-Rated Anime</span>
+          </h2>
+        </div>
+        <div id="grid-anime-toprated" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+      </section>
+
+      <!-- ROW 4: CURRENTLY AIRING & SEASONAL -->
+      <section class="py-6 sm:py-8 px-4 sm:px-6 md:px-14">
+        <div class="flex items-center justify-between mb-4 sm:mb-5">
+          <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+            <span class="material-symbols-outlined text-[#22c55e]">sensors</span>
+            <span>Currently Airing & Seasonal</span>
+          </h2>
+        </div>
+        <div id="grid-anime-airing" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+      </section>
+
+      <!-- ROW 5: UPCOMING RELEASES -->
+      <section class="py-6 sm:py-8 px-4 sm:px-6 md:px-14">
+        <div class="flex items-center justify-between mb-4 sm:mb-5">
+          <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+            <span class="material-symbols-outlined text-purple-400">calendar_month</span>
+            <span>Upcoming Releases</span>
+          </h2>
+        </div>
+        <div id="grid-anime-upcoming" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+      </section>
+    </div>
+
+    <!-- ANIME FOOTER -->
+    <footer class="mt-14 sm:mt-20 border-t border-white/10 bg-black/95 pt-8 sm:pt-12 pb-12 sm:pb-16 px-4 sm:px-6 md:px-14">
+      <div class="flex flex-col sm:flex-row items-center justify-between pb-8 sm:pb-10 border-b border-white/10 gap-4 sm:gap-6">
+        <a class="text-2xl font-bold text-[#f5c518] tracking-tight flex items-center space-x-2" href="#" onclick="showHome(); return false;">
+          <span class="material-symbols-outlined text-2xl">movie</span>
+          <span>Cineflow</span>
+        </a>
+        <div class="flex items-center space-x-4 text-xs font-mono text-slate-400">
+          <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#00dbe9]">Anilili Discovery Engine</span>
+          <span class="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#f5c518]">Miruro Multi-Gateway</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
 
   <!-- ========================================================================= -->
   <!-- SCREEN 2: MOVIE & SERIES DETAIL (Atmospheric Backdrop + Arc Episode Dial)  -->
@@ -591,7 +827,7 @@
   <div id="screen-detail" class="screen-view hidden fixed inset-0 z-50 bg-black overflow-y-auto overflow-x-hidden">
     <!-- Back Header -->
     <header class="relative z-30 flex items-center justify-between px-4 sm:px-6 md:px-14 py-4 md:py-6 gap-3 bg-gradient-to-b from-black/90 via-black/50 to-transparent">
-      <button onclick="showHome()" class="flex items-center space-x-2 text-white/80 hover:text-white group px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition cursor-pointer shrink-0">
+      <button onclick="goBackFromDetail()" class="flex items-center space-x-2 text-white/80 hover:text-white group px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition cursor-pointer shrink-0">
         <span class="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">arrow_back</span>
         <span class="text-xs font-semibold tracking-wide">BACK TO BROWSE</span>
       </button>
@@ -727,8 +963,29 @@
           </div>
 
         </div>
-      </div>
     </main>
+
+    <!-- Related Titles & Franchise Section (For Anime & Media) -->
+    <section id="detail-relations-section" class="hidden relative z-20 px-4 sm:px-6 md:px-14 py-8 border-t border-white/10 max-w-7xl mx-auto w-full">
+      <div class="flex items-center justify-between mb-4 sm:mb-5">
+        <h3 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+          <span class="material-symbols-outlined text-[#f5c518]">hub</span>
+          <span>Related Series & Franchises</span>
+        </h3>
+      </div>
+      <div id="detail-relations-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+    </section>
+
+    <!-- Dynamic Recommendations Section -->
+    <section id="detail-recommendations-section" class="hidden relative z-20 px-4 sm:px-6 md:px-14 py-8 pb-16 border-t border-white/10 max-w-7xl mx-auto w-full">
+      <div class="flex items-center justify-between mb-4 sm:mb-5">
+        <h3 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+          <span class="material-symbols-outlined text-[#00dbe9]">auto_awesome</span>
+          <span>More Like This</span>
+        </h3>
+      </div>
+      <div id="detail-recommendations-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+    </section>
   </div>
 
 
@@ -865,6 +1122,14 @@
       <!-- BOTTOM TIMELINE SCRUBBER & DOCK CONTROL DECK -->
       <div class="flex flex-col w-full space-y-2 sm:space-y-3 pointer-events-auto">
         
+        <!-- Dynamic Skip Intro / Skip Outro Floating Action Button -->
+        <div class="flex justify-end w-full pointer-events-auto">
+          <button id="btn-skip-intro" class="hidden px-4 py-2 rounded-full bg-black/85 hover:bg-black text-white font-mono font-bold text-xs uppercase border border-[#00dbe9]/50 hover:border-[#00dbe9] shadow-[0_0_20px_rgba(0,219,233,0.4)] backdrop-blur-xl flex items-center space-x-2 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+            <span class="material-symbols-outlined text-sm text-[#00dbe9]">fast_forward</span>
+            <span id="skip-intro-text">SKIP INTRO</span>
+          </button>
+        </div>
+
         <!-- Precision Scrubber Bar (Zero flicker, loaded buffer bar, smooth touch drag) -->
         <div id="scrubber-container" class="relative w-full group py-3.5 sm:py-3 cursor-pointer select-none touch-none">
           <!-- Hover/Touch Tooltip -->
@@ -1220,6 +1485,23 @@
     let currentParsedCues = [];
     let activeSubtitleLang = 'off';
 
+    // Anilili Anime Engine State
+    let animeCatalog = {
+      spotlight: null,
+      trending: [],
+      popular: [],
+      topRated: [],
+      airing: [],
+      upcoming: []
+    };
+    let animeCatalogLoaded = false;
+    let currentAnimeHero = null;
+    let currentAnimeGenre = 'All';
+    let animeCacheById = {};
+    let currentEpisodeSkipTimes = [];
+    let lastBrowseView = 'home';
+    let animeSearchDebounceTimer = null;
+
     // Player State
     let currentOffsetSeconds = 0;
     let currentTotalSeconds = 0;
@@ -1244,26 +1526,53 @@
       setupCarouselScrollAndTouch();
       updateCarouselResponsiveScale();
 
-      // Direct testing route handler: ?play=dragonball or ?test=dragonball
+      // Check URL hash/params for direct routing
       const urlParams = new URLSearchParams(window.location.search);
       const playTarget = urlParams.get('play') || urlParams.get('test');
-      if (playTarget && (playTarget.toLowerCase().includes('dragon') || playTarget === '223')) {
+      const tabTarget = urlParams.get('tab') || urlParams.get('section');
+      
+      if (window.location.hash === '#anime' || tabTarget === 'anime') {
+        showAnimeSection();
+      } else if (playTarget && (playTarget.toLowerCase().includes('dragon') || playTarget === '223')) {
         setTimeout(playDragonBall, 350);
+      } else if (playTarget) {
+        setTimeout(() => showDetailView(playTarget), 350);
+      } else {
+        // Pre-fetch anime catalog in background for instant switching
+        setTimeout(loadAnimeCatalog, 400);
+      }
+    });
+
+    // History API popstate handler for smooth browser Back/Forward navigation
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.view) {
+        if (e.state.view === 'home') showHome(false);
+        else if (e.state.view === 'anime') showAnimeSection(false);
+        else if (e.state.view === 'detail' && e.state.subject) showDetailView(e.state.subject, false);
+      } else {
+        showHome(false);
       }
     });
 
     function playDragonBall() {
       const dbObj = {
         subjectId: 'dragonball',
+        rawId: 223,
+        id: 223,
         title: 'Dragon Ball',
         subjectName: 'Dragon Ball',
         subjectType: 2,
         year: '1986',
         duration: 1450,
+        score: '8.8',
+        genres: ['Action', 'Adventure', 'Comedy', 'Fantasy'],
         cover: { url: 'https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg' },
         thumbnail: 'https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg',
-        description: "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball."
+        description: "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball.",
+        isAnime: true
       };
+      animeCacheById['dragonball'] = dbObj;
+      animeCacheById['anime_223'] = dbObj;
       selectedSubject = dbObj;
       selectedSe = 1;
       selectedEp = 1;
@@ -1285,6 +1594,31 @@
     // -------------------------------------------------------------
     // NAVIGATION & VIEW SWITCHER
     // -------------------------------------------------------------
+    function updateNavLinks(activeTab) {
+      const navHome = document.getElementById('nav-home');
+      const navAnime = document.getElementById('nav-anime');
+      if (navHome && navAnime) {
+        if (activeTab === 'home') {
+          navHome.className = "text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold cursor-pointer";
+          navAnime.className = "text-white/80 hover:text-white transition cursor-pointer";
+        } else if (activeTab === 'anime') {
+          navHome.className = "text-white/80 hover:text-white transition cursor-pointer";
+          navAnime.className = "text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold cursor-pointer";
+        }
+      }
+      const navAnimeHome = document.getElementById('nav-anime-home');
+      const navAnimeAnime = document.getElementById('nav-anime-anime');
+      if (navAnimeHome && navAnimeAnime) {
+        if (activeTab === 'home') {
+          navAnimeHome.className = "text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold cursor-pointer";
+          navAnimeAnime.className = "text-white/80 hover:text-white transition cursor-pointer";
+        } else if (activeTab === 'anime') {
+          navAnimeHome.className = "text-white/80 hover:text-white transition cursor-pointer";
+          navAnimeAnime.className = "text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold cursor-pointer";
+        }
+      }
+    }
+
     function toggleMobileNav() {
       const drawer = document.getElementById('mobile-nav-drawer');
       const icon = document.getElementById('mobile-nav-icon');
@@ -1312,49 +1646,134 @@
       closeMobileNav();
       if (category === 'home') {
         showHome();
+      } else if (category === 'anime' || category === 'Anime') {
+        showAnimeSection();
       } else {
         filterCategory(category);
       }
     }
 
-    function showHome() {
+    function showHome(pushHistory = true) {
       closeMobileNav();
       currentView = 'home';
+      lastBrowseView = 'home';
       document.getElementById('screen-home').classList.remove('hidden');
+      const sAnime = document.getElementById('screen-anime');
+      if (sAnime) sAnime.classList.add('hidden');
       document.getElementById('screen-detail').classList.add('hidden');
       document.getElementById('screen-player').classList.add('hidden');
+      updateNavLinks('home');
       pausePlayer();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (pushHistory && window.history) {
+        history.pushState({ view: 'home' }, '', window.location.pathname);
+      }
     }
 
-    function showDetailView(subject) {
+    function showAnimeSection(pushHistory = true) {
+      closeMobileNav();
+      currentView = 'anime';
+      lastBrowseView = 'anime';
+      document.getElementById('screen-home').classList.add('hidden');
+      const sAnime = document.getElementById('screen-anime');
+      if (sAnime) sAnime.classList.remove('hidden');
+      document.getElementById('screen-detail').classList.add('hidden');
+      document.getElementById('screen-player').classList.add('hidden');
+      updateNavLinks('anime');
+      pausePlayer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (pushHistory && window.history) {
+        history.pushState({ view: 'anime' }, '', '#anime');
+      }
+      if (!animeCatalogLoaded) {
+        loadAnimeCatalog();
+      }
+      setupAnimeSearch();
+    }
+
+    function goBackFromDetail() {
+      if (lastBrowseView === 'anime' || selectedSubject?.isAnime || String(selectedSubject?.subjectId).startsWith('anime_')) {
+        showAnimeSection();
+      } else {
+        showHome();
+      }
+    }
+
+    function showDetailView(subject, pushHistory = true) {
+      closeMobileNav();
+      if (currentView !== 'detail') {
+        lastBrowseView = currentView;
+      }
+      currentView = 'detail';
+
+      // Terminate previous playback and unmount video stream immediately
+      pausePlayer();
+      const video = document.getElementById('videoElement');
+      if (video) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      }
+      isPlaying = false;
+      updatePlayIcons(false);
+
       if (typeof subject === 'string') {
-        const found = [...catalogMovies, ...catalogSeries].find(s => String(s.subjectId) === subject || String(s.id) === subject);
+        const found = [
+          ...catalogMovies,
+          ...catalogSeries,
+          ...(animeCatalog.trending || []),
+          ...(animeCatalog.popular || []),
+          ...(animeCatalog.topRated || []),
+          ...(animeCatalog.airing || []),
+          ...(animeCatalog.upcoming || [])
+        ].find(s => String(s.subjectId) === subject || String(s.id) === subject || String(s.rawId) === subject);
+
         if (found) {
           subject = found;
+        } else if (animeCacheById[subject]) {
+          subject = animeCacheById[subject];
         } else if (subject.toLowerCase().includes('dragon') || subject === '223') {
           subject = {
             subjectId: 'dragonball',
+            rawId: 223,
+            id: 223,
             title: 'Dragon Ball',
             subjectName: 'Dragon Ball',
             subjectType: 2,
             year: '1986',
             duration: 1450,
+            score: '8.8',
             cover: { url: 'https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg' },
             thumbnail: 'https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg',
-            description: "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball."
+            description: "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball.",
+            isAnime: true
+          };
+        } else if (subject.startsWith('anime_') || !isNaN(Number(subject))) {
+          const aid = subject.replace('anime_', '');
+          subject = {
+            subjectId: subject.startsWith('anime_') ? subject : `anime_${aid}`,
+            id: aid,
+            rawId: aid,
+            title: 'Anime Series',
+            subjectType: 2,
+            isAnime: true
           };
         } else {
           subject = { subjectId: subject, title: "Movie", subjectType: 1 };
         }
       }
-      closeMobileNav();
-      currentView = 'detail';
+
       selectedSubject = subject;
       document.getElementById('screen-home').classList.add('hidden');
+      const sAnime = document.getElementById('screen-anime');
+      if (sAnime) sAnime.classList.add('hidden');
       document.getElementById('screen-player').classList.add('hidden');
       document.getElementById('screen-detail').classList.remove('hidden');
-      pausePlayer();
+
+      if (pushHistory && window.history) {
+        history.pushState({ view: 'detail', subject }, '', `#detail=${subject.subjectId || subject.id}`);
+      }
+
       populateDetailScreen(subject);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1363,6 +1782,8 @@
       closeMobileNav();
       currentView = 'player';
       document.getElementById('screen-home').classList.add('hidden');
+      const sAnime = document.getElementById('screen-anime');
+      if (sAnime) sAnime.classList.add('hidden');
       document.getElementById('screen-detail').classList.add('hidden');
       document.getElementById('screen-player').classList.remove('hidden');
       updateSubtitlePosition();
@@ -1374,6 +1795,8 @@
       pausePlayer();
       if (selectedSubject) {
         showDetailView(selectedSubject);
+      } else if (lastBrowseView === 'anime') {
+        showAnimeSection();
       } else {
         showHome();
       }
@@ -1519,8 +1942,8 @@
       } else if (cat === 'movie') {
         renderCardsGrid('grid-most-viewed', catalogMovies.slice(0, 6));
       } else if (cat === 'anime' || cat === 'Anime') {
-        const animeList = catalogSeries.filter(s => (s.genre && s.genre.includes('Anime')) || s.corner === 'Anime' || (s.title && s.title.toLowerCase().includes('dragon')));
-        renderCardsGrid('grid-most-viewed', animeList.length ? animeList : catalogSeries.slice(0, 6));
+        showAnimeSection();
+        return;
       } else {
         renderCardsGrid('grid-most-viewed', [...catalogMovies.slice(0, 3), ...catalogSeries.slice(0, 3)]);
       }
@@ -1683,6 +2106,413 @@
       }
     }
 
+    // =============================================================
+    // ANILILI ANIME DISCOVERY & STREAMING CLIENT ENGINE
+    // =============================================================
+    async function loadAnimeCatalog() {
+      try {
+        const res = await fetch(apiUrl('/api/anime/catalog'));
+        const json = await res.json();
+        if (json.data) {
+          animeCatalog = json.data;
+          animeCatalogLoaded = true;
+
+          // Cache all items by ID for fast lookup
+          ['trending', 'popular', 'topRated', 'airing', 'upcoming'].forEach(key => {
+            (animeCatalog[key] || []).forEach(item => {
+              if (item.subjectId) animeCacheById[item.subjectId] = item;
+              if (item.id) animeCacheById[item.id] = item;
+              if (item.rawId) animeCacheById[item.rawId] = item;
+            });
+          });
+
+          // Populate Hero with Spotlight or #1 Trending item
+          const heroItem = animeCatalog.spotlight || animeCatalog.trending[0];
+          if (heroItem) {
+            populateAnimeHero(heroItem);
+          }
+
+          // Populate Hero Stills Strip
+          renderAnimeHeroStills(animeCatalog.trending || []);
+
+          // Populate Main Catalog Discovery Sections
+          renderAnimeRow('carousel-anime-trending', animeCatalog.trending || []);
+          renderAnimeGrid('grid-anime-popular', (animeCatalog.popular || []).slice(0, 12));
+          renderAnimeGrid('grid-anime-toprated', (animeCatalog.topRated || []).slice(0, 12));
+          renderAnimeGrid('grid-anime-airing', (animeCatalog.airing || []).slice(0, 12));
+          renderAnimeGrid('grid-anime-upcoming', (animeCatalog.upcoming || []).slice(0, 12));
+        }
+      } catch (err) {
+        console.error("Failed to load anime catalog:", err);
+      }
+    }
+
+    function populateAnimeHero(item) {
+      if (!item) return;
+      currentAnimeHero = item;
+      const title = item.title || item.subjectName || "Anime Spotlight";
+      const format = item.format || "TV SERIES";
+      const year = item.year || "2024";
+      const episodes = item.episodes ? `${item.episodes} Episodes` : (item.status === 'RELEASING' ? 'Currently Airing' : 'Full Series');
+      const score = item.score ? String(item.score) : "8.8";
+      const genres = Array.isArray(item.genres) ? item.genres.slice(0, 3).join(", ") : (item.genre || "Action, Fantasy");
+      const synopsis = item.synopsis || item.description || "Stream the latest episodes in ultra-crisp resolution with seamless dubbing and subtitle choices.";
+      const banner = item.banner || item.backdrop || item.cover?.url || item.thumbnail || "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1920";
+
+      const heroTitleEl = document.getElementById('anime-hero-title');
+      if (heroTitleEl) heroTitleEl.textContent = title;
+
+      const heroFormatEl = document.getElementById('anime-hero-format-badge');
+      if (heroFormatEl) heroFormatEl.textContent = format.toUpperCase();
+
+      const heroYearEl = document.getElementById('anime-hero-year');
+      if (heroYearEl) heroYearEl.textContent = year;
+
+      const heroEpEl = document.getElementById('anime-hero-episodes');
+      if (heroEpEl) heroEpEl.textContent = episodes;
+
+      const heroScoreEl = document.getElementById('anime-hero-score');
+      if (heroScoreEl) heroScoreEl.textContent = score;
+
+      const heroGenresEl = document.getElementById('anime-hero-genres');
+      if (heroGenresEl) heroGenresEl.textContent = genres;
+
+      const heroSynEl = document.getElementById('anime-hero-synopsis');
+      if (heroSynEl) heroSynEl.textContent = synopsis;
+
+      const heroBgEl = document.getElementById('anime-hero-bg-img');
+      if (heroBgEl) {
+        heroBgEl.style.opacity = '0.4';
+        setTimeout(() => {
+          heroBgEl.src = banner;
+          heroBgEl.style.opacity = '1';
+        }, 150);
+      }
+    }
+
+    function renderAnimeHeroStills(items) {
+      const strip = document.getElementById('anime-hero-stills-strip');
+      if (!strip) return;
+      strip.innerHTML = '';
+
+      items.slice(0, 4).forEach((item, idx) => {
+        const img = item.cover?.url || item.thumbnail || item.banner;
+        if (!img) return;
+        const div = document.createElement('div');
+        div.className = `overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer hover:border-[#f5c518] hover:scale-105 transition-all duration-200 relative shadow-md`;
+        div.innerHTML = `
+          <img src="${img}" alt="${escapeHtml(item.title || '')}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300"/>
+          <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors flex items-center justify-center">
+            <span class="material-symbols-outlined text-white text-base opacity-0 group-hover:opacity-100 transition-opacity">visibility</span>
+          </div>
+        `;
+        div.onclick = () => {
+          populateAnimeHero(item);
+        };
+        strip.appendChild(div);
+      });
+    }
+
+    function openAnimeHeroPlay() {
+      if (currentAnimeHero) {
+        showDetailView(currentAnimeHero);
+      }
+    }
+
+    function openAnimeHeroDetail() {
+      if (currentAnimeHero) {
+        showDetailView(currentAnimeHero);
+      }
+    }
+
+    function renderAnimeCard(item, isCarousel = false) {
+      const title = item.title || item.subjectName || "Anime";
+      const year = item.year || "2024";
+      const poster = item.cover?.url || item.thumbnail || "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400";
+      const score = item.score ? String(item.score) : "8.5";
+      const episodes = item.episodes ? `${item.episodes} Eps` : (item.status === 'RELEASING' ? 'Airing' : 'Anime');
+      const format = item.format || 'TV';
+
+      const card = document.createElement('article');
+      card.className = isCarousel
+        ? "flex-none w-36 sm:w-44 md:w-48 flex flex-col group cursor-pointer transform hover:-translate-y-1 transition duration-200"
+        : "flex flex-col group cursor-pointer transform hover:-translate-y-1 transition duration-200";
+
+      card.innerHTML = `
+        <div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+          <img src="${poster}" alt="${escapeHtml(title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy"/>
+          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <div class="w-10 h-10 rounded-full bg-[#e50914] text-white flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition duration-200">
+              <span class="material-symbols-outlined text-2xl">play_arrow</span>
+            </div>
+          </div>
+          <div class="absolute top-2 left-2 z-10 pointer-events-none">
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#e50914] text-white shadow-sm">
+              ${escapeHtml(format)}
+            </span>
+          </div>
+          <div class="absolute top-2 right-2 z-10 pointer-events-none">
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-black/75 backdrop-blur-md text-[#f5c518] border border-white/15 flex items-center space-x-0.5">
+              <span>★</span><span>${escapeHtml(score)}</span>
+            </span>
+          </div>
+          <div class="absolute bottom-2 right-2 z-10 pointer-events-none">
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-black/75 backdrop-blur-md text-white/90 border border-white/10">
+              ${escapeHtml(episodes)}
+            </span>
+          </div>
+        </div>
+        <h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">${escapeHtml(title)}</h3>
+        <p class="text-[11px] text-white/50">${year} • ${format}</p>
+      `;
+
+      card.onclick = () => showDetailView(item);
+      return card;
+    }
+
+    function renderAnimeRow(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      items.forEach(item => {
+        container.appendChild(renderAnimeCard(item, true));
+      });
+    }
+
+    function renderAnimeGrid(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      items.forEach(item => {
+        container.appendChild(renderAnimeCard(item, false));
+      });
+    }
+
+    function scrollAnimeRow(containerId, direction) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const scrollAmount = direction * 420;
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+
+    async function filterAnimeGenre(genre) {
+      currentAnimeGenre = genre;
+      const pills = document.querySelectorAll('.anime-genre-pill');
+      pills.forEach(p => {
+        if (p.textContent.trim().toLowerCase() === genre.toLowerCase()) {
+          p.className = 'anime-genre-pill px-4 py-1.5 rounded-full text-xs font-semibold bg-[#f5c518] text-black shrink-0 transition cursor-pointer shadow-md';
+        } else {
+          p.className = 'anime-genre-pill px-4 py-1.5 rounded-full text-xs font-medium border border-white/20 text-white/80 hover:bg-white/10 hover:text-white shrink-0 transition cursor-pointer';
+        }
+      });
+
+      const mainSections = document.getElementById('anime-main-catalog-sections');
+      const genreSection = document.getElementById('anime-genre-results-section');
+      const genreGrid = document.getElementById('grid-anime-genre-results');
+      const genreTitle = document.getElementById('anime-genre-results-title');
+
+      if (genre === 'All') {
+        if (genreSection) genreSection.classList.add('hidden');
+        if (mainSections) mainSections.classList.remove('hidden');
+        return;
+      }
+
+      if (mainSections) mainSections.classList.add('hidden');
+      if (genreSection) genreSection.classList.remove('hidden');
+      if (genreTitle) genreTitle.textContent = `${genre} Anime`;
+      if (genreGrid) {
+        genreGrid.innerHTML = `
+          <div class="col-span-full py-12 flex flex-col items-center justify-center space-y-3 text-white/60">
+            <span class="material-symbols-outlined text-3xl animate-spin text-[#f5c518]">progress_activity</span>
+            <span class="text-xs font-mono">Discovering ${escapeHtml(genre)} titles from Anilili...</span>
+          </div>
+        `;
+      }
+
+      try {
+        const res = await fetch(apiUrl(`/api/anime/search?genre=${encodeURIComponent(genre)}`));
+        const json = await res.json();
+        const results = json.data?.results || json.data?.items || [];
+
+        if (genreGrid) {
+          genreGrid.innerHTML = '';
+          if (results.length === 0) {
+            genreGrid.innerHTML = `
+              <div class="col-span-full py-12 text-center text-white/50 text-xs">
+                No anime found for "${escapeHtml(genre)}".
+              </div>
+            `;
+          } else {
+            results.forEach(item => {
+              genreGrid.appendChild(renderAnimeCard(item, false));
+              if (item.subjectId) animeCacheById[item.subjectId] = item;
+            });
+          }
+        }
+      } catch (e) {
+        if (genreGrid) {
+          genreGrid.innerHTML = `
+            <div class="col-span-full py-12 text-center text-red-400 text-xs">
+              Failed to load genre titles. Please try again.
+            </div>
+          `;
+        }
+      }
+    }
+
+    function setupAnimeSearch() {
+      const input = document.getElementById('anime-search-input');
+      const clearBtn = document.getElementById('anime-search-clear-btn');
+      if (!input || input.dataset.setup) return;
+      input.dataset.setup = 'true';
+
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.trim();
+        if (clearBtn) clearBtn.classList.toggle('hidden', val.length === 0);
+
+        clearTimeout(animeSearchDebounceTimer);
+        if (val.length === 0) {
+          filterAnimeGenre(currentAnimeGenre);
+          return;
+        }
+
+        animeSearchDebounceTimer = setTimeout(async () => {
+          const mainSections = document.getElementById('anime-main-catalog-sections');
+          const genreSection = document.getElementById('anime-genre-results-section');
+          const genreGrid = document.getElementById('grid-anime-genre-results');
+          const genreTitle = document.getElementById('anime-genre-results-title');
+
+          if (mainSections) mainSections.classList.add('hidden');
+          if (genreSection) genreSection.classList.remove('hidden');
+          if (genreTitle) genreTitle.textContent = `Search: "${val}"`;
+          if (genreGrid) {
+            genreGrid.innerHTML = `
+              <div class="col-span-full py-12 flex flex-col items-center justify-center space-y-3 text-white/60">
+                <span class="material-symbols-outlined text-3xl animate-spin text-[#f5c518]">progress_activity</span>
+                <span class="text-xs font-mono">Searching Anilili for "${escapeHtml(val)}"...</span>
+              </div>
+            `;
+          }
+
+          try {
+            const res = await fetch(apiUrl(`/api/anime/search?keyword=${encodeURIComponent(val)}`));
+            const json = await res.json();
+            const results = json.data?.results || json.data?.items || [];
+
+            if (genreGrid) {
+              genreGrid.innerHTML = '';
+              if (results.length === 0) {
+                genreGrid.innerHTML = `
+                  <div class="col-span-full py-12 text-center text-white/50 text-xs">
+                    No anime found matching "${escapeHtml(val)}".
+                  </div>
+                `;
+              } else {
+                results.forEach(item => {
+                  genreGrid.appendChild(renderAnimeCard(item, false));
+                  if (item.subjectId) animeCacheById[item.subjectId] = item;
+                });
+              }
+            }
+          } catch (err) {
+            if (genreGrid) {
+              genreGrid.innerHTML = `
+                <div class="col-span-full py-12 text-center text-red-400 text-xs">
+                  Error searching titles. Please try again.
+                </div>
+              `;
+            }
+          }
+        }, 300);
+      });
+    }
+
+    function clearAnimeSearch() {
+      const input = document.getElementById('anime-search-input');
+      const clearBtn = document.getElementById('anime-search-clear-btn');
+      if (input) input.value = '';
+      if (clearBtn) clearBtn.classList.add('hidden');
+      filterAnimeGenre(currentAnimeGenre);
+    }
+
+    // Detail Screen Relations & Recommendations Renderers
+    function renderDetailRelations(relations) {
+      const section = document.getElementById('detail-relations-section');
+      const grid = document.getElementById('detail-relations-grid');
+      if (!section || !grid) return;
+
+      if (!relations || relations.length === 0) {
+        section.classList.add('hidden');
+        grid.innerHTML = '';
+        return;
+      }
+
+      section.classList.remove('hidden');
+      grid.innerHTML = '';
+      relations.slice(0, 12).forEach(item => {
+        grid.appendChild(createMediaCardElement(item));
+        if (item.subjectId) animeCacheById[item.subjectId] = item;
+      });
+    }
+
+    function renderDetailRecommendations(recommendations) {
+      const section = document.getElementById('detail-recommendations-section');
+      const grid = document.getElementById('detail-recommendations-grid');
+      if (!section || !grid) return;
+
+      if (!recommendations || recommendations.length === 0) {
+        section.classList.add('hidden');
+        grid.innerHTML = '';
+        return;
+      }
+
+      section.classList.remove('hidden');
+      grid.innerHTML = '';
+      recommendations.slice(0, 12).forEach(item => {
+        grid.appendChild(createMediaCardElement(item));
+        if (item.subjectId) animeCacheById[item.subjectId] = item;
+      });
+    }
+
+    function createMediaCardElement(item) {
+      const title = item.title || item.subjectName || "Anime";
+      const year = item.year || "2024";
+      const poster = item.cover?.url || item.thumbnail || "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400";
+      const relationType = item.relationType ? item.relationType.replace(/_/g, ' ') : '';
+      const score = item.score ? String(item.score) : '';
+
+      const card = document.createElement('article');
+      card.className = "flex flex-col group cursor-pointer transform hover:-translate-y-1 transition duration-200";
+      card.innerHTML = `
+        <div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+          <img src="${poster}" alt="${escapeHtml(title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy"/>
+          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <div class="w-10 h-10 rounded-full bg-[#f5c518] text-black flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition duration-200">
+              <span class="material-symbols-outlined text-2xl">play_arrow</span>
+            </div>
+          </div>
+          ${relationType ? `
+            <div class="absolute top-2 left-2 z-10 pointer-events-none">
+              <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[#00dbe9]/85 text-black uppercase shadow-sm">
+                ${escapeHtml(relationType)}
+              </span>
+            </div>
+          ` : ''}
+          ${score ? `
+            <div class="absolute top-2 right-2 z-10 pointer-events-none">
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-black/75 backdrop-blur-md text-[#f5c518] border border-white/15 flex items-center space-x-0.5">
+                <span>★</span><span>${escapeHtml(score)}</span>
+              </span>
+            </div>
+          ` : ''}
+        </div>
+        <h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">${escapeHtml(title)}</h3>
+        <p class="text-[11px] text-white/50">${year} • ${item.format || 'Anime'}</p>
+      `;
+      card.onclick = () => showDetailView(item);
+      return card;
+    }
+
     // Global Dub Tracking
     let activeRootSubjectId = null;
     let activePlaybackSubjectId = null;
@@ -1711,15 +2541,30 @@
       document.getElementById('detail-synopsis').textContent = subject.description || subject.synopsis || "Streaming now in cinematic high definition.";
       document.getElementById('detail-btn-play-label').textContent = "WATCH NOW";
 
+      // Reset relations and recommendations initially
+      renderDetailRelations([]);
+      renderDetailRecommendations([]);
+
       // Fetch Full Subject Details from API
       try {
         const res = await fetch(apiUrl(`/api/subject/${subjectId}`));
         const data = await res.json();
         const sub = data.data?.subject || data.data || {};
-        if (sub.description) document.getElementById('detail-synopsis').textContent = sub.description;
-        if (sub.genres) document.getElementById('detail-genres').textContent = sub.genres.join(", ");
+        if (sub.title || sub.subjectName) document.getElementById('detail-title').textContent = sub.title || sub.subjectName;
+        if (sub.description || sub.synopsis) document.getElementById('detail-synopsis').textContent = sub.description || sub.synopsis;
+        if (sub.genres) document.getElementById('detail-genres').textContent = Array.isArray(sub.genres) ? sub.genres.join(", ") : sub.genres;
         if (sub.duration) document.getElementById('detail-runtime').textContent = formatTime(sub.duration);
-      } catch (e) {}
+        if (sub.banner || sub.backdrop || sub.cover?.url || sub.thumbnail) {
+          const bg = sub.banner || sub.backdrop || sub.cover?.url || sub.thumbnail;
+          document.getElementById('detail-bg-img').src = bg;
+        }
+
+        renderDetailRelations(sub.relations || []);
+        renderDetailRecommendations(sub.recommendations || []);
+      } catch (e) {
+        renderDetailRelations([]);
+        renderDetailRecommendations([]);
+      }
 
       // Fetch Dubbing Tracks from API
       try {
@@ -1844,41 +2689,73 @@
       }
       carouselFallbackThumb = fallbackPoster || '';
 
+      const isAnime = String(subjectId).startsWith('anime_') || (selectedSubject && selectedSubject.isAnime) || subjectId === 'dragonball' || subjectId === '223';
+
       try {
-        const res = await fetch(apiUrl(`/api/seasons/${subjectId}`));
-        const json = await res.json();
-        let seasons = json.data?.seasons || [];
+        let seasons = [];
+        let animeEpisodes = null;
+
+        if (isAnime) {
+          try {
+            const epRes = await fetch(apiUrl(`/api/anime/episodes/${subjectId}`));
+            const epJson = await epRes.json();
+            if (epJson.data && epJson.data.episodes && epJson.data.episodes.length > 0) {
+              animeEpisodes = epJson.data.episodes;
+              seasons = [{ se: 1, maxEp: animeEpisodes.length }];
+            }
+          } catch (e) {
+            console.error("Failed to load anime episodes:", e);
+          }
+        }
 
         if (!seasons || seasons.length === 0) {
-          seasons = [{ se: 1, maxEp: 8 }];
+          const res = await fetch(apiUrl(`/api/seasons/${subjectId}`));
+          const json = await res.json();
+          seasons = json.data?.seasons || [];
+
+          if (!seasons || seasons.length === 0) {
+            seasons = [{ se: 1, maxEp: 8 }];
+          }
         }
 
         allSeriesSeasons = seasons;
         seriesEpisodesBySeason = {};
 
-        // Efficiently prepare episode metadata & thumbnails for all seasons
         const epDuration = (selectedSubject && selectedSubject.duration) ? formatTime(selectedSubject.duration) : "24 MIN";
         const seriesSynopsis = (selectedSubject && (selectedSubject.description || selectedSubject.synopsis)) ? selectedSubject.description || selectedSubject.synopsis : "";
 
-        seasons.forEach(s => {
-          const seNum = s.se || 1;
-          const maxEp = s.maxEp || 8;
-          const epList = [];
-          for (let i = 1; i <= maxEp; i++) {
-            const isDbEp1 = (subjectId === 'dragonball' || subjectId === '223') && i === 1;
-            epList.push({
-              se: seNum,
-              epNumber: i,
-              title: isDbEp1 ? "01. Secret of the Dragon Balls" : `${String(i).padStart(2, '0')}. Episode ${i}`,
-              runtime: isDbEp1 ? "24 MIN" : epDuration,
-              synopsis: isDbEp1 
-                ? "Goku, an extraordinary boy living alone in Mount Paozu, meets Bulma, a city girl on a quest to gather all seven legendary Dragon Balls."
-                : (seriesSynopsis ? (seriesSynopsis.slice(0, 85) + '...') : `Episode ${i} of Season ${seNum}`),
-              thumbnail: fallbackPoster || carouselFallbackThumb || "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400"
-            });
-          }
-          seriesEpisodesBySeason[seNum] = epList;
-        });
+        if (animeEpisodes && animeEpisodes.length > 0) {
+          seriesEpisodesBySeason[1] = animeEpisodes.map(ep => ({
+            se: ep.se || 1,
+            epNumber: ep.epNumber || ep.number,
+            title: ep.title || `${String(ep.epNumber).padStart(2, '0')}. Episode ${ep.epNumber}`,
+            runtime: ep.runtime || "24 MIN",
+            synopsis: ep.synopsis || `Episode ${ep.epNumber}`,
+            thumbnail: ep.thumbnail || fallbackPoster || carouselFallbackThumb,
+            skip_times: ep.skip_times || []
+          }));
+        } else {
+          seasons.forEach(s => {
+            const seNum = s.se || 1;
+            const maxEp = s.maxEp || 8;
+            const epList = [];
+            for (let i = 1; i <= maxEp; i++) {
+              const isDbEp1 = (subjectId === 'dragonball' || subjectId === '223') && i === 1;
+              epList.push({
+                se: seNum,
+                epNumber: i,
+                title: isDbEp1 ? "01. Secret of the Dragon Balls" : `${String(i).padStart(2, '0')}. Episode ${i}`,
+                runtime: isDbEp1 ? "24 MIN" : epDuration,
+                synopsis: isDbEp1 
+                  ? "Goku, an extraordinary boy living alone in Mount Paozu, meets Bulma, a city girl on a quest to gather all seven legendary Dragon Balls."
+                  : (seriesSynopsis ? (seriesSynopsis.slice(0, 85) + '...') : `Episode ${i} of Season ${seNum}`),
+                thumbnail: fallbackPoster || carouselFallbackThumb || "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400",
+                skip_times: []
+              });
+            }
+            seriesEpisodesBySeason[seNum] = epList;
+          });
+        }
 
         // Set active season & carousel items
         activeDrawerSeason = selectedSe || 1;
@@ -1896,7 +2773,8 @@
               title: `${String(i).padStart(2, '0')}. Episode ${i}`,
               runtime: epDuration,
               synopsis: `Episode ${i} of Season ${activeDrawerSeason}`,
-              thumbnail: fallbackPoster || carouselFallbackThumb
+              thumbnail: fallbackPoster || carouselFallbackThumb,
+              skip_times: []
             });
           }
         }
@@ -2097,6 +2975,13 @@
       selectedEp = epNum;
       selectedSe = seNum;
 
+      // Update active skip times for this episode
+      const epList = seriesEpisodesBySeason[seNum] || [];
+      const currentEpObj = epList.find(e => e.epNumber === epNum);
+      currentEpisodeSkipTimes = currentEpObj?.skip_times || [];
+      const skipBtn = document.getElementById('btn-skip-intro');
+      if (skipBtn) skipBtn.classList.add('hidden');
+
       // Update Player Header Badges
       const epBadge = document.getElementById('player-header-ep');
       const formattedEp = String(epNum).padStart(2, '0');
@@ -2208,6 +3093,14 @@
     function selectEpisodeFromCarousel(epNum, epTitle) {
       selectedEp = epNum;
       selectedSe = activeDrawerSeason || 1;
+
+      // Update active skip times for this episode
+      const epList = seriesEpisodesBySeason[selectedSe] || [];
+      const currentEpObj = epList.find(e => e.epNumber === epNum);
+      currentEpisodeSkipTimes = currentEpObj?.skip_times || [];
+      const skipBtn = document.getElementById('btn-skip-intro');
+      if (skipBtn) skipBtn.classList.add('hidden');
+
       document.getElementById('detail-active-ep-badge').textContent = `PART 0${epNum} — ${epTitle.toUpperCase()}`;
       renderSemicircularStage();
       renderDrawerEpisodes();
@@ -2492,6 +3385,13 @@
         if (drawerBtn) drawerBtn.classList.add('hidden');
         if (hamburgerBtn) hamburgerBtn.classList.add('hidden');
       }
+
+      // Retrieve skip_times if available for this episode
+      const epList = seriesEpisodesBySeason[selectedSe] || [];
+      const currentEpObj = epList.find(e => e.epNumber === selectedEp);
+      currentEpisodeSkipTimes = currentEpObj?.skip_times || [];
+      const skipBtn = document.getElementById('btn-skip-intro');
+      if (skipBtn) skipBtn.classList.add('hidden');
 
       // Display active dub label
       const activeLabel = activeDubItem ? activeDubItem.lanName : "Original Audio";
@@ -2787,6 +3687,35 @@
       document.getElementById('timeCurrent').textContent = formatTime(targetSec);
     }
 
+    function checkSkipIntroOutro(currentTime) {
+      const btn = document.getElementById('btn-skip-intro');
+      const label = document.getElementById('skip-intro-text');
+      if (!btn || !label) return;
+
+      if (!currentEpisodeSkipTimes || currentEpisodeSkipTimes.length === 0) {
+        btn.classList.add('hidden');
+        return;
+      }
+
+      const activeSkip = currentEpisodeSkipTimes.find(s => 
+        currentTime >= (s.start_seconds || s.start || 0) && currentTime <= (s.end_seconds || s.end || 0)
+      );
+
+      if (activeSkip) {
+        btn.classList.remove('hidden');
+        const isEd = activeSkip.kind && activeSkip.kind.toLowerCase().includes('ed');
+        label.textContent = isEd ? "SKIP OUTRO" : "SKIP INTRO";
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          const target = (activeSkip.end_seconds || activeSkip.end || currentTime) + 1;
+          seekPlayerToSeconds(target);
+          btn.classList.add('hidden');
+        };
+      } else {
+        btn.classList.add('hidden');
+      }
+    }
+
     function setupPlayerMediaEvents() {
       const video = document.getElementById('videoElement');
 
@@ -2804,6 +3733,9 @@
 
         // Real-time subtitle cue tracking
         renderActiveSubtitle(absoluteCurrent);
+
+        // Dynamic Skip Intro / Outro Check
+        checkSkipIntroOutro(absoluteCurrent);
       });
 
       // Accurate Buffered Progress Bar

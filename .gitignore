@@ -14,8 +14,9 @@ rea/
 scratch/
 .tempmediaStorage/
 
-# Zip archives
+# Zip archives & Binaries
 *.zip
+*.apk
 
 # Local IDE & OS files
 .vscode/

@@ -111,95 +111,87 @@ def srt_to_vtt(srt_text):
     return "\n".join(vtt)
 
 # ==============================================================================
-# ANILILI / MIRURO ANIME STREAMING ENGINE (DRAGON BALL & ANIME INTEGRATION)
 # ==============================================================================
+# ANILILI / MIRURO ANIME STREAMING & METADATA ENGINE INTEGRATION
+# ==============================================================================
+import anime_engine
+
 DRAGONBALL_IDS = {"dragonball", "223", "dragonball_dub", "dragonball_sub", "rqxAbYshiv3CtbJ4cetuZ-yKIe2Cyjqr"}
 
 DRAGONBALL_CARD = {
     "subjectId": "dragonball",
+    "rawId": 223,
+    "id": 223,
     "title": "Dragon Ball",
     "subjectName": "Dragon Ball",
-    "subjectType": 2,  # TV Series
+    "subjectType": 2,
     "year": "1986",
-    "releaseDate": "1986-02-26",
-    "genre": "Animation, Action & Adventure, Comedy, Anime",
-    "genres": ["Animation", "Action & Adventure", "Comedy", "Anime"],
-    "score": "8.8",
-    "cover": {
-        "url": "https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg"
-    },
-    "thumbnail": "https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg",
-    "description": "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball. Together, they embark on an epic quest across the world.",
-    "synopsis": "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball.",
     "duration": 1450,
-    "corner": "Anime",
-    "country": "Japan"
+    "score": 8.8,
+    "cover": {"url": "https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg"},
+    "thumbnail": "https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg",
+    "description": "Bulma is a girl in search of the legendary Dragon Balls that say when all seven are gathered, one's wish will come true. She meets Goku, an extraordinary boy living in Mount Paozu who possesses the four-star Dragon Ball.",
+    "isAnime": True
 }
 
-_db_stream_cache = {}
+def is_anime_subject(subject_id: str) -> bool:
+    s = str(subject_id).lower()
+    return s.startswith("anime_") or s in DRAGONBALL_IDS or "dragonball" in s
 
-def resolve_dragonball_stream(ep=1, is_dub=True):
-    """
-    Dynamically resolves Dragon Ball episode stream from Miruro/Anilili reverse-engineered API with resilient fallback.
-    """
-    cache_key = f"{ep}_{is_dub}"
-    now = time.time()
-    if cache_key in _db_stream_cache:
-        cached_time, cached_val = _db_stream_cache[cache_key]
-        if now - cached_time < 1800:
-            return cached_val
-            
+def parse_anime_id(subject_id: str) -> int:
+    s = str(subject_id).lower()
+    if s in DRAGONBALL_IDS or "dragonball" in s:
+        return 223
+    cleaned = s.replace("anime_", "").replace("_dub", "").replace("_sub", "")
     try:
-        host = "https://www.miruro.bz"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-            "Referer": "https://www.miruro.bz/",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Accept": "application/json, application/octet-stream;q=0.9, */*;q=0.8"
-        }
-        miruro_id = "rqxAbYshiv3CtbJ4cetuZ-yKIe2Cyjqr"
-        url = f"{host}/api/v1/anime/{miruro_id}/episodes/{ep}/play"
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=7) as r:
-            ct = r.headers.get("Content-Type", "")
-            raw = r.read()
-            if "application/octet-stream" in ct:
-                key = b"miruro/catalog"
-                decrypted = bytes([b ^ key[i % len(key)] for i, b in enumerate(raw)])
-                payload_str = gzip.decompress(decrypted).decode("utf-8")
-            else:
-                payload_str = raw.decode("utf-8")
-            payload = json.loads(payload_str)
-            wanted_track = "dub" if is_dub else "sub"
-            for t in payload.get("tracks", []):
-                if t.get("track") == wanted_track:
-                    for p in t.get("providers", []):
-                        if p.get("provider") == "icarus":
-                            for s in p.get("servers", []):
-                                if s.get("streams"):
-                                    st_url = s["streams"][0]["url"]
-                                    h = s.get("headers", {})
-                                    res = {
-                                        "url": st_url,
-                                        "origin": h.get("Origin", "https://ultracloud.cc"),
-                                        "referer": h.get("Referer", "https://ultracloud.cc/")
-                                    }
-                                    _db_stream_cache[cache_key] = (now, res)
-                                    return res
+        return int(cleaned)
+    except Exception:
+        return 223
+
+@app.route("/api/anime/catalog")
+def api_anime_catalog():
+    try:
+        catalog = anime_engine.get_anime_catalog()
+        return jsonify({"code": 0, "data": catalog})
     except Exception as e:
-        print(f"[Miruro API] Resolver fallback for Dragon Ball ep {ep}: {e}")
+        return jsonify({"code": 500, "message": str(e)}), 500
+
+@app.route("/api/anime/search")
+def api_anime_search():
+    keyword = request.args.get("keyword", request.args.get("q", "")).strip()
+    genre = request.args.get("genre", "").strip()
+    try:
+        page = int(request.args.get("page", "1"))
+    except Exception:
+        page = 1
+    try:
+        per_page = int(request.args.get("perPage", "18"))
+    except Exception:
+        per_page = 18
         
-    fallback_url = (
-        "https://fielddewice-31.trail29.top/m/ASBoHpTyH_HbHf1LpHCUWXZQ3NxDMFrGpi3cn8UMpHLxd2TW8nrT_jE_yWnSflFed1nr-Hv-wERqQclSHMZlN_Sj-nHE1ziZ23UupVFLjlIAcfmithVDi6hiUZXo-sLadDj90kQOda_LQAPOke5et4DOPla_O-w4joTGpkAHoChWdO3cp-TmbHfLpeaaurQoVBEcw7vQb9L3TcSdQNu0nzWpc-ZIPB1dXleliaRBMKXLQAvzQAokJ2Y9ZVyqATGFGFSy8wIy-ruVO4Z3D_dQcQw3n6IOHJY13ziXZvBfp6d_vOA9QIHNXAa6V7DBeokLLpT2StVW5bjBOA.m3u8"
-        if is_dub else
-        "https://fielddewice-31.trail29.top/m/AeqxIUu7M8m38YU__LyelHX8KQQH46IrAuoPcxord_g9333dUP7KWF4XrW2eRskRHVS5JoJj93gPDodBzZuwcXUibciMbtDXonFhRrZb1qHK3CiG6zNn5BmGUsC4JBDVZDjb4ab0PSwh-NmtRZB3DfFMouwmYtLgbeG-DRaK3N361W-xrEak0nm16Het8FY-fw_P8BzvAcOKRqFTsjoZW4aG09hjxVMhFYTcrbkCwBaf-JukPE8EFtqsRRCZeXf3cECTTX4qzj9jhjMLwR-AI1dGFbDv_pO1a1IdaB47yxTyUGk1SRkU6FX17m9syo4EwMC0c_mtUmrDYw.m3u8"
-    )
-    return {
-        "url": fallback_url,
-        "origin": "https://ultracloud.cc",
-        "referer": "https://ultracloud.cc/"
-    }
+    try:
+        items = anime_engine.search_anime(keyword=keyword, genre=genre, page=page, per_page=per_page)
+        return jsonify({"code": 0, "data": {"items": items, "results": items}})
+    except Exception as e:
+        return jsonify({"code": 500, "message": str(e), "data": {"items": [], "results": []}}), 500
+
+@app.route("/api/anime/details/<path:subject_id>")
+def api_anime_details(subject_id):
+    try:
+        aid = parse_anime_id(subject_id)
+        details = anime_engine.get_anime_details(aid)
+        return jsonify({"code": 0, "data": {"subject": details}})
+    except Exception as e:
+        return jsonify({"code": 500, "message": str(e)}), 500
+
+@app.route("/api/anime/episodes/<path:subject_id>")
+def api_anime_episodes(subject_id):
+    try:
+        aid = parse_anime_id(subject_id)
+        eps = anime_engine.get_anime_episodes(aid)
+        return jsonify({"code": 0, "data": {"episodes": eps, "total": len(eps)}})
+    except Exception as e:
+        return jsonify({"code": 500, "message": str(e), "data": {"episodes": []}}), 500
 
 @app.route("/")
 def index():
@@ -289,11 +281,14 @@ def api_search():
             except Exception:
                 pass
                 
-        # Inject Dragon Ball if searched or if related to anime / DB
-        kw_l = keyword.lower()
-        if any(term in kw_l for term in ["dragon", "ball", "db", "goku", "anime"]):
-            if not any(it.get("subjectId") == "dragonball" for it in items):
-                items.insert(0, DRAGONBALL_CARD)
+        # Enrich search with anime results from Anilili/Miruro catalog
+        try:
+            anime_matches = anime_engine.search_anime(keyword=keyword, per_page=6)
+            for am in anime_matches:
+                if not any(it.get("subjectId") == am.get("subjectId") for it in items):
+                    items.append(am)
+        except Exception as e:
+            print(f"[AnimeEngine] Search enrichment error: {e}")
 
         return jsonify({
             "code": 0,
@@ -304,7 +299,12 @@ def api_search():
             }
         })
     except Exception as e:
-        return jsonify({"code": 500, "message": str(e), "data": {"items": [DRAGONBALL_CARD] if any(term in keyword.lower() for term in ['dragon', 'ball', 'goku']) else [], "relatedKeywords": [], "recommendations": []}}), 500
+        anime_items = []
+        try:
+            anime_items = anime_engine.search_anime(keyword=keyword, per_page=6)
+        except Exception:
+            pass
+        return jsonify({"code": 500, "message": str(e), "data": {"items": anime_items, "relatedKeywords": [], "recommendations": []}}), 500
 
 @app.route("/api/search/suggest")
 def api_search_suggest():
@@ -343,11 +343,14 @@ def api_search_suggest():
             except Exception:
                 pass
 
-        if any(term in kw_lower for term in ["drag", "ball", "db", "goku", "anim"]):
-            if "Dragon Ball" not in words:
-                words.insert(0, "Dragon Ball")
-            if "Dragon Ball English Dub" not in words:
-                words.insert(1, "Dragon Ball English Dub")
+        # Suggest matching anime titles from local index
+        if anime_engine._local_index and len(keyword) >= 2:
+            for it in anime_engine._local_index:
+                t = it.get("title", "")
+                if kw_lower in t.lower() and t not in words:
+                    words.insert(0 if kw_lower in ["anim", "drag", "atta", "solo", "juju", "one", "nar"] else len(words), t)
+                    if len(words) >= 10:
+                        break
                 
         return jsonify({"code": 0, "suggestions": words[:8]})
     except Exception as e:
@@ -391,11 +394,13 @@ def api_catalog():
 
 @app.route("/api/subject/<subject_id>")
 def api_subject(subject_id):
-    if subject_id in DRAGONBALL_IDS:
+    if is_anime_subject(subject_id):
+        aid = parse_anime_id(subject_id)
+        details = anime_engine.get_anime_details(aid)
         return jsonify({
             "code": 0,
             "data": {
-                "subject": DRAGONBALL_CARD
+                "subject": details
             }
         })
     try:
@@ -406,15 +411,17 @@ def api_subject(subject_id):
 
 @app.route("/api/seasons/<subject_id>")
 def api_seasons(subject_id):
-    if subject_id in DRAGONBALL_IDS:
+    if is_anime_subject(subject_id):
+        aid = parse_anime_id(subject_id)
+        eps = anime_engine.get_anime_episodes(aid)
         return jsonify({
             "code": 0,
             "data": {
                 "seasons": [
                     {
                         "se": 1,
-                        "maxEp": 153,
-                        "seasonName": "Season 1 (Classic)"
+                        "maxEp": len(eps),
+                        "seasonName": "Season 1"
                     }
                 ]
             }
@@ -427,7 +434,7 @@ def api_seasons(subject_id):
 
 @app.route("/api/subtitles/<subject_id>")
 def api_subtitles(subject_id):
-    if subject_id in DRAGONBALL_IDS:
+    if is_anime_subject(subject_id):
         return jsonify({"code": 0, "captions": []})
     se = request.args.get("se", "")
     ep = request.args.get("ep", "")
@@ -518,14 +525,15 @@ def get_cached_play_info(subject_id, se="", ep=""):
 def api_play_info(subject_id):
     se = request.args.get("se", "")
     ep = request.args.get("ep", "")
-    if subject_id in DRAGONBALL_IDS:
-        is_dub = not (subject_id == "dragonball_sub")
+    if is_anime_subject(subject_id):
+        is_dub = not str(subject_id).endswith("_sub")
         ep_val = 1
         try:
             ep_val = int(ep) if ep else 1
         except Exception:
             ep_val = 1
-        st_info = resolve_dragonball_stream(ep_val, is_dub)
+        aid = parse_anime_id(subject_id)
+        st_info = anime_engine.resolve_anime_stream(aid, ep=ep_val, is_dub=is_dub)
         return jsonify({
             "code": 0,
             "url": st_info["url"],
@@ -553,19 +561,21 @@ def api_play_info(subject_id):
 
 @app.route("/api/dubs/<subject_id>")
 def api_dubs(subject_id):
-    if subject_id in DRAGONBALL_IDS:
+    if is_anime_subject(subject_id):
+        aid = parse_anime_id(subject_id)
+        base_id = f"anime_{aid}" if not str(subject_id).startswith("dragonball") else "dragonball"
         return jsonify({
             "code": 0,
             "dubs": [
                 {
-                    "subjectId": "dragonball",
+                    "subjectId": f"{base_id}_dub" if base_id != "dragonball" else "dragonball",
                     "lanName": "English Dub",
                     "lanCode": "en",
                     "original": True,
                     "type": 0
                 },
                 {
-                    "subjectId": "dragonball_sub",
+                    "subjectId": f"{base_id}_sub",
                     "lanName": "Japanese (English Sub)",
                     "lanCode": "ja",
                     "original": False,
@@ -665,14 +675,15 @@ def api_stream_mp4(subject_id):
     terminate_previous_stream(subject_id)
     
     try:
-        if subject_id in DRAGONBALL_IDS:
-            is_dub = not (subject_id == "dragonball_sub")
+        if is_anime_subject(subject_id):
+            is_dub = not str(subject_id).endswith("_sub")
             ep_val = 1
             try:
                 ep_val = int(ep) if ep else 1
             except Exception:
                 ep_val = 1
-            st_info = resolve_dragonball_stream(ep_val, is_dub)
+            aid = parse_anime_id(subject_id)
+            st_info = anime_engine.resolve_anime_stream(aid, ep=ep_val, is_dub=is_dub)
             url = st_info["url"]
             origin = st_info.get("origin", "https://ultracloud.cc")
             referer = st_info.get("referer", "https://ultracloud.cc/")
@@ -718,7 +729,7 @@ def api_stream_mp4(subject_id):
             cmd += ["-ss", "0"]
         
         # Map specific resolution if requested and available for DASH
-        if subject_id not in DRAGONBALL_IDS:
+        if not is_anime_subject(subject_id):
             if requested_res and requested_res in res_list:
                 v_idx = res_list.index(requested_res)
                 cmd += ["-map", f"0:v:{v_idx}", "-map", "0:a:0?"]
