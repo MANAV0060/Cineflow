@@ -681,6 +681,23 @@ import threading
 
 _active_stream_processes = {}
 _stream_proc_lock = threading.Lock()
+_ffmpeg_hls_flags = None
+
+def get_ffmpeg_hls_flags():
+    """Detects and returns all supported HLS demuxer flags across FFmpeg 6 and 7+."""
+    global _ffmpeg_hls_flags
+    if _ffmpeg_hls_flags is not None:
+        return _ffmpeg_hls_flags
+    flags = ["-allowed_extensions", "ALL"]
+    for opt in [["-allowed_segment_extensions", "ALL"], ["-extension_picky", "0"]]:
+        try:
+            res = subprocess.run(["ffmpeg"] + opt + ["-h"], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=2)
+            if res.returncode == 0 or b"Unrecognized" not in res.stderr:
+                flags.extend(opt)
+        except Exception:
+            pass
+    _ffmpeg_hls_flags = flags
+    return flags
 
 def terminate_previous_stream(subject_id):
     """Terminates any existing ffmpeg remuxing process for this subject to free bandwidth and CPU immediately."""
@@ -743,7 +760,10 @@ def api_stream_mp4(subject_id):
         cmd = [
             "ffmpeg",
             "-headers", headers_flag,
-            "-allowed_extensions", "ALL",
+        ]
+        if is_anime_subject(subject_id):
+            cmd += get_ffmpeg_hls_flags()
+        cmd += [
             "-multiple_requests", "1",
             "-fflags", "+nobuffer+flush_packets+fastseek+discardcorrupt",
             "-analyzeduration", probe_val,
@@ -858,7 +878,7 @@ def api_debug_ffmpeg():
         cmd = [
             "ffmpeg",
             "-headers", hdr,
-            "-allowed_extensions", "ALL",
+        ] + get_ffmpeg_hls_flags() + [
             "-multiple_requests", "1",
             "-fflags", "+nobuffer+flush_packets+fastseek+discardcorrupt",
             "-analyzeduration", "1500000",
