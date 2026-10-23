@@ -216,22 +216,30 @@
     }
   </style>
 </head>
-<body class="bg-[#08080a] text-slate-200 font-sans antialiased selection:bg-brandBlue selection:text-white min-h-screen">
+<body class="bg-[#08080a] text-slate-200 font-sans antialiased selection:bg-brandBlue selection:text-white min-h-screen overflow-x-hidden">
 
   <!-- ========================================================================= -->
   <!-- SCREEN 1: HOMEPAGE (Cinematic Luxe + Multi-Row Carousel + Predictive Search) -->
   <!-- ========================================================================= -->
-  <div id="screen-home" class="screen-view w-full">
+  <div id="screen-home" class="screen-view w-full overflow-x-hidden">
 
     <!-- Top Navigation Header -->
-    <header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-6 md:px-14 py-4 bg-gradient-to-b from-black/95 via-black/75 to-transparent backdrop-blur-md border-b border-white/5 transition-all">
-      <!-- Brand Logo -->
-      <a href="#" onclick="showHome(); return false;" class="text-2xl md:text-3xl font-extrabold text-[#f5c518] tracking-tight hover:opacity-90 transition flex items-center space-x-2">
-        <span class="material-symbols-outlined text-3xl text-[#f5c518]">movie</span>
-        <span>Cineflow</span>
-      </a>
+    <header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-3.5 sm:px-6 md:px-14 py-3 sm:py-4 bg-gradient-to-b from-black/95 via-black/80 to-transparent backdrop-blur-md border-b border-white/5 transition-all">
+      <!-- Left: Mobile Nav Toggle + Brand Logo -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <!-- Mobile Navigation Menu Toggle Button (Visible on mobile/tablet < md) -->
+        <button id="btn-mobile-nav-toggle" onclick="toggleMobileNav()" class="md:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all cursor-pointer shrink-0" aria-label="Toggle Navigation Menu">
+          <span id="mobile-nav-icon" class="material-symbols-outlined text-xl">menu</span>
+        </button>
 
-      <!-- Main Navigation Links -->
+        <!-- Brand Logo -->
+        <a href="#" onclick="showHome(); return false;" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#f5c518] tracking-tight hover:opacity-90 transition flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+          <span class="material-symbols-outlined text-2xl sm:text-3xl text-[#f5c518]">movie</span>
+          <span>Cineflow</span>
+        </a>
+      </div>
+
+      <!-- Main Navigation Links (Desktop md+) -->
       <nav class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
         <a href="#" onclick="showHome(); return false;" id="nav-home" class="text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold">Home</a>
         <a href="#" onclick="filterCategory('tv'); return false;" id="nav-tv" class="text-white/80 hover:text-white transition">TV Shows</a>
@@ -240,42 +248,81 @@
       </nav>
 
       <!-- Header Search Input & Profile -->
-      <div class="flex items-center space-x-4 relative">
-        <div class="relative">
+      <div class="flex items-center space-x-2 sm:space-x-4 relative">
+        <div class="relative flex items-center">
           <input id="header-search-input" 
                  type="text" 
                  placeholder="Search movies & series..." 
-                 class="bg-black/60 border border-white/20 text-xs rounded-full pl-9 pr-8 py-2 focus:outline-none focus:border-[#f5c518] focus:ring-1 focus:ring-[#f5c518] w-48 sm:w-64 md:w-80 transition placeholder-white/50 text-white"
+                 class="bg-black/60 border border-white/20 text-xs rounded-full pl-8 sm:pl-9 pr-7 sm:pr-8 py-1.5 sm:py-2 focus:outline-none focus:border-[#f5c518] focus:ring-1 focus:ring-[#f5c518] w-32 xs:w-44 sm:w-64 md:w-80 transition-all placeholder-white/50 text-white"
                  autocomplete="off"/>
-          <span class="material-symbols-outlined text-base text-white/60 absolute left-3 top-2.5 pointer-events-none">search</span>
-          <button id="search-clear-btn" onclick="clearSearch()" class="hidden absolute right-3 top-2.5 text-white/50 hover:text-white">
+          <span class="material-symbols-outlined text-sm sm:text-base text-white/60 absolute left-2.5 sm:left-3 pointer-events-none">search</span>
+          <button id="search-clear-btn" onclick="clearSearch()" class="hidden absolute right-2.5 sm:right-3 text-white/50 hover:text-white">
             <span class="material-symbols-outlined text-sm">close</span>
           </button>
 
           <!-- Predictive Auto-Complete Suggestions Flyout -->
-          <div id="search-suggestions-flyout" class="hidden absolute left-0 right-0 top-full mt-2 bg-[#121318]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-2 z-50 text-left">
+          <div id="search-suggestions-flyout" class="hidden absolute right-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-32px)] bg-[#121318]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-2 z-50 text-left">
             <div class="text-[10px] font-bold uppercase tracking-wider text-white/40 px-3 py-1">Quick Suggestions</div>
             <div id="suggestions-list" class="space-y-1"></div>
           </div>
         </div>
 
         <!-- User Profile Avatar -->
-        <div class="relative group cursor-pointer">
-          <div class="w-8 h-8 rounded-full border border-white/30 bg-white/10 flex items-center justify-center text-white ring-2 ring-transparent group-hover:ring-[#f5c518] transition">
-            <span class="material-symbols-outlined text-lg">person</span>
+        <div class="relative group cursor-pointer shrink-0">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/30 bg-white/10 flex items-center justify-center text-white ring-2 ring-transparent group-hover:ring-[#f5c518] transition">
+            <span class="material-symbols-outlined text-base sm:text-lg">person</span>
           </div>
         </div>
       </div>
     </header>
 
+    <!-- MOBILE NAVIGATION DRAWER (Responsive slide-down menu for mobile and tablet) -->
+    <div id="mobile-nav-drawer" class="hidden fixed inset-0 z-35 bg-black/85 backdrop-blur-xl transition-all duration-300 flex flex-col pt-16 px-5 pb-8 overflow-y-auto">
+      <div class="flex flex-col space-y-4 pt-4 border-t border-white/10 max-w-md mx-auto w-full">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-[#f5c518] font-mono">Browse Cineflow</span>
+        <div class="grid grid-cols-2 gap-2.5 text-sm font-semibold">
+          <button onclick="mobileNavSelect('home')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/10 text-[#f5c518] hover:bg-white/15 transition text-left cursor-pointer">
+            <span class="material-symbols-outlined text-lg">home</span>
+            <span>Home</span>
+          </button>
+          <button onclick="mobileNavSelect('tv')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/5 text-white/90 hover:bg-white/15 transition text-left cursor-pointer">
+            <span class="material-symbols-outlined text-lg">tv</span>
+            <span>TV Shows</span>
+          </button>
+          <button onclick="mobileNavSelect('movie')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/5 text-white/90 hover:bg-white/15 transition text-left cursor-pointer">
+            <span class="material-symbols-outlined text-lg">movie</span>
+            <span>Movies</span>
+          </button>
+          <button onclick="mobileNavSelect('anime')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/5 text-white/90 hover:bg-white/15 transition text-left cursor-pointer">
+            <span class="material-symbols-outlined text-lg">auto_awesome</span>
+            <span>Anime</span>
+          </button>
+        </div>
+
+        <span class="text-[11px] font-bold uppercase tracking-widest text-white/40 font-mono pt-2">Popular Categories</span>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <button onclick="mobileNavSelect('Action')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Action</button>
+          <button onclick="mobileNavSelect('Comedy')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Comedy</button>
+          <button onclick="mobileNavSelect('Adventure')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Adventure</button>
+          <button onclick="mobileNavSelect('Drama')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Drama</button>
+          <button onclick="mobileNavSelect('Sci-Fi')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Sci-Fi</button>
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/50">
+          <span>Powered by CineFlow Engine</span>
+          <button onclick="toggleMobileNav()" class="text-[#f5c518] hover:underline font-semibold cursor-pointer">Close Menu</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Search Results View (Toggled dynamically upon searching) -->
-    <section id="search-results-section" class="hidden pt-28 pb-12 px-6 md:px-14 min-h-[60vh]">
+    <section id="search-results-section" class="hidden pt-20 sm:pt-28 pb-10 sm:pb-12 px-4 sm:px-6 md:px-14 min-h-[60vh]">
       <div class="flex items-center justify-between mb-4">
         <div>
-          <h2 class="text-2xl font-bold text-white tracking-wide" id="search-heading">Search Results</h2>
+          <h2 class="text-xl sm:text-2xl font-bold text-white tracking-wide" id="search-heading">Search Results</h2>
           <p class="text-xs text-white/50 mt-1" id="search-count-text">Found matches</p>
         </div>
-        <button onclick="clearSearch()" class="text-xs text-[#f5c518] hover:underline flex items-center space-x-1">
+        <button onclick="clearSearch()" class="text-xs text-[#f5c518] hover:underline flex items-center space-x-1 cursor-pointer">
           <span class="material-symbols-outlined text-sm">arrow_back</span>
           <span>Back to Home</span>
         </button>
@@ -288,17 +335,17 @@
       </div>
 
       <!-- Search Match Cards Grid -->
-      <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"></div>
+      <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
 
       <!-- Related Recommendations Carousel -->
-      <div id="search-recommendations-wrap" class="hidden mt-12 pt-8 border-t border-white/10">
-        <h3 class="text-lg font-bold text-white tracking-wide mb-4">Recommended For You</h3>
-        <div id="search-recommendations-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"></div>
+      <div id="search-recommendations-wrap" class="hidden mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10">
+        <h3 class="text-base sm:text-lg font-bold text-white tracking-wide mb-4">Recommended For You</h3>
+        <div id="search-recommendations-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
       </div>
     </section>
 
     <!-- Hero Banner Section -->
-    <section id="home-hero-section" class="relative min-h-[680px] md:min-h-[780px] flex flex-col justify-end overflow-hidden pb-12 pt-28 px-6 md:px-14">
+    <section id="home-hero-section" class="relative min-h-[500px] sm:min-h-[620px] md:min-h-[760px] flex flex-col justify-end overflow-hidden pb-8 sm:pb-12 pt-20 sm:pt-28 px-4 sm:px-6 md:px-14">
       <!-- Hero Background Graphic -->
       <div class="absolute inset-0 z-0">
         <img id="hero-bg-img" alt="Hero Featured" class="w-full h-full object-cover object-center filter brightness-90 contrast-105 scale-105 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmHP4G7tciaNtl9zkfB-hi3Gvnrb1TlHg8WiHwgapYUmmr8MenuAapmL9r5lj2gH8xa9OfRTFT4KUxUIuS-PaB56myG-olMmY55JhZhvSyVq2iLgsBIbL7Lh03xh9AeCLta6m4t2MEs_KB4OFNpk40ZOgwPMq26bkIOFgPqVafN09IKMbz7j2bUDVMuqfyCNVv--SrC5R2t28DRYNO6_xk8QeomvClPC3mAJWYvwRnG4JlAXLHwQT-JQ"/>
@@ -307,35 +354,35 @@
       </div>
 
       <!-- Hero Content Overlay -->
-      <div class="relative z-10 max-w-2xl text-left mt-12">
-        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs text-[#f5c518] font-semibold mb-3">
+      <div class="relative z-10 max-w-2xl text-left mt-8 sm:mt-12">
+        <div class="inline-flex items-center space-x-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] sm:text-xs text-[#f5c518] font-semibold mb-2 sm:mb-3">
           <span class="w-2 h-2 rounded-full bg-[#f5c518] animate-pulse"></span>
           <span id="hero-badge">FEATURED SPOTLIGHT</span>
         </div>
-        <h1 id="hero-title" class="text-4xl md:text-6xl font-cinematic font-black text-white text-shadow-hero leading-tight uppercase tracking-wider">
+        <h1 id="hero-title" class="text-3xl sm:text-4xl md:text-6xl font-cinematic font-black text-white text-shadow-hero leading-tight uppercase tracking-wider">
           Raya and the<br/>Last Dragon
         </h1>
-        <p class="mt-3 text-sm md:text-base font-medium text-slate-300 flex items-center space-x-2">
+        <p class="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base font-medium text-slate-300 flex items-center space-x-2">
           <span id="hero-tagline">A quest to save her world.</span>
           <span id="hero-release" class="text-[#4ade80] font-semibold">2021 • UHD 4K</span>
         </p>
-        <p id="hero-synopsis" class="mt-3 text-xs md:text-sm text-slate-300/90 leading-relaxed max-w-lg line-clamp-3">
+        <p id="hero-synopsis" class="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-300/90 leading-relaxed max-w-lg line-clamp-3">
           Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when sinister monsters known as the Druun threatened the land, the dragons sacrificed themselves to save humanity.
         </p>
         <!-- Rating Row -->
-        <div class="mt-4 flex items-center space-x-2">
+        <div class="mt-3 sm:mt-4 flex items-center space-x-2">
           <div class="flex text-[#f5c518] text-sm">
             <span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-500">★</span>
           </div>
-          <span id="hero-rating" class="text-xs font-bold text-white tracking-wider">8.2 RATING</span>
+          <span id="hero-rating" class="text-[11px] sm:text-xs font-bold text-white tracking-wider">8.2 RATING</span>
         </div>
         <!-- Action Buttons -->
-        <div class="mt-6 flex items-center space-x-4">
-          <button id="hero-play-btn" onclick="openHeroPlay()" class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-8 py-3 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
+        <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
+          <button id="hero-play-btn" onclick="openHeroPlay()" class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-6 sm:px-8 py-2.5 sm:py-3 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
             <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
             <span>PLAY NOW</span>
           </button>
-          <button id="hero-detail-btn" onclick="openHeroDetail()" class="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs tracking-wider uppercase px-6 py-3 rounded-full border border-white/20 transition flex items-center space-x-1.5 cursor-pointer">
+          <button id="hero-detail-btn" onclick="openHeroDetail()" class="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs tracking-wider uppercase px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-white/20 transition flex items-center space-x-1.5 cursor-pointer">
             <span class="material-symbols-outlined text-base">info</span>
             <span>DETAILS</span>
           </button>
@@ -343,28 +390,28 @@
       </div>
 
       <!-- Thumbnail Strip Carousel in Hero Bottom -->
-      <div class="relative z-10 mt-12 flex flex-col items-center">
-        <div id="hero-stills-strip" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 w-full max-w-5xl">
+      <div class="relative z-10 mt-8 sm:mt-12 flex flex-col items-center w-full">
+        <div id="hero-stills-strip" class="flex sm:grid sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-3 w-full max-w-5xl overflow-x-auto sm:overflow-visible hide-scrollbar pb-1">
           <!-- Dynamically populated or interactive hero scene cards -->
         </div>
       </div>
     </section>
 
     <!-- Category Filter Row -->
-    <section class="py-6 px-6 md:px-14 flex items-center justify-start md:justify-center overflow-x-auto hide-scrollbar space-x-3">
-      <button onclick="filterCategory('all')" class="cat-pill active bg-[#f5c518] text-black font-semibold text-xs uppercase px-7 py-2 rounded-full shadow-sm hover:opacity-90 transition cursor-pointer">ALL</button>
-      <button onclick="filterCategory('Action')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition cursor-pointer">Action</button>
-      <button onclick="filterCategory('Comedy')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition cursor-pointer">Comedy</button>
-      <button onclick="filterCategory('tv')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition cursor-pointer">Series</button>
-      <button onclick="filterCategory('Adventure')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition cursor-pointer">Adventure</button>
-      <button onclick="filterCategory('Drama')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition cursor-pointer">Drama</button>
-      <button onclick="filterCategory('Sci-Fi')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition cursor-pointer">Sci-Fi</button>
+    <section class="py-4 sm:py-6 px-4 sm:px-6 md:px-14 flex items-center justify-start md:justify-center overflow-x-auto hide-scrollbar space-x-2 sm:space-x-3">
+      <button onclick="filterCategory('all')" class="cat-pill active bg-[#f5c518] text-black font-semibold text-[11px] sm:text-xs uppercase px-5 sm:px-7 py-1.5 sm:py-2 rounded-full shadow-sm hover:opacity-90 transition cursor-pointer shrink-0">ALL</button>
+      <button onclick="filterCategory('Action')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Action</button>
+      <button onclick="filterCategory('Comedy')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Comedy</button>
+      <button onclick="filterCategory('tv')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Series</button>
+      <button onclick="filterCategory('Adventure')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Adventure</button>
+      <button onclick="filterCategory('Drama')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Drama</button>
+      <button onclick="filterCategory('Sci-Fi')" class="cat-pill border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-[11px] sm:text-xs px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition cursor-pointer shrink-0">Sci-Fi</button>
     </section>
 
     <!-- SECTION: Most Viewed / Trending -->
-    <section class="py-6 px-6 md:px-14">
-      <div class="flex items-center justify-between mb-5">
-        <h2 class="text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+    <section class="py-4 sm:py-6 px-4 sm:px-6 md:px-14">
+      <div class="flex items-center justify-between mb-4 sm:mb-5">
+        <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
           <span class="material-symbols-outlined text-[#f5c518]">trending_up</span>
           <span>Most Viewed</span>
         </h2>
@@ -373,32 +420,32 @@
           <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
         </a>
       </div>
-      <div id="grid-most-viewed" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+      <div id="grid-most-viewed" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
         <!-- Rendered by JavaScript -->
       </div>
     </section>
 
     <!-- SPOTLIGHT 1: BLACK ADAM CINEMATIC BANNER -->
-    <section id="spotlight-section-1" class="my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-6 md:px-14 py-14">
+    <section id="spotlight-section-1" class="my-6 sm:my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-4 sm:px-6 md:px-14 py-8 sm:py-14">
       <div class="absolute inset-0 z-0">
         <img alt="Black Adam Background" class="w-full h-full object-cover object-right md:object-center filter brightness-60 contrast-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkzEzhq2R3OUCWJeQJky46slW71wrMwDBMWO2SCKE6AbTFGN8Py5NJyusoxj_iMoaxLQYnlt4nI2e-e8YHGcgi4SdCsEoAuIYN49BcthXsWEB9_GEtLnfZ4Skb_b3CSfrCiVgGRa0NZxlBu-KGiEB5jZRmGjmEFh3W1Upt0T3HiuHGDwKCMTWTvfpIYy_5tf2z3PdDrnA-xqHF6jx8ktvJMn8-9VS0ovUFB7zMmI9HO6bkTTOgnxmhdg"/>
         <div class="absolute inset-0 black-adam-glow"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent"></div>
       </div>
-      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
         <div class="lg:col-span-7 max-w-xl">
-          <h2 class="text-3xl md:text-5xl font-cinematic font-black text-white text-shadow-lightning tracking-wider">
+          <h2 class="text-2xl sm:text-3xl md:text-5xl font-cinematic font-black text-white text-shadow-lightning tracking-wider">
             BLACK ADAM
           </h2>
-          <div class="mt-3 flex items-center space-x-2">
+          <div class="mt-2.5 sm:mt-3 flex items-center space-x-2">
             <div class="flex text-[#f5c518] text-sm"><span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-600">★</span></div>
             <span class="text-xs font-bold text-white tracking-wide">IMDb 8.1</span>
           </div>
-          <p class="mt-4 text-xs md:text-sm text-slate-300/90 leading-relaxed">
+          <p class="mt-3 sm:mt-4 text-xs sm:text-sm text-slate-300/90 leading-relaxed">
             Nearly 5,000 years after he was bestowed with the almighty powers of the ancient gods—and imprisoned just as quickly—Black Adam is freed from his earthly tomb, ready to unleash his unique form of justice on the modern world.
           </p>
-          <div class="mt-6 flex items-center space-x-4">
-            <button onclick="searchAndPlay('Black Adam')" class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
+          <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
+            <button onclick="searchAndPlay('Black Adam')" class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-6 sm:px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
               <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
               <span>WATCH NOW</span>
             </button>
@@ -419,9 +466,9 @@
     </section>
 
     <!-- SECTION: Most Popular Movies -->
-    <section class="py-6 px-6 md:px-14">
-      <div class="flex items-center justify-between mb-5">
-        <h2 class="text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+    <section class="py-4 sm:py-6 px-4 sm:px-6 md:px-14">
+      <div class="flex items-center justify-between mb-4 sm:mb-5">
+        <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
           <span class="material-symbols-outlined text-[#f5c518]">movie</span>
           <span>Popular Movies</span>
         </h2>
@@ -430,32 +477,32 @@
           <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
         </a>
       </div>
-      <div id="grid-popular-movies" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+      <div id="grid-popular-movies" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
         <!-- Rendered by JavaScript -->
       </div>
     </section>
 
     <!-- SPOTLIGHT 2: THE FLASH TV SERIES BANNER -->
-    <section id="spotlight-section-2" class="my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-6 md:px-14 py-14">
+    <section id="spotlight-section-2" class="my-6 sm:my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-4 sm:px-6 md:px-14 py-8 sm:py-14">
       <div class="absolute inset-0 z-0">
         <img alt="The Flash Season 9" class="w-full h-full object-cover object-center filter brightness-60 contrast-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl6Na-QENU3u7AALAj_7Uof9EUz2X2RxWH41iWyEYEOKny1v8nwewse5Kwxbbo8p4TZZkV2HxZ5PCpkiYnDZNkqXR4EaHfm4Pa_Bm5B6EKBmgyH5X8H_8yBTpBOozLuz3pTq-dfy58MvgspVUlwxSvwGKTEqFZccpnXeaqvhd2wxEA0j3Sz11vUFLSi0V9OBSJn_AEkwvWAtV_GkF6lNp_z5KO4q-1zdu6fXvJU4wIs2VAFeqatDqfwg"/>
         <div class="absolute inset-0 flash-glow"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent"></div>
       </div>
-      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
         <div class="lg:col-span-7 max-w-xl">
-          <h2 class="text-3xl md:text-5xl font-cinematic font-black text-white leading-tight tracking-wider">
+          <h2 class="text-2xl sm:text-3xl md:text-5xl font-cinematic font-black text-white leading-tight tracking-wider">
             THE FLASH :<br/>SEASON 9
           </h2>
-          <div class="mt-3 flex items-center space-x-2">
+          <div class="mt-2.5 sm:mt-3 flex items-center space-x-2">
             <div class="flex text-[#f5c518] text-sm"><span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-600">★</span></div>
             <span class="text-xs font-bold text-white tracking-wide">TV SERIES</span>
           </div>
-          <p class="mt-4 text-xs md:text-sm text-slate-300/90 leading-relaxed">
+          <p class="mt-3 sm:mt-4 text-xs sm:text-sm text-slate-300/90 leading-relaxed">
             After defeating the Reverse Flash once and for all, Barry Allen and Iris West-Allen reconnect. But when a deadly group of Rogues descends on Central City led by a powerful new threat, the Flash must once again push his powers to the limit.
           </p>
-          <div class="mt-6 flex items-center space-x-4">
-            <button onclick="searchAndPlay('The Flash')" class="bg-[#e50914] hover:bg-red-700 text-white font-semibold text-xs tracking-wider uppercase px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-red-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
+          <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
+            <button onclick="searchAndPlay('The Flash')" class="bg-[#e50914] hover:bg-red-700 text-white font-semibold text-xs tracking-wider uppercase px-6 sm:px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-red-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
               <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
               <span>WATCH SERIES</span>
             </button>
@@ -468,9 +515,9 @@
     </section>
 
     <!-- SECTION: Popular TV Series -->
-    <section class="py-6 px-6 md:px-14">
-      <div class="flex items-center justify-between mb-5">
-        <h2 class="text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
+    <section class="py-4 sm:py-6 px-4 sm:px-6 md:px-14">
+      <div class="flex items-center justify-between mb-4 sm:mb-5">
+        <h2 class="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide flex items-center space-x-2">
           <span class="material-symbols-outlined text-[#f5c518]">tv</span>
           <span>Popular TV Series</span>
         </h2>
@@ -479,14 +526,14 @@
           <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
         </a>
       </div>
-      <div id="grid-popular-series" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+      <div id="grid-popular-series" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
         <!-- Rendered by JavaScript -->
       </div>
     </section>
 
     <!-- Main Footer -->
-    <footer class="mt-20 border-t border-white/10 bg-black/95 pt-12 pb-16 px-6 md:px-14">
-      <div class="flex flex-col sm:flex-row items-center justify-between pb-10 border-b border-white/10 gap-6">
+    <footer class="mt-14 sm:mt-20 border-t border-white/10 bg-black/95 pt-8 sm:pt-12 pb-12 sm:pb-16 px-4 sm:px-6 md:px-14">
+      <div class="flex flex-col sm:flex-row items-center justify-between pb-8 sm:pb-10 border-b border-white/10 gap-4 sm:gap-6">
         <a class="text-2xl font-bold text-[#f5c518] tracking-tight flex items-center space-x-2" href="#">
           <span class="material-symbols-outlined text-2xl">movie</span>
           <span>Cineflow</span>
@@ -495,7 +542,7 @@
           <span class="font-medium text-white/90">Powered by CineFlow High-Speed Engine</span>
         </div>
       </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 pt-10 text-xs">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 pt-6 sm:pt-10 text-xs">
         <div>
           <h4 class="text-base font-bold text-[#f5c518] mb-4">Movies</h4>
           <ul class="space-y-2.5 text-slate-400">
@@ -536,8 +583,7 @@
   <!-- ========================================================================= -->
   <!-- SCREEN 2: MOVIE & SERIES DETAIL (Atmospheric Backdrop + Arc Episode Dial)  -->
   <!-- ========================================================================= -->
-  <div id="screen-detail" class="screen-view hidden fixed inset-0 z-50 bg-black overflow-y-auto">
-    <!-- Back Header -->
+  <div id="screen-detail" class="screen-view hidden fixed inset-0 z-50 bg-black overflow-y-auto overflow-x-hidden">
     <!-- Back Header -->
     <header class="relative z-30 flex items-center justify-between px-4 sm:px-6 md:px-14 py-4 md:py-6 gap-3 bg-gradient-to-b from-black/90 via-black/50 to-transparent">
       <button onclick="showHome()" class="flex items-center space-x-2 text-white/80 hover:text-white group px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition cursor-pointer shrink-0">
@@ -584,7 +630,7 @@
             </div>
             <!-- Condensed Title -->
             <div class="flex flex-col min-w-0">
-              <h1 id="detail-title" class="font-anton text-3xl sm:text-5xl md:text-7xl text-white tracking-wider uppercase leading-none drop-shadow-lg truncate">
+              <h1 id="detail-title" class="font-anton text-3xl sm:text-5xl md:text-6xl text-white tracking-wider uppercase leading-tight drop-shadow-lg break-words">
                 TITLE
               </h1>
               <div class="flex items-center gap-2 mt-2">
@@ -664,7 +710,7 @@
           </div>
 
           <!-- FOR MOVIES: Premium Movie Display Card (Right Anchored) -->
-          <div id="detail-movie-card" class="w-full max-w-sm rounded-2xl overflow-hidden border border-white/15 bg-white/5 backdrop-blur-xl p-4 shadow-2xl mr-0 ml-auto">
+          <div id="detail-movie-card" class="w-full max-w-[260px] sm:max-w-sm rounded-2xl overflow-hidden border border-white/15 bg-white/5 backdrop-blur-xl p-3 sm:p-4 shadow-2xl mx-auto lg:mr-0 lg:ml-auto">
             <div class="aspect-[2/3] w-full rounded-xl overflow-hidden relative shadow-lg">
               <img id="detail-movie-poster" alt="Movie Poster" class="w-full h-full object-cover"/>
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
@@ -832,9 +878,9 @@
         </div>
 
         <!-- Dock Control Deck -->
-        <div class="flex items-center justify-between gap-2 sm:gap-4 w-full bg-black/75 backdrop-blur-2xl px-3 sm:px-6 py-2.5 sm:py-3 rounded-2xl border border-white/10 shadow-2xl relative">
+        <div class="flex items-center justify-between gap-1.5 sm:gap-4 w-full bg-black/75 backdrop-blur-2xl px-2 sm:px-6 py-2 sm:py-3 rounded-2xl border border-white/10 shadow-2xl relative">
           <!-- Left Controls: Play, -10s, +10s, Volume, Timers -->
-          <div class="flex items-center space-x-2 sm:space-x-4 min-w-0">
+          <div class="flex items-center space-x-1.5 sm:space-x-4 min-w-0">
             <button onclick="togglePlayPause()" class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full flex items-center justify-center hover:bg-white/10 text-white transition-colors cursor-pointer" title="Play/Pause">
               <span id="dockPlayIcon" class="material-symbols-outlined text-xl sm:text-2xl">play_arrow</span>
             </button>
@@ -895,7 +941,7 @@
     </div>
 
     <!-- AUDIO & SUBTITLES FLYOUT MODAL -->
-    <div id="modal-subtitles" class="fixed inset-y-0 right-0 w-full max-w-lg bg-surface-container-low/95 backdrop-blur-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-4 sm:p-6 md:p-7 flex flex-col justify-between shadow-2xl border-l border-white/10 overflow-y-auto max-h-screen">
+    <div id="modal-subtitles" class="fixed inset-y-0 right-0 w-full max-w-full sm:max-w-lg bg-surface-container-low/95 backdrop-blur-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-4 sm:p-6 md:p-7 flex flex-col justify-between shadow-2xl border-l border-white/10 overflow-y-auto max-h-[100dvh]">
       <div>
         <div class="flex items-center justify-between pb-4 border-b border-white/10">
           <div class="flex items-center space-x-2.5">
@@ -1023,7 +1069,7 @@
     </div>
 
     <!-- SETTINGS MODAL -->
-    <div id="modal-settings" class="fixed inset-y-0 right-0 w-full max-w-sm bg-surface-container-low/95 backdrop-blur-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-6 flex flex-col justify-between shadow-2xl border-l border-white/10">
+    <div id="modal-settings" class="fixed inset-y-0 right-0 w-full max-w-full sm:max-w-sm bg-surface-container-low/95 backdrop-blur-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-4 sm:p-6 flex flex-col justify-between shadow-2xl border-l border-white/10 overflow-y-auto max-h-[100dvh]">
       <div>
         <div class="flex items-center justify-between pb-5 border-b border-white/10">
           <div class="flex items-center space-x-2.5">
@@ -1076,7 +1122,7 @@
   </div>
 
   <!-- GLOBAL EPISODES & SEASONS SLIDE-OVER DRAWER (Accessible from both Detail View and Video Player) -->
-  <div id="modal-episodes-drawer" class="fixed inset-y-0 right-0 w-full max-w-md sm:max-w-lg bg-[#0e0f14]/95 backdrop-blur-2xl z-[70] transform translate-x-full transition-transform duration-300 ease-in-out p-5 sm:p-6 flex flex-col justify-between shadow-2xl border-l border-white/10">
+  <div id="modal-episodes-drawer" class="fixed inset-y-0 right-0 w-full max-w-full sm:max-w-md md:max-w-lg bg-[#0e0f14]/95 backdrop-blur-2xl z-[70] transform translate-x-full transition-transform duration-300 ease-in-out p-4 sm:p-6 flex flex-col justify-between shadow-2xl border-l border-white/10 overflow-y-auto max-h-[100dvh]">
     <div class="flex flex-col h-full overflow-hidden">
       <!-- Drawer Header -->
       <div class="flex items-center justify-between pb-3.5 border-b border-white/10 shrink-0">
@@ -1206,7 +1252,40 @@
     // -------------------------------------------------------------
     // NAVIGATION & VIEW SWITCHER
     // -------------------------------------------------------------
+    function toggleMobileNav() {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      const icon = document.getElementById('mobile-nav-icon');
+      if (!drawer) return;
+      const isHidden = drawer.classList.contains('hidden');
+      if (isHidden) {
+        drawer.classList.remove('hidden');
+        if (icon) icon.textContent = 'close';
+      } else {
+        drawer.classList.add('hidden');
+        if (icon) icon.textContent = 'menu';
+      }
+    }
+
+    function closeMobileNav() {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      const icon = document.getElementById('mobile-nav-icon');
+      if (drawer && !drawer.classList.contains('hidden')) {
+        drawer.classList.add('hidden');
+        if (icon) icon.textContent = 'menu';
+      }
+    }
+
+    function mobileNavSelect(category) {
+      closeMobileNav();
+      if (category === 'home') {
+        showHome();
+      } else {
+        filterCategory(category);
+      }
+    }
+
     function showHome() {
+      closeMobileNav();
       currentView = 'home';
       document.getElementById('screen-home').classList.remove('hidden');
       document.getElementById('screen-detail').classList.add('hidden');
@@ -1216,6 +1295,7 @@
     }
 
     function showDetailView(subject) {
+      closeMobileNav();
       currentView = 'detail';
       selectedSubject = subject;
       document.getElementById('screen-home').classList.add('hidden');
@@ -1227,6 +1307,7 @@
     }
 
     function showPlayerView() {
+      closeMobileNav();
       currentView = 'player';
       document.getElementById('screen-home').classList.add('hidden');
       document.getElementById('screen-detail').classList.add('hidden');
@@ -1368,12 +1449,17 @@
 
     // Category Filter Pills
     function filterCategory(cat) {
+      if (currentView !== 'home') {
+        showHome();
+      }
       document.querySelectorAll('.cat-pill').forEach(btn => {
         btn.classList.remove('bg-[#f5c518]', 'text-black');
         btn.classList.add('border', 'border-white/20', 'text-white/80');
       });
-      event?.target?.classList?.remove('border', 'border-white/20', 'text-white/80');
-      event?.target?.classList?.add('bg-[#f5c518]', 'text-black');
+      if (typeof event !== 'undefined' && event?.target?.classList?.contains('cat-pill')) {
+        event.target.classList.remove('border', 'border-white/20', 'text-white/80');
+        event.target.classList.add('bg-[#f5c518]', 'text-black');
+      }
 
       if (cat === 'tv') {
         renderCardsGrid('grid-most-viewed', catalogSeries.slice(0, 6));
@@ -3629,6 +3715,7 @@
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
         if (e.key === 'Escape') {
+          closeMobileNav();
           document.getElementById('modal-subtitles').classList.add('translate-x-full');
           document.getElementById('modal-settings').classList.add('translate-x-full');
           document.getElementById('modal-episodes-drawer').classList.add('translate-x-full');
