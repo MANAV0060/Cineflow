@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#690003", "surface-container": "#1e1f25", "primary": "#ffb4aa", "on-primary-container": "#fff7f6", "background": "#121318", "on-background": "#e3e1e9", "tertiary-fixed-dim": "#00dbe9", "on-error": "#690005", "on-surface": "#e3e1e9", "secondary-container": "#ee9800", "error-container": "#93000a", "outline-variant": "#5e3f3b", "surface-container-high": "#292a2f", "surface-variant": "#34343a", "secondary-fixed": "#ffddb8", "on-secondary-fixed": "#2a1700", "tertiary-container": "#007f87", "on-error-container": "#ffdad6", "on-surface-variant": "#e9bcb6", "on-secondary": "#472a00", "surface-container-low": "#1a1b21", "secondary-fixed-dim": "#ffb95f", "on-tertiary-fixed-variant": "#004f54", "inverse-primary": "#c0000c", "inverse-surface": "#e3e1e9", "surface-bright": "#38393f", "on-tertiary-fixed": "#002022", "surface-container-lowest": "#0d0e13", "surface-container-highest": "#34343a", "inverse-on-surface": "#2f3036", "on-secondary-fixed-variant": "#653e00", "tertiary-fixed": "#7df4ff", "on-secondary-container": "#5b3800", "surface": "#121318", "error": "#ffb4ab", "tertiary": "#00dbe9", "on-primary-fixed": "#410001", "primary-fixed-dim": "#ffb4aa", "primary-container": "#e50914", "on-tertiary-container": "#e8fdff", "surface-dim": "#121318", "on-tertiary": "#00363a", "secondary": "#ffb95f", "outline": "#af8782", "primary-fixed": "#ffdad5", "surface-tint": "#ffb4aa", "on-primary-fixed-variant": "#930007" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-md": "1rem", "space-lg": "1.5rem", "gutter": "1.5rem", "gutter-mobile": "0.75rem", "margin": "3rem", "margin-mobile": "1.25rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "display-xl": [ "Plus Jakarta Sans" ], "label-sm": [ "Inter" ], "body-sm": [ "Inter" ], "headline-md": [ "Plus Jakarta Sans" ], "label-md": [ "Inter" ], "body-lg": [ "Inter" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-xl-mobile": [ "Plus Jakarta Sans" ], "title-md": [ "Plus Jakarta Sans" ], "body-md": [ "Inter" ] }, "fontSize": { "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "headline-lg": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "display-xl": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "400" } ], "headline-md": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-md": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" } ], "headline-sm": [ "22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "display-xl-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" } ], "title-md": [ "18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-center items-center"><main class="w-full flex-1 flex flex-col justify-center items-center px-gutter"><div class="flex flex-col w-full">
+<div class="relative w-full aspect-[21/9] min-h-[720px] max-h-[920px] bg-surface-container-lowest overflow-hidden rounded-xl shadow-2xl select-none group/player" id="cineflow-stage">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center scale-100 transition-transform duration-700 ease-out" data-alt="An ultra-wide 8k cinematic space sci-fi scene of a gigantic luminous singularity gateway ring in deep void cosmos. Fiery solar plasma jets curve around dark event horizon with subtle crimson and vibrant cyan nebulae dust reflections. Highly detailed space vessel cockpit frame visible in foreground with soft ambient instrumentation glow." id="video-viewport" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCVohABTHhaH562esISbOumtD3EuAGA2f60_E3a23-0y1XtBfblzpnS4G88ig7MNTzAKIbAH7P7QYXgBhro7RvbB1UBmMY5Cjj_8tKdj2-CZuvTGaI9kwlw0989SBIg2btrkd30qDk2BaiW_z-oupkWJ-yhng-rUt8pYY1N3Pk4RG0mjMknGedPGLxLY4RNqwt8guBXdW2TQ9cSDBJPICb_GB_IhYPIc2i0C61hywY6qVnZ7uVvDgdY5A')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/80 pointer-events-none"></div>
+<div class="absolute inset-0 bg-radial-gradient from-transparent via-surface-container-lowest/20 to-surface-container-lowest/90 pointer-events-none"></div>
+</div>
+<div class="absolute top-0 inset-x-0 z-30 p-space-lg flex items-center justify-between bg-gradient-to-b from-surface-container-lowest/95 via-surface-container-lowest/40 to-transparent backdrop-blur-md transition-all duration-300">
+<div class="flex items-center gap-space-md min-w-0">
+<button class="w-10 h-10 rounded-full bg-surface-container-high/80 hover:bg-surface-bright flex items-center justify-center text-on-surface hover:text-primary transition-all shadow-md group/btn" title="Back to Catalog">
+<span class="material-symbols-outlined text-title-md transition-transform group-hover/btn:-translate-x-0.5">arrow_back</span>
+</button>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="text-tertiary font-label-sm text-label-sm uppercase tracking-wider">CineFlow Premier Max</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-secondary font-label-sm text-label-sm uppercase">HDR10+</span>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-on-surface truncate flex items-center gap-space-xs">
+<span>Chronos: Beyond the Void</span>
+<span class="text-outline font-body-md text-body-md font-normal">— Season 1 : Episode 4 "The Singularity Gate"</span>
+</h1>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-highest/60 backdrop-blur-xl shadow-sm text-tertiary font-label-sm text-label-sm tracking-widest">
+<span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">spatial_audio</span>
+<span>DOLBY ATMOS · 4K 60FPS</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container-high/60 hover:bg-surface-bright flex items-center justify-center text-on-surface transition-all" title="Add to Watchlist">
+<span class="material-symbols-outlined text-title-md">bookmark_border</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-high/60 hover:bg-surface-bright flex items-center justify-center text-on-surface transition-all" title="Audio Stream Settings">
+<span class="material-symbols-outlined text-title-md">tune</span>
+</button>
+</div>
+</div>
+<div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+<div class="w-20 h-20 rounded-full bg-primary-container/20 backdrop-blur-md flex items-center justify-center text-primary-fixed shadow-2xl opacity-0 scale-75 transition-all duration-300" id="play-pulse-indicator">
+<span class="material-symbols-outlined text-display-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-24 right-space-lg z-30 w-80 bg-surface-container/90 backdrop-blur-2xl rounded-xl shadow-2xl overflow-hidden p-space-md flex flex-col gap-space-sm transform transition-all duration-300" id="next-ep-drawer">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-title-md animate-pulse">fast_forward</span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase">Up Next in <span class="font-bold" id="countdown-timer">12s</span></span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1" onclick="document.getElementById('next-ep-drawer').classList.add('hidden')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="flex gap-space-sm items-center">
+<div class="relative w-28 h-16 rounded-lg overflow-hidden shrink-0 bg-surface-container-highest">
+<div class="w-full h-full bg-cover bg-center" data-alt="Wide shot of colossal warp vessel entering a glowing electric blue accretion disk surrounded by fragmented asteroid belts with deep space volumetric stars in deep charcoal and cyan." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDKLzhBt2KQ3kpzgrPeVVeA7mDZwiazXBduzIL0spK0_I_AOvaCuY9IF295OqkxlyLfQ2vXF7fp2FbUigFJ2U_dxGvoFGLApjSehVO4P3fCu2dyRehzIWugAnYI2fPc6s9PT_JSBWFEygfW2u33C5Il4j1rfQOyR-8LKBOAvalZalGQkkwRPjgdguzl6Iqd8eferMFtm5eoU-n8OjarcwziNwO_kWeSOf6QUsw-zkVqUzOEiT1DReZAdA')"></div>
+<div class="absolute bottom-1 right-1 px-1 bg-surface-container-lowest/80 rounded font-label-sm text-[9px] text-on-surface">54:12</div>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Episode 5</span>
+<h4 class="text-on-surface font-title-md text-title-md truncate">Terminal Event</h4>
+<span class="text-outline font-body-sm text-body-sm truncate">The horizon collapses.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs mt-1">
+<button class="flex-1 py-1.5 px-space-md rounded bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold hover:brightness-110 transition flex items-center justify-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+          Play Now
+        </button>
+<button class="px-space-md py-1.5 rounded bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md text-label-md transition" onclick="document.getElementById('next-ep-drawer').classList.add('hidden')">
+          Cancel
+        </button>
+</div>
+</div>
+<div class="absolute bottom-0 inset-x-0 z-30 pt-12 pb-space-md px-space-lg bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/90 to-transparent backdrop-blur-[2px]">
+<div class="relative w-full flex flex-col mb-space-md group/scrubber cursor-pointer" id="scrubber-zone">
+<div class="absolute -top-32 left-[68%] -translate-x-1/2 flex flex-col items-center pointer-events-none opacity-0 group-hover/scrubber:opacity-100 transition-all duration-200" id="scrub-tooltip">
+<div class="w-36 h-20 rounded-lg overflow-hidden bg-surface-container-highest shadow-2xl relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="Cinematic macro zoom inside spacecraft command hub with glowing cyan telemetry screens illuminating a pilot silhouette gazing toward a deep space black hole event." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC5ExvlJw9kjB8UFO0VxJGzByL0yMMPL-CohzEzL5OxdFw0fbwgQ1xm70pxmBJ0iPAUf8qr5fq3oT6qHE5ny13p6JRf8pFRnxAdGr8vYZu-f9ACWpqoEMG8TdYX28CYCNb1SI1HzDpntYF3DQ4lFPtp_KzK-o4CTN2rHnfhtbns74n3JAlWP2Xc64m9pHFl-BPMluN37ptQcoQaoDXWqgENltIkDaWq0fDBWJWYjET9koPoQpJSxdsIwg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 via-transparent to-transparent"></div>
+<span class="absolute bottom-1 inset-x-0 text-center font-label-sm text-label-sm text-primary font-bold">00:44:18</span>
+</div>
+<div class="w-2.5 h-2.5 bg-surface-container rotate-45 -mt-1.5 shadow-sm"></div>
+</div>
+<div class="relative w-full h-2 flex items-center group-hover/scrubber:h-3 transition-all duration-200">
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden relative group-hover/scrubber:h-2 transition-all">
+<div class="absolute left-0 top-0 bottom-0 w-[78%] bg-surface-variant/80 rounded-full"></div>
+<div class="absolute left-0 top-0 bottom-0 w-[68%] bg-primary-container rounded-full relative">
+<div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-r from-transparent to-primary"></div>
+</div>
+</div>
+<div class="absolute left-[68%] w-3.5 h-3.5 bg-on-primary-container rounded-full shadow-lg scale-0 group-hover/scrubber:scale-100 transition-transform -translate-x-1/2 flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-primary-container"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<button class="w-11 h-11 rounded-full bg-primary-container hover:scale-105 active:scale-95 text-on-primary-container flex items-center justify-center transition-all shadow-lg" id="btn-play-toggle">
+<span class="material-symbols-outlined text-headline-sm" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-surface-container-high/60 hover:bg-surface-bright text-on-surface flex items-center justify-center transition" title="Rewind 10 seconds">
+<span class="material-symbols-outlined text-title-md">replay_10</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-surface-container-high/60 hover:bg-surface-bright text-on-surface flex items-center justify-center transition" title="Fast Forward 10 seconds">
+<span class="material-symbols-outlined text-title-md">forward_10</span>
+</button>
+<div class="flex items-center gap-space-xs group/vol relative">
+<button class="w-9 h-9 rounded-full bg-surface-container-high/40 hover:bg-surface-bright text-on-surface flex items-center justify-center transition" id="vol-btn">
+<span class="material-symbols-outlined text-title-md">volume_up</span>
+</button>
+<div class="w-20 h-1 bg-surface-container-highest rounded-full overflow-hidden cursor-pointer relative">
+<div class="w-3/4 h-full bg-on-surface rounded-full"></div>
+</div>
+</div>
+<div class="text-on-surface-variant font-label-md text-label-md tabular-nums flex items-center gap-1 ml-2">
+<span class="text-on-surface font-semibold">00:44:18</span>
+<span class="text-outline">/</span>
+<span>01:02:40</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm relative">
+<div class="relative">
+<button class="px-space-md py-1.5 rounded bg-surface-container-high/70 hover:bg-surface-bright text-on-surface text-label-md font-label-md flex items-center gap-1.5 transition" onclick="document.getElementById('audio-sub-popover').classList.toggle('hidden')">
+<span class="material-symbols-outlined text-[18px]">subtitles</span>
+<span>Audio &amp; Subtitles</span>
+</button>
+<div class="hidden absolute bottom-12 right-0 w-80 bg-surface-container-low/95 backdrop-blur-2xl rounded-xl shadow-2xl p-space-md z-50" id="audio-sub-popover">
+<div class="grid grid-cols-2 gap-space-md">
+<div>
+<h5 class="text-tertiary font-label-sm text-label-sm uppercase tracking-wider mb-space-xs">Audio</h5>
+<div class="flex flex-col gap-1 font-body-sm text-body-sm">
+<button class="flex items-center justify-between text-left py-1 text-primary font-semibold">
+<span>English [Original] 5.1</span>
+<span class="material-symbols-outlined text-[16px]">check</span>
+</button>
+<button class="text-left py-1 text-on-surface-variant hover:text-on-surface transition">Spanish 5.1</button>
+<button class="text-left py-1 text-on-surface-variant hover:text-on-surface transition">French (Audiodesc)</button>
+<button class="text-left py-1 text-on-surface-variant hover:text-on-surface transition">Japanese 5.1</button>
+</div>
+</div>
+<div>
+<h5 class="text-tertiary font-label-sm text-label-sm uppercase tracking-wider mb-space-xs">Subtitles</h5>
+<div class="flex flex-col gap-1 font-body-sm text-body-sm">
+<button class="flex items-center justify-between text-left py-1 text-primary font-semibold">
+<span>English [CC]</span>
+<span class="material-symbols-outlined text-[16px]">check</span>
+</button>
+<button class="text-left py-1 text-on-surface-variant hover:text-on-surface transition">Spanish</button>
+<button class="text-left py-1 text-on-surface-variant hover:text-on-surface transition">French</button>
+<button class="text-left py-1 text-on-surface-variant hover:text-on-surface transition">Off</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative">
+<button class="px-space-sm py-1.5 rounded bg-surface-container-high/70 hover:bg-surface-bright text-on-surface text-label-md font-label-md flex items-center gap-1 transition" onclick="document.getElementById('quality-popover').classList.toggle('hidden')">
+<span class="material-symbols-outlined text-[18px]">hd</span>
+<span>4K UHD</span>
+</button>
+<div class="hidden absolute bottom-12 right-0 w-44 bg-surface-container-low/95 backdrop-blur-2xl rounded-xl shadow-2xl p-space-sm z-50 flex flex-col gap-1 font-body-sm text-body-sm" id="quality-popover">
+<span class="text-outline font-label-sm text-label-sm px-space-xs py-1 uppercase">Stream Quality</span>
+<button class="flex items-center justify-between px-space-xs py-1 rounded bg-surface-container-high text-primary font-semibold">
+<span>Auto (4K UHD)</span>
+<span class="material-symbols-outlined text-[16px]">check</span>
+</button>
+<button class="text-left px-space-xs py-1 text-on-surface-variant hover:text-on-surface transition">1080p Full HD</button>
+<button class="text-left px-space-xs py-1 text-on-surface-variant hover:text-on-surface transition">720p HD</button>
+<button class="text-left px-space-xs py-1 text-on-surface-variant hover:text-on-surface transition">Data Saver</button>
+</div>
+</div>
+<button class="px-space-sm py-1.5 rounded bg-surface-container-high/70 hover:bg-surface-bright text-on-surface text-label-md font-label-md transition" id="speed-btn">
+            1.0x
+          </button>
+<button class="w-9 h-9 rounded-full bg-surface-container-high/60 hover:bg-surface-bright text-on-surface flex items-center justify-center transition" title="Picture in Picture">
+<span class="material-symbols-outlined text-title-md">picture_in_picture_alt</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-surface-container-high/60 hover:bg-surface-bright text-on-surface flex items-center justify-center transition" title="Fullscreen Toggle">
+<span class="material-symbols-outlined text-title-md">fullscreen</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full mt-space-xl grid grid-cols-1 lg:grid-cols-3 gap-space-lg">
+<div class="bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">Interface Spec</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-tertiary">VideoPlayerProps</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-xs">Core Video Orchestrator</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+          Configured for low-latency HLS/DASH adaptive bitrate streaming with synchronized WebVTT cue rendering, DRM decrypt pipelines, and Dolby Atmos audio switching.
+        </p>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-md font-mono text-[12px] text-tertiary-fixed-dim leading-relaxed overflow-x-auto">
+<p><span class="text-outline">interface</span> <span class="text-primary">VideoPlayerProps</span> {</p>
+<p class="pl-4">contentId: <span class="text-secondary">string</span>;</p>
+<p class="pl-4">streamManifestUrl: <span class="text-secondary">string</span>;</p>
+<p class="pl-4">initialTimestamp?: <span class="text-secondary">number</span>;</p>
+<p class="pl-4">autoPlay?: <span class="text-secondary">boolean</span>;</p>
+<p class="pl-4">onPlaybackEnd: () =&gt; <span class="text-secondary">void</span>;</p>
+<p>}</p>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">Metadata Props</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-tertiary">DetailModalProps</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-xs">Overlay State Engine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+          Governs drawer visibility, next-episode auto-advance logic, and high-fidelity scrubbing previews generated via micro VTT sprites.
+        </p>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-md font-mono text-[12px] text-tertiary-fixed-dim leading-relaxed overflow-x-auto">
+<p><span class="text-outline">interface</span> <span class="text-primary">DetailModalProps</span> {</p>
+<p class="pl-4">episodeInfo: <span class="text-secondary">EpisodeData</span>;</p>
+<p class="pl-4">nextEpisodePromptMs?: <span class="text-secondary">number</span>;</p>
+<p class="pl-4">enableAudioDescriptions?: <span class="text-secondary">boolean</span>;</p>
+<p class="pl-4">onDismissModal: () =&gt; <span class="text-secondary">void</span>;</p>
+<p>}</p>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-space-lg shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">Feed Component</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-tertiary">MediaCardProps</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-xs">Card Surface Model</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+          Supports 16:9 episodic cards and 2:3 key art posters with progressive poster image decoding and dynamic playhead resumption markers.
+        </p>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-md font-mono text-[12px] text-tertiary-fixed-dim leading-relaxed overflow-x-auto">
+<p><span class="text-outline">interface</span> <span class="text-primary">MediaCardProps</span> {</p>
+<p class="pl-4">cardRatio: <span class="text-secondary">'16:9' | '2:3'</span>;</p>
+<p class="pl-4">posterUrl: <span class="text-secondary">string</span>;</p>
+<p class="pl-4">progressRatio?: <span class="text-secondary">number</span>;</p>
+<p class="pl-4">badges: <span class="text-secondary">Array&lt;string&gt;</span>;</p>
+<p>}</p>
+</div>
+</div>
+</div>
+<script>
+    (function() {
+      const playBtn = document.getElementById('btn-play-toggle');
+      const pulseIndicator = document.getElementById('play-pulse-indicator');
+      const speedBtn = document.getElementById('speed-btn');
+      let isPlaying = true;
+      const speeds = ['1.0x', '1.25x', '1.5x', '2.0x'];
+      let speedIdx = 0;
+
+      if (playBtn && pulseIndicator) {
+        playBtn.addEventListener('click', () => {
+          isPlaying = !isPlaying;
+          const icon = playBtn.querySelector('.material-symbols-outlined');
+          const pulseIcon = pulseIndicator.querySelector('.material-symbols-outlined');
+          
+          if (isPlaying) {
+            icon.textContent = 'pause';
+            pulseIcon.textContent = 'play_arrow';
+          } else {
+            icon.textContent = 'play_arrow';
+            pulseIcon.textContent = 'pause';
+          }
+
+          pulseIndicator.classList.remove('opacity-0', 'scale-75');
+          pulseIndicator.classList.add('opacity-100', 'scale-100');
+          setTimeout(() => {
+            pulseIndicator.classList.remove('opacity-100', 'scale-100');
+            pulseIndicator.classList.add('opacity-0', 'scale-75');
+          }, 350);
+        });
+      }
+
+      if (speedBtn) {
+        speedBtn.addEventListener('click', () => {
+          speedIdx = (speedIdx + 1) % speeds.length;
+          speedBtn.textContent = speeds[speedIdx];
+        });
+      }
+
+      let count = 12;
+      const countdownEl = document.getElementById('countdown-timer');
+      if (countdownEl) {
+        const interval = setInterval(() => {
+          count--;
+          if (count >= 0) {
+            countdownEl.textContent = count + 's';
+          } else {
+            clearInterval(interval);
+          }
+        }, 1000);
+      }
+    })();
+  </script>
+</div></main></body></html>

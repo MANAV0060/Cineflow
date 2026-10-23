@@ -1,0 +1,649 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>HBO - Chernobyl</title>
+<!-- Google Fonts for accurate condensed title and typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Inter:wght@300;400;500;600;700&amp;family=Share+Tech+Mono&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            anton: ['Anton', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"Share Tech Mono"', 'monospace'],
+          },
+          colors: {
+            'chernobyl-smoke': '#101517',
+            'rad-cyan': '#00dbe9',
+            'rad-orange': '#ee9800',
+            'rad-alert': '#e50914',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles for Layout & Visuals -->
+<style data-purpose="custom-styling">
+    .title-chernobyl {
+      font-family: 'Anton', sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+    
+    /* CRT Scanline & Grain Overlay */
+    .crt-scanlines {
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0) 50%,
+        rgba(0, 0, 0, 0.35) 50%,
+        rgba(0, 0, 0, 0.35)
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    /* Arc path connection line */
+    .arc-line-path {
+      stroke: rgba(255, 255, 255, 0.3);
+      stroke-width: 1.5;
+      fill: none;
+      transition: stroke 0.4s ease;
+    }
+    .arc-line-pulse {
+      stroke: #00dbe9;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-dasharray: 120 400;
+      animation: arcPulseStream 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      filter: drop-shadow(0 0 6px #00dbe9);
+    }
+    @keyframes arcPulseStream {
+      0% { stroke-dashoffset: 520; opacity: 0; }
+      20% { opacity: 0.9; }
+      80% { opacity: 0.9; }
+      100% { stroke-dashoffset: -520; opacity: 0; }
+    }
+
+    /* Atmospheric breathing glow behind reactor & visor */
+    @keyframes visorBreathe {
+      0%, 100% { opacity: 0.25; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.08); }
+    }
+    .ambient-glow-visor {
+      animation: visorBreathe 5s ease-in-out infinite;
+    }
+
+    /* Hero Play Pulsing Rings */
+    @keyframes playPulseRings {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      70% { transform: scale(1.4); opacity: 0; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    .play-ring-fx {
+      animation: playPulseRings 2.2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+    }
+
+    /* Node Selected Dual Concentric Animated Beacon */
+    @keyframes radarSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .node-selected {
+      border-color: #00dbe9 !important;
+      transform: scale(1.12);
+      box-shadow: 0 0 25px rgba(0, 219, 233, 0.75), inset 0 0 10px rgba(0, 219, 233, 0.4);
+    }
+    .node-beacon-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 9999px;
+      border: 1px dashed rgba(0, 219, 233, 0.8);
+      animation: radarSpin 7s linear infinite;
+      pointer-events: none;
+    }
+    .node-beacon-halo {
+      position: absolute;
+      inset: -12px;
+      border-radius: 9999px;
+      border: 1px solid rgba(0, 219, 233, 0.3);
+      animation: playPulseRings 2.8s ease-out infinite;
+      pointer-events: none;
+    }
+
+    /* Number roll-up effect */
+    .roll-container {
+      height: 3.5rem;
+      overflow: hidden;
+      display: inline-flex;
+      flex-direction: column;
+    }
+    .roll-item {
+      height: 3.5rem;
+      line-height: 3.5rem;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Entrance keyframes */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlideRight {
+      from { opacity: 0; transform: translateX(25px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-enter-1 { animation: fadeSlideUp 0.8s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .animate-enter-2 { animation: fadeSlideUp 0.8s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .animate-enter-3 { animation: fadeSlideUp 0.8s 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .animate-enter-nodes { animation: fadeSlideRight 0.9s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+    /* Glitch trigger effect */
+    .glitch-flash {
+      filter: contrast(1.4) saturate(1.4) hue-rotate(15deg);
+      transform: translate(2px, -1px);
+    }
+
+    /* Audio Geiger ticker pulse */
+    @keyframes geigerBlink {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+    .geiger-dot {
+      animation: geigerBlink 0.9s ease-in-out infinite;
+    }
+  </style>
+<!-- END: Custom Styles for Layout & Visuals -->
+</head>
+<body class="bg-black text-white m-0 p-0 font-sans select-none overflow-x-hidden min-h-screen flex items-center justify-center relative">
+<!-- BEGIN: Screen Container -->
+<main class="relative w-full max-w-[1440px] aspect-[16/9] max-h-screen overflow-hidden shadow-2xl bg-black flex flex-col justify-between transition-transform duration-200" data-purpose="main-screen-container" id="main-stage">
+<!-- Background Layer (Recreation of Image 7) -->
+<div class="absolute inset-0 z-0">
+<img alt="Chernobyl HBO series backdrop featuring firefighter in hazmat gas mask and apocalyptic industrial ruins" class="w-full h-full object-cover object-center filter brightness-[0.9] contrast-[1.05] transition-all duration-700 ease-out" id="bg-hero-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqCk7i6kWwb-CSit5nae4Ji4I8cMrE-l-6wgZ5QWyapFej6HHcEkN9DZ0Wne95QxhfDyqjHddtaqVzGn14tNHMx2H3B52I83NwhnDrAOCoKxotcK-rDnGauXZ5TrTCTJoFNqTjk3fuBBUjlKw1uytag28XkXqHU2sBawhmN4syQK3frwNY8h5aHcNU0vdVJDTApL9u7Fpp6tUMBzzMUbA5Cym2wg6pgx0JExBmLzUZ_0BBsh5dq30X2MR6jCWVPUGJjaU">
+<!-- Subtle breathing volumetric cyan-teal glow behind cooling towers & mask visor -->
+
+
+<!-- Vignette and cinematic darkness overlay for UI readability -->
+<div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/35 to-black/80 pointer-events-none"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/50 pointer-events-none"></div>
+</div>
+<!-- Floating Nuclear Ash & Radioactive Ember Particles Canvas -->
+<canvas class="absolute inset-0 z-10 pointer-events-none w-full h-full opacity-75" id="ash-canvas" width="1280" height="720"></canvas>
+<!-- Subtle CRT Scanlines & Grain Overlay -->
+<div class="crt-scanlines absolute inset-0 z-10 pointer-events-none opacity-40"></div>
+<!-- BEGIN: Top Navigation Bar -->
+<header class="relative z-30 flex items-center justify-between px-10 py-7 lg:px-14 lg:py-8 animate-enter-1">
+<!-- HBO Logo & Live Radiation Status -->
+<div class="flex items-center space-x-6" data-purpose="hbo-logo">
+<span class="font-black text-4xl lg:text-5xl tracking-tighter text-white font-sans inline-block drop-shadow-md hover:opacity-90 cursor-pointer transition">
+      HBO
+    </span>
+<!-- Dosimeter / Geiger Ticker Widget -->
+
+</div>
+<!-- Right Utility Icons & Badges -->
+<div class="flex items-center space-x-4 lg:space-x-5 text-sm font-medium tracking-wide">
+<!-- Dolby Atmos Badge -->
+<span class="hidden md:inline-flex items-center px-2 py-0.5 text-xs font-mono font-medium tracking-wider text-gray-300 rounded border border-white/15 bg-white/5 backdrop-blur-sm hover:border-rad-cyan/50 hover:text-white transition duration-200">
+      ATMOS
+    </span>
+<!-- HD Quality Badge -->
+<span class="px-2 py-0.5 text-xs font-mono font-semibold tracking-wider text-gray-300 rounded border border-white/15 bg-white/5 backdrop-blur-sm hover:border-rad-cyan/50 hover:text-white transition duration-200">
+      HD
+    </span>
+<!-- 18+ Rating Badge -->
+<span class="px-2 py-0.5 text-xs font-mono font-semibold tracking-wider text-gray-300 rounded border border-white/15 bg-white/5 backdrop-blur-sm hover:border-rad-cyan/50 hover:text-white transition duration-200">
+      18+
+    </span>
+<!-- Interactive Hamburger Menu Button -->
+<button aria-label="Menu" class="relative w-10 h-10 rounded bg-white/10 hover:bg-white/20 active:scale-95 border border-white/15 backdrop-blur-md flex flex-col items-center justify-center gap-1.5 transition duration-200 group cursor-pointer" id="menu-btn">
+<span class="w-5 h-[2px] bg-white rounded-full transition-transform duration-300" id="bar-top"></span>
+<span class="w-5 h-[2px] bg-white rounded-full transition-opacity duration-200" id="bar-mid"></span>
+<span class="w-5 h-[2px] bg-white rounded-full transition-transform duration-300" id="bar-bot"></span>
+</button>
+</div>
+</header>
+<!-- END: Top Navigation Bar -->
+<!-- Tactical Drawer Menu Overlay (Morphing Preview) -->
+<div class="absolute top-20 right-10 lg:right-14 z-40 w-64 bg-black/90 border border-white/20 rounded-xl p-5 backdrop-blur-xl shadow-2xl transition-all duration-300 opacity-0 pointer-events-none -translate-y-3 font-sans" id="drawer-menu">
+<div class="text-[10px] font-mono uppercase tracking-widest text-rad-cyan mb-3 flex items-center justify-between">
+<span class="">SYSTEM ARCHIVE</span>
+<span class="w-1.5 h-1.5 rounded-full bg-rad-cyan"></span>
+</div>
+<ul class="space-y-2 text-sm text-gray-300">
+<li class="hover:text-white hover:translate-x-1 cursor-pointer transition flex items-center justify-between py-1 border-b border-white/5">
+<span class="">Episode Guide</span><span class="text-xs font-mono text-gray-500">05 EPS</span>
+</li>
+<li class="hover:text-white hover:translate-x-1 cursor-pointer transition flex items-center justify-between py-1 border-b border-white/5">
+<span class="">Cast &amp; Characters</span><span class="text-xs font-mono text-gray-500">ARCHIVE</span>
+</li>
+<li class="hover:text-white hover:translate-x-1 cursor-pointer transition flex items-center justify-between py-1 border-b border-white/5">
+<span class="">The Chernobyl Podcast</span><span class="text-xs font-mono text-rad-cyan">AUDIO</span>
+</li>
+<li class="hover:text-white hover:translate-x-1 cursor-pointer transition flex items-center justify-between py-1">
+<span class="">Historical Declassified</span><span class="text-xs font-mono text-gray-500">1986</span>
+</li>
+</ul>
+</div>
+<!-- BEGIN: Main Showcase Area -->
+<div class="relative z-20 flex-1 grid grid-cols-12 px-10 lg:px-14 items-center">
+<!-- Left Column: Title, Synopsis, and Play Button -->
+<div class="col-span-12 md:col-span-7 lg:col-span-6 flex flex-col items-start gap-4 animate-enter-2" data-purpose="showcase-content">
+<div class="flex items-center gap-5 sm:gap-6">
+<!-- Play Button with Radar Waves & Magnetic Glow -->
+<div class="relative group cursor-pointer" id="play-button-wrap"><button aria-label="Play Episode" class="relative w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-black/80 border border-white/40 hover:border-white hover:scale-105 active:scale-95 flex items-center justify-center text-white transition duration-300 shadow-2xl backdrop-blur-sm" id="hero-play-btn"><svg class="w-7 h-7 lg:w-9 lg:h-9 fill-current translate-x-1 transition duration-300" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></button></div>
+<!-- Chernobyl Big Condensed Title -->
+<div class="flex flex-col">
+<h1 class="title-chernobyl text-5xl sm:text-6xl lg:text-8xl text-white tracking-wider drop-shadow-lg select-none leading-none">
+          CHERNOBYL
+        </h1>
+<div class="flex items-center gap-2 mt-1"><span class="text-xs font-mono tracking-[0.2em] uppercase text-white/60">MINISERIES</span><span class="text-white/30">/</span><span class="text-xs font-mono tracking-[0.2em] text-white/80 uppercase" id="active-episode-title-badge">PART 01 — 1:23:45</span></div>
+</div>
+</div>
+<!-- Episode Subtitle & Dynamic Airtime Meta -->
+<div class="flex items-center gap-3 text-xs font-mono text-gray-400 ml-1 lg:ml-2 transition-all duration-300" id="meta-display"><span class="text-xs font-mono tracking-widest text-white/90 font-medium" id="active-ep-tag">PART 01</span><span class="text-white/30">/</span><span class="text-xs font-mono tracking-widest text-white/60" id="active-ep-runtime">59 MIN</span><span class="text-white/30">/</span><span class="text-xs font-mono tracking-widest text-white/60">5.1 SURROUND</span></div>
+<!-- Historical Synopsis with Smooth Slide/Cross-fade -->
+<div class="overflow-hidden min-h-[72px] ml-1 lg:ml-2">
+<p class="text-sm md:text-base text-gray-300 max-w-md font-normal leading-relaxed drop-shadow transition-all duration-300 transform translate-y-0 opacity-100" id="synopsis-text">
+        The historical mini-series created by Craig Mazin. The television channel HBO, together with Sky, dramatizes the story of the 1986 nuclear disaster.
+      </p>
+</div>
+</div>
+<!-- Right Column: Interactive Arc Episode Dial -->
+<div class="col-span-12 md:col-span-5 lg:col-span-6 h-full relative flex items-center justify-end animate-enter-nodes" data-purpose="episode-navigation-dial">
+<!-- SVG Arc Curve for the Dial Connector with Traveling Energy Beam -->
+<div class="absolute right-0 top-0 bottom-0 w-[420px] pointer-events-none z-0">
+<svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 420 540"><path class="arc-line-path" d="M 380,20 C 310,120 220,270 340,490" id="guide-arc"></path><circle cx="395" cy="50" fill="white" opacity="0.4" r="2.5"></circle><circle cx="328" cy="145" fill="white" opacity="0.4" r="2.5"></circle><circle cx="304" cy="270" fill="white" opacity="0.6" r="3"></circle><circle cx="320" cy="380" fill="white" opacity="0.4" r="2.5"></circle><circle cx="370" cy="480" fill="white" opacity="0.4" r="2.5"></circle></svg>
+</div>
+<!-- Node List Container: 5 Episodes aligned along curve -->
+<div aria-label="Chernobyl Episodes" class="flex flex-col gap-3 lg:gap-4 relative z-10 w-full max-w-[370px]" id="episode-list" role="tablist">
+<!-- Episode 01 Node -->
+<div aria-selected="true" class="episode-node relative flex items-center justify-end gap-3 group cursor-pointer translate-x-1 transition-all duration-300" data-date="MAY 6, 2019" data-index="1" data-runtime="59 MIN" data-synopsis="The historical mini-series created by Craig Mazin. The television channel HBO, together with Sky, dramatizes the story of the 1986 nuclear disaster." data-title="1:23:45" role="tab" tabindex="0"><div class="text-right transition-all duration-300 group-hover:-translate-x-1"><div class="text-xs font-bold text-white tracking-widest font-mono">01</div><div class="text-[11px] text-gray-300 font-medium font-sans">1:23:45</div><div class="text-[10px] text-white/50 font-mono">MAY 6, 2019</div></div><div class="relative"><div class="node-thumb w-14 h-14 rounded-full border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.4)] overflow-hidden shrink-0 transition-transform duration-300"><img alt="Episode 1 - 1:23:45" class="w-full h-full object-cover object-[88%_16%] transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqCk7i6kWwb-CSit5nae4Ji4I8cMrE-l-6wgZ5QWyapFej6HHcEkN9DZ0Wne95QxhfDyqjHddtaqVzGn14tNHMx2H3B52I83NwhnDrAOCoKxotcK-rDnGauXZ5TrTCTJoFNqTjk3fuBBUjlKw1uytag28XkXqHU2sBawhmN4syQK3frwNY8h5aHcNU0vdVJDTApL9u7Fpp6tUMBzzMUbA5Cym2wg6pgx0JExBmLzUZ_0BBsh5dq30X2MR6jCWVPUGJjaU"></div></div></div>
+<!-- Episode 02 Node -->
+<div aria-selected="false" class="episode-node relative flex items-center justify-end gap-3 group cursor-pointer -translate-x-6 transition-all duration-300" data-date="MAY 13, 2019" data-index="2" data-runtime="65 MIN" data-synopsis="With untold millions at risk, Ulana Khomyuk attempts to warn Valery Legasov about the danger of a catastrophic secondary thermal explosion." data-title="Please Remain Calm" role="tab" tabindex="0">
+<div class="text-right transition-all duration-300 group-hover:-translate-x-1">
+<div class="text-xs font-bold text-white tracking-widest font-mono">02</div>
+<div class="text-[11px] text-gray-300 font-medium leading-tight font-sans">Please Remain<br>Calm</div>
+</div>
+<div class="relative">
+<div class="node-thumb w-14 h-14 rounded-full border-2 border-white/40 group-hover:border-rad-cyan overflow-hidden shrink-0 transition-transform duration-300">
+<img alt="Episode 2 - Please Remain Calm" class="w-full h-full object-cover object-[81%_33%] transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqCk7i6kWwb-CSit5nae4Ji4I8cMrE-l-6wgZ5QWyapFej6HHcEkN9DZ0Wne95QxhfDyqjHddtaqVzGn14tNHMx2H3B52I83NwhnDrAOCoKxotcK-rDnGauXZ5TrTCTJoFNqTjk3fuBBUjlKw1uytag28XkXqHU2sBawhmN4syQK3frwNY8h5aHcNU0vdVJDTApL9u7Fpp6tUMBzzMUbA5Cym2wg6pgx0JExBmLzUZ_0BBsh5dq30X2MR6jCWVPUGJjaU">
+</div>
+</div>
+</div>
+<!-- Episode 03 Node -->
+<div aria-selected="false" class="episode-node relative flex items-center justify-end gap-3 group cursor-pointer -translate-x-12 transition-all duration-300" data-date="MAY 20, 2019" data-index="3" data-runtime="63 MIN" data-synopsis="Legasov details an intricate decontamination plan, while local miners dig in extreme conditions under the damaged reactor to stop a total core meltdown." data-title="Open Wide, O Earth" role="tab" tabindex="0">
+<div class="text-right transition-all duration-300 group-hover:-translate-x-1">
+<div class="text-xs font-bold text-white tracking-widest font-mono">03</div>
+<div class="text-[11px] text-gray-300 font-medium leading-tight font-sans">Open Wide,<br>O Earth</div>
+</div>
+<div class="relative">
+<div class="node-thumb w-14 h-14 rounded-full border-2 border-white/40 group-hover:border-rad-cyan overflow-hidden shrink-0 transition-transform duration-300">
+<img alt="Episode 3 - Open Wide, O Earth" class="w-full h-full object-cover object-[77%_52%] transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqCk7i6kWwb-CSit5nae4Ji4I8cMrE-l-6wgZ5QWyapFej6HHcEkN9DZ0Wne95QxhfDyqjHddtaqVzGn14tNHMx2H3B52I83NwhnDrAOCoKxotcK-rDnGauXZ5TrTCTJoFNqTjk3fuBBUjlKw1uytag28XkXqHU2sBawhmN4syQK3frwNY8h5aHcNU0vdVJDTApL9u7Fpp6tUMBzzMUbA5Cym2wg6pgx0JExBmLzUZ_0BBsh5dq30X2MR6jCWVPUGJjaU">
+</div>
+</div>
+</div>
+<!-- Episode 04 Node -->
+<div aria-selected="false" class="episode-node relative flex items-center justify-end gap-3 group cursor-pointer -translate-x-6 transition-all duration-300" data-date="MAY 27, 2019" data-index="4" data-runtime="65 MIN" data-synopsis="General Tarakanov enlists bio-robots on the deadly rooftop of Reactor 4 to clear lethal graphite chunks before safe enclosure can begin." data-title="The Happiness of All Mankind" role="tab" tabindex="0">
+<div class="text-right transition-all duration-300 group-hover:-translate-x-1">
+<div class="text-xs font-bold text-white tracking-widest font-mono">04</div>
+<div class="text-[11px] text-gray-300 font-medium leading-tight font-sans">The Happiness<br>of All Mankind</div>
+</div>
+<div class="relative">
+<div class="node-thumb w-14 h-14 rounded-full border-2 border-white/40 group-hover:border-rad-cyan overflow-hidden shrink-0 transition-transform duration-300">
+<img alt="Episode 4 - The Happiness of All Mankind" class="w-full h-full object-cover object-[79%_71%] transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqCk7i6kWwb-CSit5nae4Ji4I8cMrE-l-6wgZ5QWyapFej6HHcEkN9DZ0Wne95QxhfDyqjHddtaqVzGn14tNHMx2H3B52I83NwhnDrAOCoKxotcK-rDnGauXZ5TrTCTJoFNqTjk3fuBBUjlKw1uytag28XkXqHU2sBawhmN4syQK3frwNY8h5aHcNU0vdVJDTApL9u7Fpp6tUMBzzMUbA5Cym2wg6pgx0JExBmLzUZ_0BBsh5dq30X2MR6jCWVPUGJjaU">
+</div>
+</div>
+</div>
+<!-- Episode 05 Node -->
+<div aria-selected="false" class="episode-node relative flex items-center justify-end gap-3 group cursor-pointer translate-x-2 transition-all duration-300" data-date="JUNE 3, 2019" data-index="5" data-runtime="72 MIN" data-synopsis="Legasov, Shcherbina, and Khomyuk risk everything to reveal the systemic design flaws and the state cover-up that doomed Chernobyl." data-title="Vichnaya Pamyat" role="tab" tabindex="0">
+<div class="text-right transition-all duration-300 group-hover:-translate-x-1">
+<div class="text-xs font-bold text-white tracking-widest font-mono">05</div>
+<div class="text-[11px] text-gray-300 font-medium leading-tight font-sans">Vichnaya Pamyat</div>
+</div>
+<div class="relative">
+<div class="node-thumb w-14 h-14 rounded-full border-2 border-white/40 group-hover:border-rad-cyan overflow-hidden shrink-0 transition-transform duration-300">
+<img alt="Episode 5 - Vichnaya Pamyat" class="w-full h-full object-cover object-[83%_90%] transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqCk7i6kWwb-CSit5nae4Ji4I8cMrE-l-6wgZ5QWyapFej6HHcEkN9DZ0Wne95QxhfDyqjHddtaqVzGn14tNHMx2H3B52I83NwhnDrAOCoKxotcK-rDnGauXZ5TrTCTJoFNqTjk3fuBBUjlKw1uytag28XkXqHU2sBawhmN4syQK3frwNY8h5aHcNU0vdVJDTApL9u7Fpp6tUMBzzMUbA5Cym2wg6pgx0JExBmLzUZ_0BBsh5dq30X2MR6jCWVPUGJjaU">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Main Showcase Area -->
+<!-- BEGIN: Bottom Footer Navigation -->
+<footer class="relative z-20 px-10 pb-8 lg:px-14 lg:pb-10 flex items-end justify-between animate-enter-3">
+<!-- Current Episode Large Number & Air Date with Roll Up Effect -->
+<div class="flex items-center space-x-5 border-l-2 border-rad-cyan/50 pl-4" data-purpose="current-episode-indicator">
+<!-- Vertical Roller Episode Number Container -->
+<div class="roll-container font-mono font-bold text-5xl lg:text-6xl text-white tracking-tight drop-shadow-md">
+<div class="transition-transform duration-500 ease-out flex flex-col" id="roller-track">
+<span class="roll-item">01</span>
+<span class="roll-item">02</span>
+<span class="roll-item">03</span>
+<span class="roll-item">04</span>
+<span class="roll-item">05</span>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center text-xs tracking-widest font-semibold uppercase text-gray-300 font-mono">
+<span id="active-episode-date" class="">MAY 6, 2019</span>
+<svg class="w-4 h-4 ml-1 inline text-rad-cyan fill-current transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24">
+<path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
+</svg>
+</div>
+<!-- Tactical Lock Feedback Badge -->
+
+</div>
+</div>
+<!-- Quick subtle playback metadata -->
+<div class="text-right hidden sm:flex flex-col items-end text-xs text-gray-400 uppercase tracking-widest font-mono"><div class="text-xs text-white/80 font-mono tracking-widest uppercase">DIRECTED BY JOHAN RENCK • WRITTEN BY CRAIG MAZIN</div><span class="text-[10px] text-white/40 mt-1 font-mono tracking-widest uppercase">5 EPISODES COMPLETE • HBO ENTERTAINMENT</span></div>
+</footer>
+<!-- END: Bottom Footer Navigation -->
+</main>
+<!-- END: Screen Container -->
+<!-- BEGIN: Cinematic Engine & Interactive Arc Dial JavaScript Logic -->
+<script data-purpose="cinematic-interactivity">
+  document.addEventListener('DOMContentLoaded', () => {
+    // -------------------------------------------------------------------------
+    // 1. FLOATING NUCLEAR ASH & PARTICLES CANVAS
+    // -------------------------------------------------------------------------
+    const canvas = document.getElementById('ash-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    const particles = [];
+    const particleCount = 42;
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      width = canvas.width = canvas.offsetWidth;
+      height = canvas.height = canvas.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class AshParticle {
+      constructor() {
+        this.reset();
+        this.y = Math.random() * (height || 800); // initial scatter
+      }
+      reset() {
+        this.x = Math.random() * (width || 1440);
+        this.y = -10;
+        this.size = Math.random() * 2.2 + 0.6;
+        this.speedY = Math.random() * 0.45 + 0.2;
+        this.speedX = (Math.random() - 0.48) * 0.35;
+        this.opacity = Math.random() * 0.65 + 0.2;
+        this.isEmber = Math.random() > 0.82; // small percentage of glowing embers
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX + Math.sin(this.y * 0.015) * 0.2;
+        if (this.y > height + 10 || this.x < -20 || this.x > width + 20) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        if (this.isEmber) {
+          ctx.fillStyle = `rgba(0, 219, 233, ${this.opacity * 0.9})`;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = '#00dbe9';
+        } else {
+          ctx.fillStyle = `rgba(220, 225, 230, ${this.opacity * 0.65})`;
+          ctx.shadowBlur = 0;
+        }
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new AshParticle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // -------------------------------------------------------------------------
+    // 2. GEIGER-COUNTER OSCILLATOR & CRT MICRO-GLITCH
+    // -------------------------------------------------------------------------
+    const geigerCounterEl = document.getElementById('geiger-counter');
+    const geigerStatusEl = document.getElementById('geiger-status');
+    const mainStage = document.getElementById('main-stage');
+
+    function triggerMicroGlitch() {
+      mainStage.classList.add('glitch-flash');
+      setTimeout(() => {
+        mainStage.classList.remove('glitch-flash');
+      }, 90);
+    }
+
+    setInterval(() => {
+      // Oscillate around famous 3.6 R/h with random slight spikes
+      const base = 3.6;
+      const variation = (Math.random() * 0.24 - 0.12);
+      const val = (base + variation).toFixed(2);
+      if (geigerCounterEl) {
+        geigerCounterEl.textContent = `${val} R/h`;
+      }
+      // Micro spike alert simulation
+      if (Math.random() > 0.88) {
+        if (geigerStatusEl) {
+          geigerStatusEl.textContent = 'SPIKE';
+          geigerStatusEl.className = 'text-[9px] uppercase px-1 py-0.2 rounded bg-rad-orange/20 text-rad-orange font-semibold ml-1';
+        }
+        setTimeout(() => {
+          if (geigerStatusEl) {
+            geigerStatusEl.textContent = 'NOMINAL';
+            geigerStatusEl.className = 'text-[9px] uppercase px-1 py-0.2 rounded bg-rad-cyan/15 text-rad-cyan font-semibold ml-1';
+          }
+        }, 1200);
+      }
+    }, 1100);
+
+    // Trigger occasional subtle atmospheric glitch
+    setInterval(() => {
+      if (Math.random() > 0.65) {
+        triggerMicroGlitch();
+      }
+    }, 9000);
+
+    // -------------------------------------------------------------------------
+    // 3. EPISODE ARC DIAL NAVIGATION & SYNCHRONIZED TRANSITIONS
+    // -------------------------------------------------------------------------
+    const nodes = document.querySelectorAll('.episode-node');
+    const rollerTrack = document.getElementById('roller-track');
+    const activeDateEl = document.getElementById('active-episode-date');
+    const synopsisEl = document.getElementById('synopsis-text');
+    const epTagEl = document.getElementById('active-ep-tag');
+    const epRuntimeEl = document.getElementById('active-ep-runtime');
+    const epTitleBadgeEl = document.getElementById('active-episode-title-badge');
+    const lockBadgeEl = document.getElementById('lock-badge');
+    const bgHeroImg = document.getElementById('bg-hero-img');
+
+    let currentIndex = 0; // 0-indexed for 5 episodes
+
+    function selectEpisode(index, triggerGlitch = true) {
+      if (index < 0 || index >= nodes.length) return;
+      currentIndex = index;
+
+      const targetNode = nodes[index];
+
+      // Remove active halos and borders from all nodes
+      nodes.forEach(n => {
+        n.setAttribute('aria-selected', 'false');
+        const thumb = n.querySelector('.node-thumb');
+        thumb.classList.remove('node-selected', 'border-white');
+        thumb.classList.add('border-white/40');
+        
+        // Remove beacon decorators
+        const oldHalo = n.querySelector('.node-beacon-halo');
+        const oldRing = n.querySelector('.node-beacon-ring');
+        if (oldHalo) oldHalo.remove();
+        if (oldRing) oldRing.remove();
+      });
+
+      // Highlight target node
+      targetNode.setAttribute('aria-selected', 'true');
+      const thumb = targetNode.querySelector('.node-thumb');
+      thumb.classList.remove('border-white/40');
+      thumb.classList.add('node-selected', 'border-white');
+
+      // Add dynamic radar sweep ring & halo
+      const haloWrapper = targetNode.querySelector('.relative');
+      if (haloWrapper && !haloWrapper.querySelector('.node-beacon-halo')) {
+        const ring = document.createElement('div');
+        ring.className = 'node-beacon-ring';
+        const halo = document.createElement('div');
+        halo.className = 'node-beacon-halo';
+        haloWrapper.insertBefore(ring, thumb);
+        haloWrapper.insertBefore(halo, thumb);
+      }
+
+      // Dataset values
+      const epIndex = targetNode.getAttribute('data-index');
+      const epDate = targetNode.getAttribute('data-date');
+      const epTitle = targetNode.getAttribute('data-title');
+      const epRuntime = targetNode.getAttribute('data-runtime');
+      const epSynopsis = targetNode.getAttribute('data-synopsis');
+
+      // 1. Roll-up number transition
+      if (rollerTrack) {
+        rollerTrack.style.transform = `translateY(-${(parseInt(epIndex) - 1) * 3.5}rem)`;
+      }
+
+      // 2. Lock feedback micro animation
+      if (lockBadgeEl) {
+        lockBadgeEl.textContent = 'ACQUIRING...';
+        lockBadgeEl.classList.remove('text-rad-cyan', 'bg-rad-cyan/15');
+        lockBadgeEl.classList.add('text-rad-orange', 'bg-rad-orange/20');
+        setTimeout(() => {
+          lockBadgeEl.textContent = `EP. ${epIndex} LOCKED`;
+          lockBadgeEl.classList.remove('text-rad-orange', 'bg-rad-orange/20');
+          lockBadgeEl.classList.add('text-rad-cyan', 'bg-rad-cyan/15');
+        }, 220);
+      }
+
+      // 3. Smooth crossfade & slide-in synopsis & metadata
+      synopsisEl.style.opacity = '0';
+      synopsisEl.style.transform = 'translateY(8px)';
+      
+      setTimeout(() => {
+        activeDateEl.textContent = epDate;
+        epTagEl.textContent = `EPISODE ${epIndex.padStart(2, '0')}`;
+        epRuntimeEl.textContent = epRuntime;
+        epTitleBadgeEl.textContent = `EP. ${epIndex.padStart(2, '0')} — ${epTitle.toUpperCase()}`;
+        synopsisEl.textContent = epSynopsis;
+        synopsisEl.style.opacity = '1';
+        synopsisEl.style.transform = 'translateY(0)';
+      }, 180);
+
+      // 4. Subtle background zoom/shimmer response
+      if (bgHeroImg) {
+        bgHeroImg.style.transform = `scale(${1 + index * 0.015})`;
+      }
+
+      if (triggerGlitch) {
+        triggerMicroGlitch();
+      }
+    }
+
+    // Attach click listeners to nodes
+    nodes.forEach((node, idx) => {
+      node.addEventListener('click', () => {
+        selectEpisode(idx, true);
+      });
+      // Keyboard support on node
+      node.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectEpisode(idx, true);
+        }
+      });
+    });
+
+    // Arrow Up / Down keyboard cycle navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = (currentIndex + 1) % nodes.length;
+        selectEpisode(next, true);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = (currentIndex - 1 + nodes.length) % nodes.length;
+        selectEpisode(prev, true);
+      }
+    });
+
+    // -------------------------------------------------------------------------
+    // 4. PLAY BUTTON & DRAWER INTERACTION
+    // -------------------------------------------------------------------------
+    const heroPlayBtn = document.getElementById('hero-play-btn');
+    if (heroPlayBtn) {
+      heroPlayBtn.addEventListener('click', () => {
+        triggerMicroGlitch();
+        heroPlayBtn.classList.add('scale-90');
+        setTimeout(() => {
+          heroPlayBtn.classList.remove('scale-90');
+        }, 150);
+      });
+    }
+
+    const menuBtn = document.getElementById('menu-btn');
+    const drawerMenu = document.getElementById('drawer-menu');
+    const barTop = document.getElementById('bar-top');
+    const barMid = document.getElementById('bar-mid');
+    const barBot = document.getElementById('bar-bot');
+    let menuOpen = false;
+
+    if (menuBtn && drawerMenu) {
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menuOpen = !menuOpen;
+        if (menuOpen) {
+          drawerMenu.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-3');
+          drawerMenu.classList.add('opacity-100', 'translate-y-0');
+          barTop.classList.add('rotate-45', 'translate-y-2');
+          barMid.classList.add('opacity-0');
+          barBot.classList.add('-rotate-45', '-translate-y-2');
+        } else {
+          drawerMenu.classList.add('opacity-0', 'pointer-events-none', '-translate-y-3');
+          drawerMenu.classList.remove('opacity-100', 'translate-y-0');
+          barTop.classList.remove('rotate-45', 'translate-y-2');
+          barMid.classList.remove('opacity-0');
+          barBot.classList.remove('-rotate-45', '-translate-y-2');
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (menuOpen && !drawerMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+          menuOpen = false;
+          drawerMenu.classList.add('opacity-0', 'pointer-events-none', '-translate-y-3');
+          drawerMenu.classList.remove('opacity-100', 'translate-y-0');
+          barTop.classList.remove('rotate-45', 'translate-y-2');
+          barMid.classList.remove('opacity-0');
+          barBot.classList.remove('-rotate-45', '-translate-y-2');
+        }
+      });
+    }
+  });
+</script>
+<!-- END: Cinematic Engine & Interactive Arc Dial JavaScript Logic -->
+
+
+</body></html>

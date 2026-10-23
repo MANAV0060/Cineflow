@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#690003", "surface-container": "#1e1f25", "primary": "#ffb4aa", "on-primary-container": "#fff7f6", "background": "#121318", "on-background": "#e3e1e9", "tertiary-fixed-dim": "#00dbe9", "on-error": "#690005", "on-surface": "#e3e1e9", "secondary-container": "#ee9800", "error-container": "#93000a", "outline-variant": "#5e3f3b", "surface-container-high": "#292a2f", "surface-variant": "#34343a", "secondary-fixed": "#ffddb8", "on-secondary-fixed": "#2a1700", "tertiary-container": "#007f87", "on-error-container": "#ffdad6", "on-surface-variant": "#e9bcb6", "on-secondary": "#472a00", "surface-container-low": "#1a1b21", "secondary-fixed-dim": "#ffb95f", "on-tertiary-fixed-variant": "#004f54", "inverse-primary": "#c0000c", "inverse-surface": "#e3e1e9", "surface-bright": "#38393f", "on-tertiary-fixed": "#002022", "surface-container-lowest": "#0d0e13", "surface-container-highest": "#34343a", "inverse-on-surface": "#2f3036", "on-secondary-fixed-variant": "#653e00", "tertiary-fixed": "#7df4ff", "on-secondary-container": "#5b3800", "surface": "#121318", "error": "#ffb4ab", "tertiary": "#00dbe9", "on-primary-fixed": "#410001", "primary-fixed-dim": "#ffb4aa", "primary-container": "#e50914", "on-tertiary-container": "#e8fdff", "surface-dim": "#121318", "on-tertiary": "#00363a", "secondary": "#ffb95f", "outline": "#af8782", "primary-fixed": "#ffdad5", "surface-tint": "#ffb4aa", "on-primary-fixed-variant": "#930007" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-md": "1rem", "space-lg": "1.5rem", "gutter": "1.5rem", "gutter-mobile": "0.75rem", "margin": "3rem", "margin-mobile": "1.25rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "display-xl": [ "Plus Jakarta Sans" ], "label-sm": [ "Inter" ], "body-sm": [ "Inter" ], "headline-md": [ "Plus Jakarta Sans" ], "label-md": [ "Inter" ], "body-lg": [ "Inter" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-xl-mobile": [ "Plus Jakarta Sans" ], "title-md": [ "Plus Jakarta Sans" ], "body-md": [ "Inter" ] }, "fontSize": { "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "headline-lg": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "display-xl": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "400" } ], "headline-md": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-md": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" } ], "headline-sm": [ "22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "display-xl-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" } ], "title-md": [ "18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ] } } } };</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.65)]"><div class="h-20 w-full px-gutter md:px-margin flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-xl"><div class="flex items-center gap-space-sm"><img alt="CineFlow Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WmU2BztXMtwiOE8nVpXySuglAylbqWAsD4G79pGZm3PswvV_sAoRcoh9sff1R-R0YS0N-x92Jt5IaQhlI5nD9gruhaeV6eJmPBDz0pbkjPvXO5tGY4FbI3z_MCZiTdAefh54M0R0bGOY_YKSiqJh-trO-8pspwaIfx6H0boOZhAaxmh8jLfObQd0u5x_5sHTTsAgVbMemo0teMlHFP2rx5DvIFf4oteHqS7qnbT0t3U5Pwwg10Rw9PNYz0"/><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface">Cine<span class="text-primary-container">Flow</span></span></div><nav class="hidden lg:flex items-center gap-space-lg" data-active-classes="text-on-surface font-bold"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">Home</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="movies" href="#">Movies</a><a aria-current="page" class="transition-colors text-on-surface font-bold" data-path="tv-shows" href="#">TV Shows</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="my-list" href="#">My List</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="categories" href="#">Categories</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center h-10 px-space-md rounded-full bg-surface-container-high/60 focus-within:bg-surface-container-high transition-all group"><span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-space-sm">search</span><input class="bg-transparent border-0 outline-none font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 w-40 md:w-56 focus:w-72 transition-all" placeholder="Titles, genres, creators..." type="text"/><span class="ml-space-sm px-space-xs py-0.5 rounded bg-surface-variant font-label-sm text-label-sm text-on-surface-variant">⌘K</span></div><button class="relative p-space-sm rounded-full bg-surface-container-high/60 hover:bg-surface-container-high hover:text-on-surface text-on-surface-variant transition-colors flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary-container"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwVRLg1YGzC-K0VSP4yql7A3ydoFhlgRoNVtz0ySyB6HYpFLYGIpSnlJSYZqU4o8rb_x84_lhlCqsiiQITbEPvuqufn1t4JetJwNoeYhrF6yO2uGpJhzJ1Mez_oXnrAvkf8mMiLO7Hytg7VO6a-kKH_KvGF1KkIqJguO1O-ZFy-9YHlxbkpzKZ91Qip6192V8_Y1t4pfdFvmHyez-TZWB0-XqK_YLdZSX67uivS9QKCw9b1JeoOl2_kA"/><span class="material-symbols-outlined text-on-surface-variant text-[18px] hidden md:inline">arrow_drop_down</span></div></div></div></header><main class="w-full pt-20 bg-background min-h-screen">
+<!-- VARIANT 2: FULL-BLEED CINEMATIC HERO SECTION -->
+<section class="relative w-full h-[620px] md:h-[720px] lg:h-[780px] flex items-end overflow-hidden">
+<!-- Full-Bleed Background Artwork -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Cinematic high budget sci-fi scene of Cyberpunk Red Line featuring neon-lit futuristic metropolitan skyline drenched in crimson and electric teal rain reflections with a sleek cybernetic agent standing on a glass balcony gazing at flying vehicles in deep atmospheric volumetric mist" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD7L6DjdeIVlnqj_mxNRKcDsf6zPAWQWCrPmoHboA1HhdcKrviVspLh63bgK5y5Oh02ZfbrYZX_ENJLOHQiz_7qxdEAAshkXJ-loarVnq673cnaZJLqU13MwIWCewiZ1Vn9MCXLdtH09urX9Hy2VEHBFvtxczNOEpuzFWElCZe8aBousI9XefUVqZCD_KCShK4E4OobNomzQnAFH9fT-XFPJXlo7XUjLuPNMj292hn1tDbcK1iBIEFGfw')"></div>
+<!-- Multi-layered Atmospheric Scrim Overlays -->
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent w-full lg:w-3/5"></div>
+<div class="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-surface-container-lowest/90 to-transparent"></div>
+<!-- Hero Content Layer -->
+<div class="relative z-10 w-full px-gutter md:px-margin pb-space-xl flex flex-col gap-space-lg max-w-5xl">
+<!-- Floating Glass Badge Pill Bar -->
+<div class="flex flex-wrap items-center gap-space-xs sm:gap-space-sm">
+<span class="px-space-sm py-1 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-wider uppercase font-extrabold flex items-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-[14px]">local_fire_department</span> Trending #1
+</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high/90 text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span> 9.1 IMDb
+</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high/80 text-on-surface-variant font-label-sm text-label-sm font-semibold backdrop-blur-md">2024</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high/80 text-secondary-fixed-dim font-label-sm text-label-sm font-bold backdrop-blur-md">TV-MA</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high/80 text-on-surface-variant font-label-sm text-label-sm backdrop-blur-md">3 Seasons</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high/90 text-tertiary font-label-sm text-label-sm font-bold tracking-wider backdrop-blur-md">4K DOLBY VISION</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high/90 text-secondary-fixed-dim font-label-sm text-label-sm font-bold tracking-wider backdrop-blur-md">ATMOS</span>
+</div>
+<!-- Title & Tagline Branding -->
+<div class="flex flex-col gap-space-xs">
+<h1 class="font-display-xl text-display-xl text-on-surface tracking-tight font-extrabold leading-tight drop-shadow-xl">
+CYBERPUNK<span class="text-primary-container">:</span> RED LINE
+</h1>
+<p class="font-title-md text-title-md text-on-surface-variant/95 max-w-2xl font-semibold">
+The lattice will burn before the syndicate yields.
+</p>
+</div>
+<!-- Integrated Action Cluster -->
+<div class="flex flex-wrap items-center gap-space-sm sm:gap-space-md pt-space-xs">
+<button class="h-12 px-space-xl rounded-lg bg-primary-container hover:bg-inverse-primary text-on-primary-container font-label-md text-label-md uppercase tracking-wider font-extrabold flex items-center gap-space-sm shadow-[0_4px_28px_-4px_rgba(229,9,20,0.7)] hover:scale-[1.02] active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span>Continue S3:E4</span>
+</button>
+<button class="h-12 px-space-lg rounded-lg bg-surface-container-high/70 hover:bg-surface-container-high text-on-surface backdrop-blur-md font-label-md text-label-md font-semibold flex items-center gap-space-xs hover:scale-[1.02] transition-all shadow-md">
+<span class="material-symbols-outlined text-[20px]">movie</span>
+<span>Trailer</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="w-12 h-12 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-all hover:text-primary backdrop-blur-md" title="Add to Watchlist">
+<span class="material-symbols-outlined text-[22px]">bookmark_add</span>
+</button>
+<button class="w-12 h-12 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-all hover:text-secondary backdrop-blur-md" title="Rate this Title">
+<span class="material-symbols-outlined text-[22px]">thumb_up</span>
+</button>
+<button class="w-12 h-12 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-all hover:text-tertiary backdrop-blur-md" title="Share link">
+<span class="material-symbols-outlined text-[22px]">share</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- STICKY SEGMENTED NAVIGATION DOCK -->
+<div class="sticky top-20 z-40 w-full bg-surface-container-lowest/90 backdrop-blur-xl border-y border-surface-container-high">
+<div class="px-gutter md:px-margin flex items-center justify-between py-space-sm overflow-x-auto">
+<div class="inline-flex p-1 rounded-xl bg-surface-container-low/80 backdrop-blur-md gap-1">
+<button class="tab-dock-btn active px-space-lg py-2 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md font-bold shadow-sm flex items-center gap-2 transition-all" data-tab="tab-episodes">
+<span class="material-symbols-outlined text-[18px]">play_circle</span>
+<span>Episodes (5 Released)</span>
+</button>
+<button class="tab-dock-btn px-space-lg py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md font-semibold flex items-center gap-2 transition-all" data-tab="tab-details">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span>Cast &amp; Metadata</span>
+</button>
+<button class="tab-dock-btn px-space-lg py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md font-semibold flex items-center gap-2 transition-all" data-tab="tab-recommendations">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+<span>More Like This</span>
+</button>
+</div>
+<!-- Season Selector Pills (Docked alongside) -->
+<div class="inline-flex p-1 rounded-lg bg-surface-container-high/80 backdrop-blur-md gap-1 shrink-0 ml-space-md">
+<button class="season-pill px-space-md py-1.5 rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">
+Season 1
+</button>
+<button class="season-pill px-space-md py-1.5 rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">
+Season 2
+</button>
+<button class="season-pill active px-space-md py-1.5 rounded-md bg-surface-container-lowest text-on-surface font-label-md text-label-md font-bold shadow-sm flex items-center gap-1.5">
+<span>Season 3</span>
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+</button>
+</div>
+</div>
+</div>
+<!-- MAIN CONTENT CONTAINER -->
+<div class="w-full px-gutter md:px-margin py-space-xl flex flex-col gap-space-xl">
+<!-- 1. EPISODES MULTI-COLUMN CARD GRID -->
+<section class="flex flex-col gap-space-lg" id="tab-episodes">
+<div class="flex items-center justify-between border-b border-surface-container-high/60 pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">Episodes</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">5 Released</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Click episode card to preview or continue playback</span>
+</div>
+<!-- 3-Column Responsive Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md">
+<!-- Card 1: Completed Episode -->
+<article class="flex flex-col rounded-xl overflow-hidden bg-surface-container-low/60 hover:bg-surface-container-high/60 border border-surface-container-high/30 hover:border-surface-variant transition-all duration-300 group cursor-pointer shadow-md">
+<div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+<img alt="Episodic still of a dark underground cyberpunk alley bathed in holographic ads with Elena walking into a concealed hideout, heavy rain ambiance" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Episodic still of a dark underground cyberpunk alley bathed in holographic ads with Elena walking into a concealed hideout, heavy rain ambiance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx5gVuwnDzNtg6N7eDReddzQolk6TqguESxz5VNpykUpAhTKbxet_RvaBphnOIFYdRMiTnFE6YLDwCvDnSFXeCdI7elpglrhkBDWXY0_hrpr_SlewttsDUNUU4vslhUHdGIS90_pG0I-WH_NO8TnA9edYpjZ2_xtt9VpAT7GYoNMbcqj2LK1q6VrNi2ihiTzLdl7xx47b_Em6_B1XDoqeZ8583h6xizlgnEmqEuLkI7ozPrFoSQVxs5Q"/>
+<div class="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-on-surface text-[40px] drop-shadow-lg">play_circle</span>
+</div>
+<span class="absolute top-2 left-2 px-space-xs py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-primary font-bold">E1</span>
+<span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-on-surface font-semibold">54m</span>
+<!-- Progress Scrubber: 100% -->
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-surface-variant">
+<div class="h-full bg-primary-container w-full"></div>
+</div>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs flex-1">
+<div class="flex items-center justify-between gap-space-xs">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Neon Shadows</h3>
+<span class="material-symbols-outlined text-tertiary text-[18px] shrink-0" title="Watched">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+Elena undertakes an unsanctioned neural extraction contract within the neon heights of Sector Zero, inadvertently triggering an automated death-code cipher.
+</p>
+</div>
+</article>
+<!-- Card 2: Completed Episode -->
+<article class="flex flex-col rounded-xl overflow-hidden bg-surface-container-low/60 hover:bg-surface-container-high/60 border border-surface-container-high/30 hover:border-surface-variant transition-all duration-300 group cursor-pointer shadow-md">
+<div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+<img alt="Cyberpunk laboratory with glowing servers and blue neural holographic interfaces as characters analyze corrupted digital blueprints" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Cyberpunk laboratory with glowing servers and blue neural holographic interfaces as characters analyze corrupted digital blueprints" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCbn_w6W1lgg7BDVBxmvk3odIPo-Q2RZG-L7XjtqJESOCsBRK7gNy1D9B54ovwJ_I2G6iF1-PGar6pIrEW5Mze8F3Ksd1a-Oduzqk-wLDIiNk8GQOdwrR-tYYQdfXMh6geDrNMk9ASWwrJTJ3Z8W03dlwE67928_zLy3IUaM8MuRGIgDNjz21N_OnuebG88SrHOgRxg7xrn_LrovSqItPjqabSbfRgaAYe0WHN3UOzQuh2FtroD1bRWA"/>
+<div class="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-on-surface text-[40px] drop-shadow-lg">play_circle</span>
+</div>
+<span class="absolute top-2 left-2 px-space-xs py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-primary font-bold">E2</span>
+<span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-on-surface font-semibold">48m</span>
+<!-- Progress Scrubber: 100% -->
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-surface-variant">
+<div class="h-full bg-primary-container w-full"></div>
+</div>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs flex-1">
+<div class="flex items-center justify-between gap-space-xs">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Memory Leak</h3>
+<span class="material-symbols-outlined text-tertiary text-[18px] shrink-0" title="Watched">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+With corporate drones locking down the sub-level transport nodes, Kaelen uncovers a hidden surveillance archive that implicates his former commanding officers.
+</p>
+</div>
+</article>
+<!-- Card 3: Completed Episode -->
+<article class="flex flex-col rounded-xl overflow-hidden bg-surface-container-low/60 hover:bg-surface-container-high/60 border border-surface-container-high/30 hover:border-surface-variant transition-all duration-300 group cursor-pointer shadow-md">
+<div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+<img alt="High speed futuristic magnetic levitation train chase through glowing subterranean neon tunnels with sparks flying and heavy kinetic action" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="High speed futuristic magnetic levitation train chase through glowing subterranean neon tunnels with sparks flying and heavy kinetic action" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARNx0yDv9j0aGXNTEY6gfwC9N2sGGkkGZA37Hw3CYJGHYc58aVfYRyxfgzQc3V-O32b_XVDC9OJAhTupeTaR5L3VQnKV56rvbiNSG8p-dfpz-tkMk_2YRK_ia-j5Pyt8Qyw0-s1VJZrYthlD4Jdg1phFAGV2RgiwZifKvu4Le45F_7_0X-wExdW1oyxD_dgtd9AEm8a7sikoPTHLYaNGvXS9fuv0M-IEsTpFTuDmg6uRozvLSoSiv_6Q"/>
+<div class="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-on-surface text-[40px] drop-shadow-lg">play_circle</span>
+</div>
+<span class="absolute top-2 left-2 px-space-xs py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-primary font-bold">E3</span>
+<span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-on-surface font-semibold">52m</span>
+<!-- Progress Scrubber: 100% -->
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-surface-variant">
+<div class="h-full bg-primary-container w-full"></div>
+</div>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs flex-1">
+<div class="flex items-center justify-between gap-space-xs">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Protocol 99</h3>
+<span class="material-symbols-outlined text-tertiary text-[18px] shrink-0" title="Watched">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+An explosive confrontation aboard the Pacific Core Maglev leaves the crew separated, forcing Elena to interface directly with the rogue AI before containment collapses.
+</p>
+</div>
+</article>
+<!-- Card 4: ACTIVE TARGET EPISODE -->
+<article class="flex flex-col rounded-xl overflow-hidden bg-surface-container-high/90 border-2 border-primary-container shadow-[0_12px_36px_-8px_rgba(229,9,20,0.35)] transition-all duration-300 group cursor-pointer relative">
+<div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+<img alt="Cinematic frame of a massive crystalline supercomputer node glowing with intricate crimson light pathways in an echoing dark chamber" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Cinematic frame of a massive crystalline supercomputer node glowing with intricate crimson light pathways in an echoing dark chamber" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1I9alYiHYNt93TVU1RN7PWxBytDsVrgnxUleVCW-1r5K5IMSfJb24KV_qKkDsMXVrw25c3b7kzLuPS98E3ZnGUTl6_SRB5Uv7xSKlFJhERqHJzjUIsoQNrtBvRfntYHTNwtRW6n0a6FhrjyxNr0A9k_2LYbhrraNkBK-dkIP1BxRx94fGUlCQoDdn6MprEGrWgGKh74nbdIFqbLg3L9DOBNVtBs1W0M49sJDaQciMUR8UDSUOHR-SiA"/>
+<!-- Active Play Overlay -->
+<div class="absolute inset-0 bg-primary-container/20 flex items-center justify-center">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute top-2 left-2 flex items-center gap-1">
+<span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold">NEXT UP</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-primary font-bold">E4</span>
+</div>
+<span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-on-surface font-semibold">56m</span>
+<!-- Partial Scrubber: 65% -->
+<div class="absolute bottom-0 left-0 right-0 h-1.5 bg-surface-variant">
+<div class="h-full bg-primary-container w-[65%] shadow-[0_0_8px_#e50914]"></div>
+</div>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs flex-1">
+<div class="flex items-center justify-between gap-space-xs">
+<h3 class="font-title-md text-title-md text-on-surface font-bold truncate">Ghost in the Lattice</h3>
+<span class="font-label-sm text-label-sm text-primary font-semibold shrink-0">22m remaining</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface line-clamp-3">
+Inside the lattice, Elena encounters a fractured ghost of Dr. Vance’s original cybernetic prototype. Time is running out as the city’s defense network prepares an orbital purge.
+</p>
+<div class="pt-space-xs flex items-center justify-between mt-auto">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Resume playback</span>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span> Restart
+</button>
+</div>
+</div>
+</article>
+<!-- Card 5: Upcoming Episode -->
+<article class="flex flex-col rounded-xl overflow-hidden bg-surface-container-low/30 hover:bg-surface-container-high/40 border border-surface-container-high/20 opacity-75 hover:opacity-100 transition-all duration-300 group cursor-pointer shadow-md">
+<div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+<img alt="Dramatic silhouette of skyscrapers burning in distance beneath a stormy night sky with searchlights cutting through fog" class="w-full h-full object-cover grayscale contrast-125" data-alt="Dramatic silhouette of skyscrapers burning in distance beneath a stormy night sky with searchlights cutting through fog" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqg-nBj0aSC4ECLjHLQgIu4914hKLKP-xIxE3XsYo0T-MMfZJDV4FAPlHalDD-Z_fLFImPljt9Z3C3MbhoNXfnJiVB4U_AJG68mqZt5PXAtMFryQW5-iOgJcIHPr-_1vlY-qjKfUJR2-kV1JDf-v5fFMkR8Zl0VX_gOaRDnen-mes69WqWzXzwXzVu8bja6w2LfF32D-kDjbAxJyuCdHRO9X0vgHtJyNHi33qhv5uW5VK9EGyk7JEvgQ"/>
+<div class="absolute inset-0 bg-background/60 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-[28px]">lock</span>
+</div>
+<div class="absolute top-2 left-2 flex items-center gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-on-surface-variant font-bold">E5</span>
+<span class="px-space-xs py-0.2 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Finale Part I</span>
+</div>
+<span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-label-sm text-label-sm text-on-surface-variant font-semibold">58m</span>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs flex-1">
+<h3 class="font-title-md text-title-md text-on-surface-variant font-semibold truncate">Terminal Velocity</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+The battle reaches orbital threshold as Sector Zero initiates total system disconnect. Elena and Kaelen must make the ultimate sacrifice to broadcast the truth.
+</p>
+</div>
+</article>
+</div>
+</section>
+<!-- 2. CAST & METADATA DOSSIER (DOCKABLE SECTION) -->
+<section class="flex flex-col gap-space-lg pt-space-md" id="tab-details">
+<div class="flex items-center justify-between border-b border-surface-container-high/60 pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">Cast &amp; Production Dossier</h2>
+</div>
+</div>
+<!-- Synopsis Card -->
+<div class="p-space-lg rounded-xl bg-surface-container-low/60 border border-surface-container-high/40 flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">Synopsis</span>
+<p class="font-body-lg text-body-lg text-on-surface leading-relaxed max-w-5xl">
+In the subterranean megalopolis of Sector Zero, memory architect Elena Rostova stumbles upon a dormant synthetic consciousness known as Protocol 99. Pursued by high-table cybernetic cartels and the rogue peacekeepers of the Red Line, she forms a volatile alliance with augmented ex-sentinel Kaelen to expose a syndicate weapon capable of deleting digital human identity at will.
+</p>
+</div>
+<!-- Cast Carousel Horizontal Strip -->
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Starring Cast</span>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-space-md">
+<!-- Actor 1 -->
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high border border-surface-container-high/40 transition-all group">
+<img alt="Portrait headshot of an intense female cybernetic operative with striking silver hair, neon violet eye modifications and futuristic high collar cyber attire, dramatic studio rim lighting" class="w-16 h-16 rounded-full object-cover shrink-0 ring-2 ring-surface-variant group-hover:ring-primary transition-all" data-alt="Portrait headshot of an intense female cybernetic operative with striking silver hair, neon violet eye modifications and futuristic high collar cyber attire, dramatic studio rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABZByZFWKTGzQCnpurVijSoNV94thEOv4i7JpqxEpHTi5zz1FUqnKazC_IwRQ7XXheJc2vRH7MaTEwFW11B52LEKm68B3qHfjYkHkUrYmKwGzUIzBxl8RlWvMWnvoXK75SKFSUd36kQz5PaDRRBhDdS4XRqHOFXyot91pWOle1r9qET8xS-YwizPQRwjcepnegnahWQ8MWNnEP-8BBdcaztq0Ekse-e7108v5aqdWdepWjQFSgw6kvwg"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Elena Rostova</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Sasha L. Banks</span>
+</div>
+</div>
+<!-- Actor 2 -->
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high border border-surface-container-high/40 transition-all group">
+<img alt="Close up portrait photo of rugged male bounty hunter with cybernetic cheekbone implants, scarred jawline, dark synth leather coat in dark moody lighting" class="w-16 h-16 rounded-full object-cover shrink-0 ring-2 ring-surface-variant group-hover:ring-primary transition-all" data-alt="Close up portrait photo of rugged male bounty hunter with cybernetic cheekbone implants, scarred jawline, dark synth leather coat in dark moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy2zD6xwdFyyBBS7GNi6WILUGAC-IlI7uDAFmirfMrAgBdV3umx8IaVGF7p4LBDigs6s7fL6XsOCXTw9DWxDgG7I0zdLszoHmvSWJop9tpEBHt7HN0XKG4gcesHTmDLUVbCRQcxF3La-nWUrTluh1wIl4-VO9pEx-_pe32pm4YetklogQtGxQfgRTqh0SCuGgabPPoo2qU8UQhWTLlqdLCY3-i-n2ByF1m1mNEz3EKN5SnnXaYK68RyQ"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Kaelen Vance</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">David K. Cho</span>
+</div>
+</div>
+<!-- Actor 3 -->
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high border border-surface-container-high/40 transition-all group">
+<img alt="Studio portrait of a dignified senior male corporate doctor scientist wearing titanium spectacles and sophisticated minimalist tech apparel, soft amber cinematic lighting" class="w-16 h-16 rounded-full object-cover shrink-0 ring-2 ring-surface-variant group-hover:ring-primary transition-all" data-alt="Studio portrait of a dignified senior male corporate doctor scientist wearing titanium spectacles and sophisticated minimalist tech apparel, soft amber cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZANwYxJ5YTQ0SEje2VYR5UxTcdKlINcZm2bdIDwedNRvdJ9ciA6_I_QaZT4RH_DxIKxAHkGvAPbD3JlE3dV5cfmAwxxnOa5g94kxCqB-9CpmKQtc_HSMVZ0TZ0Q_H-ODafQz87E0wXQfZqXHmhGl8NLUGVc2kreH1h1n6-m8C98odH2bL8isbennvQBEz34-fAcKiVza65nYFjFE4Zjkcc_0WNtcIwj9RCXVenc-nP7s-oWQqY0qNnw"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Dr. Marcus Vance</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Sterling Thorne</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Compact Horizontal Specs Ribbon Bento -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-md p-space-lg rounded-xl bg-surface-container-low/70 border border-surface-container-high/40">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Created By</span>
+<span class="font-body-md text-body-md text-on-surface font-semibold">Tatsuya Takahashi &amp; Sarah Sterling</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Directors</span>
+<span class="font-body-md text-body-md text-on-surface">Guillermo Del Mar, Nyx Acolyte</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Audio Streams</span>
+<span class="font-body-md text-body-md text-on-surface">English (Dolby Atmos), Japanese (5.1), German, French, Spanish</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Subtitles</span>
+<span class="font-body-md text-body-md text-on-surface">English [CC], Japanese, Spanish, German, French, Korean</span>
+</div>
+<div class="flex flex-col gap-1 sm:col-span-2 lg:col-span-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Content Advisory</span>
+<span class="font-body-sm text-body-sm text-secondary-fixed-dim">Intense Violence, Flashing Strobe Sequences, Language, Substance Use</span>
+</div>
+</div>
+</section>
+<!-- 3. MORE LIKE THIS CINEMATIC RAIL -->
+<section class="flex flex-col gap-space-lg pt-space-md" id="tab-recommendations">
+<div class="flex items-center justify-between border-b border-surface-container-high/60 pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">More Like This</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant hidden sm:inline">Handpicked by CineFlow Curators</span>
+</div>
+<button class="font-label-md text-label-md text-primary hover:text-on-surface font-semibold flex items-center gap-1 transition-colors">
+<span>Explore All</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<!-- Wide Cinematic Horizontal Rail -->
+<div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Recommendation 1 -->
+<div class="flex flex-col rounded-xl overflow-hidden bg-surface-container-low/70 hover:bg-surface-container-high/70 border border-surface-container-high/30 hover:border-surface-variant transition-all duration-300 group cursor-pointer shadow-md">
+<div class="aspect-[16/10] w-full relative overflow-hidden bg-surface-container">
+<img alt="Cover art of neon synth dystopia titled Chrono Rift showing a female pilot in high tech helmet inside a hyperdrive cockpit glowing orange and teal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Cover art of neon synth dystopia titled Chrono Rift showing a female pilot in high tech helmet inside a hyperdrive cockpit glowing orange and teal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKciKV4te4gPwpPars2dj9gWGr3Qv5CPgRmuvp452IzIo7eVEkQqkEPiFmCCmlpiOOzg6yyKutDL8nRRiXAESyiTDuCIwl49eNDlI6lvXTTTn71RUp5LtGDW9M86bLKl_JO-6jz22Yt8-Q0aPa5PpHdjUd9DSiuE9MZKM7AO55g3m5PJ-iPj0P4pcQPf7dmfbGdg4nT1v1ZCbifl12GpdLuxUmvVEXZK7tkng-s59PHONbTIIXPeGWhA"/>
+<div class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span> 8.8
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Chrono Rift</span>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<span>2023</span>
+<span>•</span>
+<span>2 Seasons</span>
+<span>•</span>
+<span class="text-tertiary">HDR</span>
+</div>
+</div>
+</div>
+<!-- Recommendation 2 -->
+<div class="flex flex-col rounded-xl overflow-hidden bg-surface-container-low/70 hover:bg-surface-container-high/70 border border-surface-container-high/30 hover:border-surface-variant transition-all duration-300 group cursor-pointer shadow-md">
+<div class="aspect-[16/10] w-full relative overflow-hidden bg-surface-container">
+<img alt="Dark atmospheric movie poster of synthetic android detective standing in front of rain soaked brutalist glass tower" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Dark atmospheric movie poster of synthetic android detective standing in front of rain soaked brutalist glass tower" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAirKxboCBfEy0cfAFdrVP7bp2pVCVCIgiRf85zcKVf9rVMWl-qBMvx9zr9y2ZOQG5RMQH5_keTUqcsagfschfk-8yP3Ya81lxYwKVUSJ6feha8vApr3wZwDhtDSPVVRL1E_Z_XhedfOdSGxdJU_U9X7CrBghRadKjl2oO3UB_5tqWJS145zXeq1oLk0QXb07E2MxGP-twPCQF4fXFNYeHzgUl1NYdfEGlIwyAXEO6Om0S5uqclTNC1gQ"/>
+<div class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span> 9.0
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Synthetic Noir</span>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<span>2024</span>
+<span>•</span>
+<span>Movie</span>
+<span>•</span>
+<span class="text-tertiary">4K Dolby</span>
+</div>
+</div>
+</div>
+<!-- Recommendation 3 -->
+<div class="flex flex-col rounded-xl overflow-hidden bg-surface-container-low/70 hover:bg-surface-container-high/70 border border-surface-container-high/30 hover:border-surface-variant transition-all duration-300 group cursor-pointer shadow-md">
+<div class="aspect-[16/10] w-full relative overflow-hidden bg-surface-container">
+<img alt="Space exploration crew inside an alien organic cavern with luminous crimson bioluminescence and mysterious ancient runes" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Space exploration crew inside an alien organic cavern with luminous crimson bioluminescence and mysterious ancient runes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN0QSymhZD35j8t59uFBhdzhpJ4zmYIegnHCf7N4YF8qJhnn21HAjriQns8oDisP7PNCm6ovSOUHqSjZeLWa9uwZ1mInOCthozDGqvN1r2Fjv_95PupevYHsai1LAGj7hg9diHQeJwNKDkhPeLkia9-Q-KgbBuzC33b16Pp08IvNBRiEZKXc5D47Uencg1CnMWHQ_lWJYSLie-H3mXr-hBst5yzanwvSz6CmSpYzBPd4mlNVAipJauFA"/>
+<div class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span> 8.6
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Void Horizon</span>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<span>2023</span>
+<span>•</span>
+<span>4 Seasons</span>
+<span>•</span>
+<span class="text-tertiary">Atmos</span>
+</div>
+</div>
+</div>
+<!-- Recommendation 4 -->
+<div class="flex flex-col rounded-xl overflow-hidden bg-surface-container-low/70 hover:bg-surface-container-high/70 border border-surface-container-high/30 hover:border-surface-variant transition-all duration-300 group cursor-pointer shadow-md">
+<div class="aspect-[16/10] w-full relative overflow-hidden bg-surface-container">
+<img alt="Futuristic cyber security warfare thriller cover featuring hooded operative surrounded by intricate floating glowing code matrix" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Futuristic cyber security warfare thriller cover featuring hooded operative surrounded by intricate floating glowing code matrix" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4eKQWYywqAhH57T7BEb31WuhEjUcCtxBfRaVViZvwB8KM11siMzrJaZIroZCPCpwi0la4KQB9s9j92nXjw2GjV4f30fMDdgKnVH_o11xSWRTIr_tszfKcVxbWLXYwuxaL_gAFeLRSxoLUjWmF8yrpzQPLCbH4m6yWBaejQvPd8xTOCV9WEwXd0oO7g9k2d4SDqoNJRqUqKPULu8xpBGj18xbj2CwShmH92B6I_7aQ-desEKebDwdzOQ"/>
+<div class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span> 8.9
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Sub-Lattice 0</span>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<span>2024</span>
+<span>•</span>
+<span>Limited Series</span>
+<span>•</span>
+<span class="text-tertiary">4K UHD</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+  // Season switcher interaction
+  document.querySelectorAll('.season-pill').forEach(button => {
+    button.addEventListener('click', function() {
+      const parent = this.parentElement;
+      parent.querySelectorAll('.season-pill').forEach(btn => {
+        btn.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'font-bold', 'shadow-sm', 'active');
+        btn.classList.add('text-on-surface-variant');
+        const dot = btn.querySelector('.rounded-full');
+        if (dot) dot.remove();
+      });
+      this.classList.add('bg-surface-container-lowest', 'text-on-surface', 'font-bold', 'shadow-sm', 'active');
+      this.classList.remove('text-on-surface-variant');
+      if (!this.querySelector('.rounded-full')) {
+        const dot = document.createElement('span');
+        dot.className = 'w-2 h-2 rounded-full bg-primary-container';
+        this.appendChild(dot);
+      }
+    });
+  });
+
+  // Dock Segmented tabs smooth navigation
+  document.querySelectorAll('.tab-dock-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      document.querySelectorAll('.tab-dock-btn').forEach(btn => {
+        btn.classList.remove('bg-surface-container-high', 'text-on-surface', 'font-bold', 'shadow-sm');
+        btn.classList.add('text-on-surface-variant', 'font-semibold');
+      });
+      this.classList.add('bg-surface-container-high', 'text-on-surface', 'font-bold', 'shadow-sm');
+      this.classList.remove('text-on-surface-variant', 'font-semibold');
+
+      const targetId = this.getAttribute('data-tab');
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        const headerOffset = 140;
+        const elementPosition = targetEl.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    });
+  });
+</script>
+</main><footer class="w-full bg-surface-container-lowest text-on-surface-variant"><div class="w-full px-gutter md:px-margin py-space-xl flex flex-col gap-space-xl"><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-space-lg"><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Browse</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">New &amp; Popular</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Originals</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Documentaries</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Collections</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">CineFlow Club</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Premieres &amp; Galas</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Director Commentary</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Cinephile Pass</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Curator Journal</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Supported Devices</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Apple TV &amp; Google TV</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">PlayStation &amp; Xbox</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Smart Displays</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">VR Immersion</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Assistance</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Help Center</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Stream Quality &amp; Audio</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Manage Account</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Contact Concierge</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Legal</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Privacy Policy</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Terms of Service</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Content Licensing</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Cookie Preferences</a></div></div><div class="flex flex-wrap items-center justify-between gap-space-md pt-space-lg"><div class="flex flex-wrap items-center gap-space-md"><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-tertiary font-bold tracking-widest">4K ULTRA HD</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-tertiary font-bold tracking-widest">DOLBY VISION</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-secondary font-bold tracking-widest">DOLBY ATMOS</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant font-bold tracking-widest">IMAX ENHANCED</span></div><div class="flex items-center gap-space-sm px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface"><span class="material-symbols-outlined text-[18px]">language</span><select class="bg-transparent font-body-sm text-body-sm text-on-surface outline-none cursor-pointer pr-space-xs"><option class="bg-surface-container-high text-on-surface" value="en-US">English (US)</option><option class="bg-surface-container-high text-on-surface" value="en-GB">English (UK)</option><option class="bg-surface-container-high text-on-surface" value="fr-FR">Français</option><option class="bg-surface-container-high text-on-surface" value="de-DE">Deutsch</option><option class="bg-surface-container-high text-on-surface" value="ja-JP">日本語</option></select></div></div><div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant"><p class="font-body-sm text-body-sm">© 2025 CineFlow Studios &amp; Entertainment LLC. All high-fidelity rights reserved.</p><p class="font-label-sm text-label-sm text-on-surface-variant/80">Cinema mastered at 24.000 fps · DCI-P3 wide color gamut</p></div></div></footer></body></html>

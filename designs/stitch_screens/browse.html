@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#690003", "surface-container": "#1e1f25", "primary": "#ffb4aa", "on-primary-container": "#fff7f6", "background": "#121318", "on-background": "#e3e1e9", "tertiary-fixed-dim": "#00dbe9", "on-error": "#690005", "on-surface": "#e3e1e9", "secondary-container": "#ee9800", "error-container": "#93000a", "outline-variant": "#5e3f3b", "surface-container-high": "#292a2f", "surface-variant": "#34343a", "secondary-fixed": "#ffddb8", "on-secondary-fixed": "#2a1700", "tertiary-container": "#007f87", "on-error-container": "#ffdad6", "on-surface-variant": "#e9bcb6", "on-secondary": "#472a00", "surface-container-low": "#1a1b21", "secondary-fixed-dim": "#ffb95f", "on-tertiary-fixed-variant": "#004f54", "inverse-primary": "#c0000c", "inverse-surface": "#e3e1e9", "surface-bright": "#38393f", "on-tertiary-fixed": "#002022", "surface-container-lowest": "#0d0e13", "surface-container-highest": "#34343a", "inverse-on-surface": "#2f3036", "on-secondary-fixed-variant": "#653e00", "tertiary-fixed": "#7df4ff", "on-secondary-container": "#5b3800", "surface": "#121318", "error": "#ffb4ab", "tertiary": "#00dbe9", "on-primary-fixed": "#410001", "primary-fixed-dim": "#ffb4aa", "primary-container": "#e50914", "on-tertiary-container": "#e8fdff", "surface-dim": "#121318", "on-tertiary": "#00363a", "secondary": "#ffb95f", "outline": "#af8782", "primary-fixed": "#ffdad5", "surface-tint": "#ffb4aa", "on-primary-fixed-variant": "#930007" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-md": "1rem", "space-lg": "1.5rem", "gutter": "1.5rem", "gutter-mobile": "0.75rem", "margin": "3rem", "margin-mobile": "1.25rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "display-xl": [ "Plus Jakarta Sans" ], "label-sm": [ "Inter" ], "body-sm": [ "Inter" ], "headline-md": [ "Plus Jakarta Sans" ], "label-md": [ "Inter" ], "body-lg": [ "Inter" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-xl-mobile": [ "Plus Jakarta Sans" ], "title-md": [ "Plus Jakarta Sans" ], "body-md": [ "Inter" ] }, "fontSize": { "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "headline-lg": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "display-xl": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "400" } ], "headline-md": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-md": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" } ], "headline-sm": [ "22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "display-xl-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" } ], "title-md": [ "18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.65)]"><div class="h-20 w-full px-gutter md:px-margin flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-xl"><div class="flex items-center gap-space-sm"><img alt="CineFlow Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WmU2BztXMtwiOE8nVpXySuglAylbqWAsD4G79pGZm3PswvV_sAoRcoh9sff1R-R0YS0N-x92Jt5IaQhlI5nD9gruhaeV6eJmPBDz0pbkjPvXO5tGY4FbI3z_MCZiTdAefh54M0R0bGOY_YKSiqJh-trO-8pspwaIfx6H0boOZhAaxmh8jLfObQd0u5x_5sHTTsAgVbMemo0teMlHFP2rx5DvIFf4oteHqS7qnbT0t3U5Pwwg10Rw9PNYz0"/><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface">Cine<span class="text-primary-container">Flow</span></span></div><nav class="hidden lg:flex items-center gap-space-lg" data-active-classes="text-on-surface font-bold"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">Home</a><a aria-current="page" class="transition-colors text-on-surface font-bold" data-path="movies" href="#">Movies</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="tv-shows" href="#">TV Shows</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="my-list" href="#">My List</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="categories" href="#">Categories</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center h-10 px-space-md rounded-full bg-surface-container-high/60 focus-within:bg-surface-container-high transition-all group"><span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-space-sm">search</span><input class="bg-transparent border-0 outline-none font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 w-40 md:w-56 focus:w-72 transition-all" placeholder="Titles, genres, creators..." type="text"/><span class="ml-space-sm px-space-xs py-0.5 rounded bg-surface-variant font-label-sm text-label-sm text-on-surface-variant">⌘K</span></div><button class="relative p-space-sm rounded-full bg-surface-container-high/60 hover:bg-surface-container-high hover:text-on-surface text-on-surface-variant transition-colors flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary-container"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwVRLg1YGzC-K0VSP4yql7A3ydoFhlgRoNVtz0ySyB6HYpFLYGIpSnlJSYZqU4o8rb_x84_lhlCqsiiQITbEPvuqufn1t4JetJwNoeYhrF6yO2uGpJhzJ1Mez_oXnrAvkf8mMiLO7Hytg7VO6a-kKH_KvGF1KkIqJguO1O-ZFy-9YHlxbkpzKZ91Qip6192V8_Y1t4pfdFvmHyez-TZWB0-XqK_YLdZSX67uivS9QKCw9b1JeoOl2_kA"/><span class="material-symbols-outlined text-on-surface-variant text-[18px] hidden md:inline">arrow_drop_down</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full">
+<div class="relative w-full px-gutter md:px-margin pt-space-xl pb-space-lg overflow-hidden">
+<div class="absolute -top-24 right-1/4 w-96 h-96 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 left-10 w-72 h-72 bg-tertiary/5 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm text-on-surface-variant font-label-sm text-label-sm tracking-wider uppercase">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span>Live Studio Library</span>
+<span>/</span>
+<span class="text-tertiary">Global Archives</span>
+</div>
+<div class="flex flex-wrap items-baseline gap-x-space-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+            Browse All Movies &amp; Series
+          </h1>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-high font-label-md text-label-md text-tertiary font-bold tracking-normal">
+            3,480 Titles
+          </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+          Curated master quality feeds, 4K HDR transfers, audio commentary tracks, and exclusive CineFlow archival cuts.
+        </p>
+</div>
+<div class="flex items-center gap-space-md self-start md:self-auto">
+<div class="flex items-center bg-surface-container-lowest p-1 rounded-lg shadow-sm">
+<button class="flex items-center justify-center w-10 h-10 rounded-md bg-surface-container-high text-on-surface transition-all shadow-sm" id="view-grid-btn" title="Poster Grid View">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-md text-on-surface-variant hover:text-on-surface transition-all" id="view-list-btn" title="Compact List View">
+<span class="material-symbols-outlined text-[20px]">view_list</span>
+</button>
+</div>
+<div class="hidden xl:flex items-center gap-space-sm px-space-md py-space-xs rounded-lg bg-surface-container-lowest">
+<span class="material-symbols-outlined text-secondary text-[20px]">tune</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Stream Bitrate:</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">Variable 48 Mbps</span>
+</div>
+</div>
+</div>
+</div>
+<section class="sticky top-20 z-40 w-full px-gutter md:px-margin py-space-md bg-surface-container-lowest/90 backdrop-blur-xl shadow-lg transition-all">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between gap-space-md overflow-x-auto pb-1 [scrollbar-width:none]">
+<div class="flex items-center gap-space-xs shrink-0" id="genre-pills">
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-primary-container text-on-primary-container shadow-md">
+            All
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Sci-Fi
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Action
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Drama
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Thriller
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Comedy
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Animation
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Horror
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Romance
+          </button>
+<button class="genre-pill px-space-md py-1.5 rounded-full font-label-md text-label-md transition-all bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+            Documentary
+          </button>
+</div>
+<div class="hidden lg:flex items-center gap-space-sm pl-space-md shrink-0">
+<div class="flex items-center p-1 rounded-full bg-surface-container-high/60">
+<button class="type-toggle px-space-sm py-1 rounded-full font-label-sm text-label-sm bg-surface text-on-surface font-bold shadow-sm">All</button>
+<button class="type-toggle px-space-sm py-1 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors">Movies</button>
+<button class="type-toggle px-space-sm py-1 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors">TV Series</button>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-space-xs">
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="relative">
+<select class="appearance-none bg-surface-container-high/70 hover:bg-surface-container-high text-on-surface font-label-md text-label-md pl-space-md pr-8 py-2 rounded-lg cursor-pointer outline-none transition-colors">
+<option value="all">Release: All Years</option>
+<option value="2025">2025 Premieres</option>
+<option selected="" value="2024">2024 Cinema</option>
+<option value="2023">2023 Vault</option>
+<option value="2022">2022 Masters</option>
+<option value="2020s">2020s Decade</option>
+<option value="2010s">2010s Retrospective</option>
+<option value="classics">Historic Classics</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2.5 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<div class="relative">
+<select class="appearance-none bg-surface-container-high/70 hover:bg-surface-container-high text-on-surface font-label-md text-label-md pl-space-md pr-8 py-2 rounded-lg cursor-pointer outline-none transition-colors">
+<option value="all">Quality: All Formats</option>
+<option selected="" value="4k">4K Ultra HD</option>
+<option value="hdr10">HDR10 / Vision</option>
+<option value="atmos">Dolby Atmos Surround</option>
+<option value="imax">IMAX Enhanced Dynamic</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2.5 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<div class="relative">
+<select class="appearance-none bg-surface-container-high/70 hover:bg-surface-container-high text-on-surface font-label-md text-label-md pl-space-md pr-8 py-2 rounded-lg cursor-pointer outline-none transition-colors">
+<option value="popular">Sort: Most Popular</option>
+<option value="imdb">Sort: Highest Rated (IMDb)</option>
+<option value="recent">Sort: Recently Added</option>
+<option value="alpha">Sort: A to Z Masterlist</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2.5 text-on-surface-variant text-[18px]">sort</span>
+</div>
+<div class="relative">
+<select class="appearance-none bg-surface-container-high/70 hover:bg-surface-container-high text-on-surface font-label-md text-label-md pl-space-md pr-8 py-2 rounded-lg cursor-pointer outline-none transition-colors">
+<option value="all-audio">Audio: Original Dolby 7.1</option>
+<option value="commentary">With Director Commentary</option>
+<option value="isolated-score">Isolated Film Score</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2.5 text-on-surface-variant text-[18px]">graphic_eq</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+<span>Studio Master Verified</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs pt-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold uppercase tracking-wider mr-space-xs">Active Refinements:</span>
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm group">
+<span class="text-tertiary">Genre:</span>
+<span>Sci-Fi</span>
+<button class="material-symbols-outlined text-[14px] text-on-surface-variant hover:text-primary transition-colors">close</button>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm group">
+<span class="text-secondary">Year:</span>
+<span>2024</span>
+<button class="material-symbols-outlined text-[14px] text-on-surface-variant hover:text-primary transition-colors">close</button>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm group">
+<span class="text-primary">Quality:</span>
+<span>4K Ultra HD</span>
+<button class="material-symbols-outlined text-[14px] text-on-surface-variant hover:text-primary transition-colors">close</button>
+</div>
+<button class="ml-space-sm font-label-sm text-label-sm text-primary hover:text-on-primary-container transition-colors underline decoration-dotted underline-offset-4">
+          Reset All Filters
+        </button>
+</div>
+</div>
+</section>
+<section class="w-full px-gutter md:px-margin py-space-lg">
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-space-md" id="catalog-container">
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Dark dramatic movie poster for Chrono Nebula showing an astronaut gazing into a spiraling interstellar wormhole with crimson and cyan stellar flares, hyperrealistic 8k render with film grain and cinema branding" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUdhJ5NDTQZzuB0SdeK9dPhm5TWqdNoO6bTec8uA_vpLV2xham7vpipH7t2x1v5lEU_QRnA-XF2r9sAFl_LlCCALI4TDhvcdu73kLzKgWGCZbCXgLITWXBv6T9gJiEzncFh_ER_D84bnoY8ZvKz27UzbXwRrc-3o11josSj-VjnSMNspdzO5EHWJbUPAQg-vSvzezdK0D2cShDhzwMDCtTLUPH-YWQG5hT5gBDWDj42iFlevsWOxG8KA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-secondary font-label-sm text-label-sm font-bold">
+              ATMOS
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">8.9</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors" title="Quick Trailer Preview">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors" title="Add to Watchlist">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Play Master Cut</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 2h 28m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">PG-13</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Chrono Nebula
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Sci-Fi, Cosmic Odyssey
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Moody cinematic series poster for Neon Protocol featuring a rogue female hacker standing in a rain-slicked Tokyo alley illuminated by holographic cyan signs and deep violet reflections, high contrast cinematic photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjeDWAJ7PONpvy74ZzhiTAKR7hfaJtKVR1rehClAEkwCy5Sb28b0trTD5kh9EcV1JsswHxrjJOaFEZBUSFS3Ld9cSz4W2-2MBNmwotMJ0qhcjaE1TQ6queuprbd-6I3i7MyHWQyCUdqyGBdf2EUnMrDrK9-5KvC2O09TNeKasmgWRdlyU0UbJ5WOeGh9d9-KJfReIheMjBUeFh6p9XkXZg5AFVB6Jk5I3FTXwLawljFAR9Sje4Tg7Evw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+<span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold">
+              ORIGINAL
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">9.2</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Season 2 Premiere</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 3 Seasons</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">TV-MA</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Neon Protocol
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Cyberpunk, Thriller, Tech Noir
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Striking film poster for Solar Silence featuring a sleek minimalist spacecraft hovering above a burnt amber planetary ring system with stark lens flare and deep black space, 70mm anamorphic cinematic texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlw8LOxKr8OVtKnFwEABI6BF243Onho2twc0aExa9N3mIOG2sUO3EO5x0YV4oaPWdijmaIK0WVsLiupQ7vO6ydvA4wcADBPwYYgPnL59CcpNGv1NM5vSv8US4oRpFvSKIL_3e9gLFtStgO51H-ixjf8BBYljC02teKpd2lycdWGC5m0W55NLGKaJr5kdyeWn4A2MfhpvbNQJAvWlMhLudcdRKQ822WswSMRkn26WY7o_QJMqyel1Y7IQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">8.5</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Play Master Cut</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 1h 56m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">PG-13</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Solar Silence
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Hard Sci-Fi, Psychological
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Surreal deep sea cinematic poster for Abyssal Rift showing a research bathysphere descending toward a bioluminescent oceanic trench with electric blue kraken tentacles glowing in pitch-black waters, studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC849LU2XTpceocGTNiH54E5OX50nZgDXkHxmXUUNKf9_gH6BxMJ71ZoHSUvSQDlm6MQrkUAY_K7JhysO3Lh58j316P8Y0wjYwbMhMsS8jeLJO_T-qW4TaTmDIKSFaab2fz8MIhl7aeJIBiqVNg9Mqc856t5AQGyaWfwEp8bsg3x6s-EOJp-tw45CVOaAyOvQ2fpsBPGlxMHYN1U45WRoz1bOZAf3biz3h8MIlpuJN_Vw3InYS3J5-HA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary-fixed-dim font-label-sm text-label-sm font-bold">
+              IMAX
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">8.7</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Stream in Dolby</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 2h 14m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">R</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Abyssal Rift
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Sci-Fi, Nautical Thriller
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Epic cinematic movie poster for Obsidian Sovereign showing an armored warrior standing upon a volcanic mountain edge overlooking molten red lava flows under an eclipse sky, dramatic fantasy aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiMTRSCul4Jf5hmtNpp25dBQUD8_ngNcw2FTF8KcypcQUmtyiffaLMFuOKB1O0axcAfgclNWQ1uKaUzyLgEk_pB3W-5_uObt4f-LtXP1WBCwHDAEtQcy1RgR-eHNjnGt3fQ1UPIsr738kVFhNoJUgLV-DTJgIafgl5oD2kflCiOXlABNwISlElr2PAmAjmIhqWvs5nGI3WkfdZo0MDwBdlCQbHiqM6JiT-zDqiyjARbh03tcNmCssfzg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">9.0</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Play Master Cut</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 2h 45m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">PG-13</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Obsidian Sovereign
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Action, Epic Dark Fantasy
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Stylized animated series poster for Quantum Vanguard showing dynamic anime characters wielding luminous hard-light holographic energy weapons against a shattered neon city grid, vibrant purple and cyan colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7i-H5COhfxeXHQ_zakiEatdQzsMIX5rezaWe5YPDGIKrrJFScXuM0i7BThcVW-QgUQC26GpyG78hJ4TxzwhwRwKGm-JBFQsw-cMqC0juYgNjH_8atDK7iU1nndnqo-tcJUlrJodnTvSn4slWVLhoxcb2dY2GR9x98VheHXNLDEEDbhTV7h5pPdi1w3c1UlTGCJ-Ci1TCXs9ztJ45SO2FWUpXSieEZTmyhvlT8HPDlyctwPcNStfpyXA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+<span class="px-space-xs py-0.5 rounded bg-secondary-container text-on-secondary font-label-sm text-label-sm font-bold">
+              DOLBY VISION
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">8.8</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Episodes S1–S3</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 4 Seasons</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">TV-14</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Quantum Vanguard
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Animation, Sci-Fi Action
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Atmospheric detective neo-noir movie poster for Velvet Mirage showing a silhouette trench-coat investigator in smoke-filled 1950s Los Angeles alley with amber streetlights and deep velvet shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsi7oXriPzdhJREJNUeQRFyaSVnpsZaSORbKqPA26nFh_x4uHhwtAouPZyGQKGTs51iTcE0oALo1QFEUOTwk44vlIIDU-dQYIdsQE70dm4OIZmeNmUenNFp3xFkRfsOANS3kzr1oU-q0cGUlKiLtGioHDKugDsRMCQPKbHt2s026RSU0Enw5giYfcjzKk_oO8oTio0ZfGDF1kaC1DLpF6W5Lzyn82r-mc4h_esEM60AqJPdWS2QyZ1QQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">8.4</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Play Noir Master</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 2h 02m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">R</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Velvet Mirage
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Mystery, Crime, Neo-Noir
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Deep space documentary film poster for Echoes of Infinity depicting radio telescope arrays against the galactic core of the Milky Way, star clusters and gravitational lensing with clean scientific typography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNWCyycmCZPEV0p12-IjqnefPHQhYMDvDK5C4xKWBHDTyM23xssLPDUv9xREtInsF-pLr_AxKpaUx8jwnlwgNkttF886WtL4FuQAL1qRwQR6DymyBPtccbY9p_XKUihidzy8-mrCr-cNVdjWyVFieRp46nGzZYeVD5EH6kNMgUJdjDL1wLpIygGr4jHitBJa5TxkFzpKAcDW7u-6KYZi_fMLZrpnUi-tXNuYxDykr9QocadgSGrMCB3g"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-secondary font-label-sm text-label-sm font-bold">
+              ATMOS
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">9.4</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">4K Docuseries</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 1 Season</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">TV-PG</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Echoes of Infinity
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Documentary, Astrophysics
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Chilling psychological horror movie poster for Spectral Descent showing an abandoned brutalist radio tower enveloped in thick gray mountain mist with strange glowing red eye symbols in the clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHNyHU8PaPbKwVpO0Fw10SsvCyZST9oYCFm2Wz9cwyJ3_l56Cg7Fo_mfgwuA79VVgkUj63L-KNHCo4rnBAsN6IL3shXEl0Z6NMe6JfIjW7Y2tfWnHeMFvRqEgTCy1GJtOOKW7RF5GZIJSr4nEdUwraDPH43QWCZuAhzumuOgLd9176-8Lvo7ZJPzDQ4GztJTyTbO3QCocM_ojqyFHGCYjyrCiTHzAX5dtwcgKyuGqAPsr4obI7oIVagg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">8.1</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Play Master Cut</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 1h 48m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">R</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Spectral Descent
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Horror, Psychological Mystery
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="High stakes espionage movie poster for Redacted Sector depicting secret agents passing briefcases on a foggy European suspension bridge with night city lights and cinematic color grading" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUWkeICmagZtASqenjm_T2Q-p8ikplk8kBJPCbJZTZoWW7GmrlGv0DcQ8MNdiWYVKJJe5_3Kb3R-Th9paA_QZxm7ufkp-VX6fiXBIr7FhIVY1o6KT8shhEF3wluDhB6i5G3egKF9V3-S3PAOQRRrNezG6ZZKt2Nr49QbZP51kypB-_2RrK_9PCTT3TYNbYGK6oi1eq7uvAr_vTAL8fT5QYNuFQFu8XGYuDdA6fCOlPUvDxMc6r1tE5jw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">8.6</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Play Master Cut</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 2h 19m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">PG-13</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Redacted Sector
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Thriller, Modern Espionage
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Whimsical sci-fi comedy film poster for Time Heist Diner showing eccentric scientists and aliens sitting in a retro 1980s neon chrome diner with floating clock gears and cosmic shakes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvRJ-jDpPnjjsAFwT0BxgXecltK6XW6SCovApN0op5yhWGkmGvy9zo4030SUFrR4SYsspwMc1CQ-ehz2-mIm9cYtJsH_7OUilkTz3ljoDkTpgEUitl3XzXaGRZOkl0cvEXoQbdCi1ZZFtdYQigOuBBu8Bs9aJaZp1-GYiZa9Wwgd-493zeCFVfs7m0dJEkLmibTf3lkEQBJ5WDmKLMSO4tkbPXk3ByNDH55ZswBlrY8Ig0KD99yoEDXw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">7.9</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Play Master Cut</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 1h 42m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">PG-13</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Time Heist Diner
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Comedy, Temporal Sci-Fi
+          </p>
+</div>
+</div>
+<div class="catalog-card group relative flex flex-col rounded-lg bg-surface-container-low overflow-hidden transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_16px_40px_-10px_rgba(229,9,20,0.35)] hover:z-20 cursor-pointer">
+<div class="relative w-full aspect-[2/3] bg-surface-container-lowest overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Heartfelt romance drama movie poster for Parallel Frequencies depicting two lovers touching fingers across a glass dimensional barrier with warm golden dusk and soft ambient grain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcSt6C3AY2_Ek9vY035ZuQGxcmgnwAZWh8LrX5LLNwAoN9Bg4bTyIo0FS3yOwOZ_iY_bxTxMQ22ugvm84fdnrC6ewXlZScNmP3e4kjXGu3QMPdPUdku_FwjjnFAMk-7SCqK9ADRveyPfV-0EclqQBYSaYUNqFjVEDxr1uz47JvlTr6zOOjNL4bdbcLKWTBNudBJozHKur7Ljme7uWoVdtUAhgsWbFpaaIIw8fRxJpdq3P_CbwbXk-N8A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">
+              4K HDR
+            </span>
+</div>
+<div class="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">8.3</span>
+</div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-space-sm opacity-0 group-hover:opacity-100 bg-surface-container-lowest/70 backdrop-blur-sm transition-all duration-300 p-space-sm">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex items-center gap-space-xs">
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</button>
+<button class="p-2 rounded-full bg-surface-container-high/80 text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold mt-1">Play Master Cut</span>
+</div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>2024 · 1h 51m</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">PG</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-bold truncate group-hover:text-primary transition-colors">
+            Parallel Frequencies
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Romance, Magical Realism
+          </p>
+</div>
+</div>
+</div>
+</section>
+<section class="w-full px-gutter md:px-margin pb-space-xl flex flex-col items-center justify-center gap-space-lg">
+<div class="w-full max-w-md flex flex-col items-center gap-space-xs">
+<div class="flex items-center justify-between w-full text-on-surface-variant font-label-sm text-label-sm">
+<span>Showing 12 of 3,480 Titles</span>
+<span class="text-tertiary">0.34% of CineFlow Catalog</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-primary-container rounded-full w-1/12 shadow-[0_0_12px_rgba(229,9,20,0.8)]"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="relative group overflow-hidden px-space-xl py-3 rounded-xl bg-surface-container-high text-on-surface font-label-md text-label-md font-bold transition-all hover:bg-surface-container-highest hover:shadow-lg flex items-center gap-space-sm" id="load-more-btn">
+<div class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+<span class="material-symbols-outlined text-[20px] text-primary transition-transform group-hover:rotate-180 duration-500">sync</span>
+<span>Load More Master Titles (24)</span>
+</button>
+<div class="hidden sm:flex items-center gap-space-xs bg-surface-container-lowest p-1 rounded-xl">
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface bg-surface-container-low transition-colors" title="Previous page">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold shadow-sm">1</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">2</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">3</button>
+<span class="px-1 text-on-surface-variant text-[14px]">···</span>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm">290</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface bg-surface-container-low transition-colors" title="Next page">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-surface-container-lowest/90 backdrop-blur-2xl opacity-0 pointer-events-none transition-opacity duration-300 p-space-md" id="trailer-modal">
+<div class="relative w-full max-w-4xl rounded-2xl bg-surface-container-high overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.8)] flex flex-col scale-95 transition-transform duration-300" id="modal-content">
+<div class="relative w-full aspect-video bg-black flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="High quality trailer frame preview for the cinematic feature film showing dynamic IMAX visual sequences with theater audio waveforms in the bottom bar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-9QZttPe43doD2eRq5hjER42-qxsQIXqg3cr6TZOXoGT1eCH2elzZ6SMsosanIIya5IPyv8YkoOTzemxbonl3RpYDwg1tG1sEIVwyqcKMNRus_gUfoTj2aV6jNTovNMRB8i5gGhLxx5PEo2rEE3Rf37csKikNQQ_1rrtDFRYlOGLoEVz_cL6H5_BA3hMpcocfaHq-usKsONAH-UgRoJm9mPqryTCj-GsoRPS2OkS8t0oWgM49LYFtHA"/>
+<div class="absolute inset-0 flex flex-col justify-between p-space-lg bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/60">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold">
+                CineFlow 4K Stream
+              </span>
+<span class="font-title-md text-title-md text-on-surface font-bold">Chrono Nebula - Official Theatrical Trailer</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container-lowest/80 text-on-surface flex items-center justify-center hover:bg-surface-container-highest transition-colors" id="close-modal">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden relative group/scrub cursor-pointer">
+<div class="h-full bg-primary-container w-2/5 shadow-[0_0_8px_rgba(229,9,20,1)]"></div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>01:14 / 02:45</span>
+<div class="flex items-center gap-space-md text-on-surface">
+<span class="material-symbols-outlined text-[20px] cursor-pointer">volume_up</span>
+<span class="material-symbols-outlined text-[20px] cursor-pointer">subtitles</span>
+<span class="material-symbols-outlined text-[20px] cursor-pointer">settings</span>
+<span class="material-symbols-outlined text-[20px] cursor-pointer">fullscreen</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+    (function initCatalogFilters() {
+      const pills = document.querySelectorAll('.genre-pill');
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => {
+            p.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-md');
+            p.classList.add('bg-surface-container-high/60', 'text-on-surface-variant');
+          });
+          pill.classList.remove('bg-surface-container-high/60', 'text-on-surface-variant');
+          pill.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-md');
+        });
+      });
+
+      const typeButtons = document.querySelectorAll('.type-toggle');
+      typeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          typeButtons.forEach(b => {
+            b.classList.remove('bg-surface', 'text-on-surface', 'font-bold', 'shadow-sm');
+            b.classList.add('text-on-surface-variant');
+          });
+          btn.classList.remove('text-on-surface-variant');
+          btn.classList.add('bg-surface', 'text-on-surface', 'font-bold', 'shadow-sm');
+        });
+      });
+
+      const viewGridBtn = document.getElementById('view-grid-btn');
+      const viewListBtn = document.getElementById('view-list-btn');
+      const catalog = document.getElementById('catalog-container');
+
+      if (viewGridBtn && viewListBtn && catalog) {
+        viewListBtn.addEventListener('click', () => {
+          viewListBtn.classList.add('bg-surface-container-high', 'text-on-surface');
+          viewListBtn.classList.remove('text-on-surface-variant');
+          viewGridBtn.classList.remove('bg-surface-container-high', 'text-on-surface');
+          viewGridBtn.classList.add('text-on-surface-variant');
+
+          catalog.className = "flex flex-col gap-space-sm";
+          const cards = catalog.querySelectorAll('.catalog-card');
+          cards.forEach(card => {
+            card.classList.remove('flex-col');
+            card.classList.add('flex-row', 'items-center', 'h-24', 'p-2');
+            const poster = card.querySelector('.aspect-\\[2\\/3\\]');
+            if (poster) {
+              poster.classList.remove('aspect-[2/3]', 'w-full');
+              poster.classList.add('w-16', 'h-full', 'rounded');
+            }
+          });
+        });
+
+        viewGridBtn.addEventListener('click', () => {
+          viewGridBtn.classList.add('bg-surface-container-high', 'text-on-surface');
+          viewGridBtn.classList.remove('text-on-surface-variant');
+          viewListBtn.classList.remove('bg-surface-container-high', 'text-on-surface');
+          viewListBtn.classList.add('text-on-surface-variant');
+
+          catalog.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-space-md";
+          const cards = catalog.querySelectorAll('.catalog-card');
+          cards.forEach(card => {
+            card.classList.add('flex-col');
+            card.classList.remove('flex-row', 'items-center', 'h-24', 'p-2');
+            const poster = card.querySelector('.w-16');
+            if (poster) {
+              poster.classList.remove('w-16', 'h-full');
+              poster.classList.add('aspect-[2/3]', 'w-full');
+            }
+          });
+        });
+      }
+
+      const modal = document.getElementById('trailer-modal');
+      const modalContent = document.getElementById('modal-content');
+      const closeModal = document.getElementById('close-modal');
+      const triggerButtons = document.querySelectorAll('[title="Quick Trailer Preview"]');
+
+      const openTrailer = () => {
+        if (!modal) return;
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modalContent.classList.remove('scale-95');
+        modalContent.classList.add('scale-100');
+      };
+
+      const closeTrailer = () => {
+        if (!modal) return;
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modalContent.classList.add('scale-95');
+        modalContent.classList.remove('scale-100');
+      };
+
+      triggerButtons.forEach(btn => btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openTrailer();
+      }));
+
+      if (closeModal) closeModal.addEventListener('click', closeTrailer);
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeTrailer();
+        });
+      }
+
+      const loadMoreBtn = document.getElementById('load-more-btn');
+      if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+          loadMoreBtn.classList.add('opacity-70', 'pointer-events-none');
+          loadMoreBtn.querySelector('span:last-child').textContent = 'Loading Vault Stream...';
+          setTimeout(() => {
+            loadMoreBtn.classList.remove('opacity-70', 'pointer-events-none');
+            loadMoreBtn.querySelector('span:last-child').textContent = 'Loaded +24 Titles Successfully';
+            setTimeout(() => {
+              loadMoreBtn.querySelector('span:last-child').textContent = 'Load More Master Titles (24)';
+            }, 2500);
+          }, 800);
+        });
+      }
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest text-on-surface-variant"><div class="w-full px-gutter md:px-margin py-space-xl flex flex-col gap-space-xl"><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-space-lg"><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Browse</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">New &amp; Popular</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Originals</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Documentaries</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Collections</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">CineFlow Club</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Premieres &amp; Galas</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Director Commentary</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Cinephile Pass</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Curator Journal</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Supported Devices</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Apple TV &amp; Google TV</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">PlayStation &amp; Xbox</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Smart Displays</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">VR Immersion</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Assistance</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Help Center</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Stream Quality &amp; Audio</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Manage Account</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Contact Concierge</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Legal</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Privacy Policy</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Terms of Service</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Content Licensing</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Cookie Preferences</a></div></div><div class="flex flex-wrap items-center justify-between gap-space-md pt-space-lg"><div class="flex flex-wrap items-center gap-space-md"><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-tertiary font-bold tracking-widest">4K ULTRA HD</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-tertiary font-bold tracking-widest">DOLBY VISION</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-secondary font-bold tracking-widest">DOLBY ATMOS</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant font-bold tracking-widest">IMAX ENHANCED</span></div><div class="flex items-center gap-space-sm px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface"><span class="material-symbols-outlined text-[18px]">language</span><select class="bg-transparent font-body-sm text-body-sm text-on-surface outline-none cursor-pointer pr-space-xs"><option class="bg-surface-container-high text-on-surface" value="en-US">English (US)</option><option class="bg-surface-container-high text-on-surface" value="en-GB">English (UK)</option><option class="bg-surface-container-high text-on-surface" value="fr-FR">Français</option><option class="bg-surface-container-high text-on-surface" value="de-DE">Deutsch</option><option class="bg-surface-container-high text-on-surface" value="ja-JP">日本語</option></select></div></div><div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant"><p class="font-body-sm text-body-sm">© 2025 CineFlow Studios &amp; Entertainment LLC. All high-fidelity rights reserved.</p><p class="font-label-sm text-label-sm text-on-surface-variant/80">Cinema mastered at 24.000 fps · DCI-P3 wide color gamut</p></div></div></footer></body></html>

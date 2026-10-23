@@ -1,0 +1,15 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.github
+.vscode
+.idea
+*.log
+scratch/
+tests/
+reverse_engineering/
+designs/
+rea/
+NEWFORNTEND/

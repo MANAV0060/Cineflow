@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#690003", "surface-container": "#1e1f25", "primary": "#ffb4aa", "on-primary-container": "#fff7f6", "background": "#121318", "on-background": "#e3e1e9", "tertiary-fixed-dim": "#00dbe9", "on-error": "#690005", "on-surface": "#e3e1e9", "secondary-container": "#ee9800", "error-container": "#93000a", "outline-variant": "#5e3f3b", "surface-container-high": "#292a2f", "surface-variant": "#34343a", "secondary-fixed": "#ffddb8", "on-secondary-fixed": "#2a1700", "tertiary-container": "#007f87", "on-error-container": "#ffdad6", "on-surface-variant": "#e9bcb6", "on-secondary": "#472a00", "surface-container-low": "#1a1b21", "secondary-fixed-dim": "#ffb95f", "on-tertiary-fixed-variant": "#004f54", "inverse-primary": "#c0000c", "inverse-surface": "#e3e1e9", "surface-bright": "#38393f", "on-tertiary-fixed": "#002022", "surface-container-lowest": "#0d0e13", "surface-container-highest": "#34343a", "inverse-on-surface": "#2f3036", "on-secondary-fixed-variant": "#653e00", "tertiary-fixed": "#7df4ff", "on-secondary-container": "#5b3800", "surface": "#121318", "error": "#ffb4ab", "tertiary": "#00dbe9", "on-primary-fixed": "#410001", "primary-fixed-dim": "#ffb4aa", "primary-container": "#e50914", "on-tertiary-container": "#e8fdff", "surface-dim": "#121318", "on-tertiary": "#00363a", "secondary": "#ffb95f", "outline": "#af8782", "primary-fixed": "#ffdad5", "surface-tint": "#ffb4aa", "on-primary-fixed-variant": "#930007" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-md": "1rem", "space-lg": "1.5rem", "gutter": "1.5rem", "gutter-mobile": "0.75rem", "margin": "3rem", "margin-mobile": "1.25rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "display-xl": [ "Plus Jakarta Sans" ], "label-sm": [ "Inter" ], "body-sm": [ "Inter" ], "headline-md": [ "Plus Jakarta Sans" ], "label-md": [ "Inter" ], "body-lg": [ "Inter" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-xl-mobile": [ "Plus Jakarta Sans" ], "title-md": [ "Plus Jakarta Sans" ], "body-md": [ "Inter" ] }, "fontSize": { "headline-lg-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "headline-lg": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700" } ], "display-xl": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "800" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "400" } ], "headline-md": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-md": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400" } ], "headline-sm": [ "22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "display-xl-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" } ], "title-md": [ "18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.65)]"><div class="h-20 w-full px-gutter md:px-margin flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-xl"><div class="flex items-center gap-space-sm"><img alt="CineFlow Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WmU2BztXMtwiOE8nVpXySuglAylbqWAsD4G79pGZm3PswvV_sAoRcoh9sff1R-R0YS0N-x92Jt5IaQhlI5nD9gruhaeV6eJmPBDz0pbkjPvXO5tGY4FbI3z_MCZiTdAefh54M0R0bGOY_YKSiqJh-trO-8pspwaIfx6H0boOZhAaxmh8jLfObQd0u5x_5sHTTsAgVbMemo0teMlHFP2rx5DvIFf4oteHqS7qnbT0t3U5Pwwg10Rw9PNYz0"/><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface">Cine<span class="text-primary-container">Flow</span></span></div><nav class="hidden lg:flex items-center gap-space-lg" data-active-classes="text-on-surface font-bold"><a aria-current="page" class="transition-colors text-on-surface font-bold" data-path="home" href="#">Home</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="movies" href="#">Movies</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="tv-shows" href="#">TV Shows</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="my-list" href="#">My List</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="categories" href="#">Categories</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center h-10 px-space-md rounded-full bg-surface-container-high/60 focus-within:bg-surface-container-high transition-all group"><span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-space-sm">search</span><input class="bg-transparent border-0 outline-none font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 w-40 md:w-56 focus:w-72 transition-all" placeholder="Titles, genres, creators..." type="text"/><span class="ml-space-sm px-space-xs py-0.5 rounded bg-surface-variant font-label-sm text-label-sm text-on-surface-variant">⌘K</span></div><button class="relative p-space-sm rounded-full bg-surface-container-high/60 hover:bg-surface-container-high hover:text-on-surface text-on-surface-variant transition-colors flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary-container"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwVRLg1YGzC-K0VSP4yql7A3ydoFhlgRoNVtz0ySyB6HYpFLYGIpSnlJSYZqU4o8rb_x84_lhlCqsiiQITbEPvuqufn1t4JetJwNoeYhrF6yO2uGpJhzJ1Mez_oXnrAvkf8mMiLO7Hytg7VO6a-kKH_KvGF1KkIqJguO1O-ZFy-9YHlxbkpzKZ91Qip6192V8_Y1t4pfdFvmHyez-TZWB0-XqK_YLdZSX67uivS9QKCw9b1JeoOl2_kA"/><span class="material-symbols-outlined text-on-surface-variant text-[18px] hidden md:inline">arrow_drop_down</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full">
+<!-- HERO SECTION: Atmospheric Cinema Canvas -->
+<section class="relative w-full h-[901px] min-h-[640px] max-h-[960px] overflow-hidden -mt-20 flex items-end">
+<!-- Cinematic Full-Bleed Backdrop -->
+<div class="absolute inset-0 bg-cover bg-center scale-105 transition-transform duration-1000 ease-out" data-alt="Cinematic wide 8k still from sci-fi film CHRONOS BEYOND THE VOID. Massive glowing sapphire temporal fracture and obsidian starship traversing a luminescent violet accretion disk with stardust, cosmic nebula clouds, volumetric lighting, deep shadows, cinematic anamorphic lens flare." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDJosHdDOk16W5KYgf9M8hUQ9gUqSoMYWK8-4Upxk9FdEmD0KB3ZoR9ksQ45jBApJ7TYUUlKDKnMa6Qlx9nbg7f6SlOY3-4pSyOMtM_kMdVYQdeL4cgNFi4Bl79uX9cOlO0zifvMFejwVTndJqO8NMFTWVTZDUE837hA6s6IXOoLSs4b1e_poyZ3NopFylv3WUAf65GjJg1GGHU6F6pUPo9g-wN5NPtRjVMEkXx6MZMbafBETVaz9TdAg')">
+</div>
+<!-- Multi-tier Optical Scrims -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/60 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/80 via-35% to-transparent"></div>
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,219,233,0.12),transparent_60%)]"></div>
+<div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-surface-container-lowest/90 to-transparent"></div>
+<!-- Hero Content Container -->
+<div class="relative z-10 w-full px-gutter md:px-margin pb-14 pt-36 max-w-7xl flex flex-col gap-space-lg">
+<!-- Studio Ribbon & Live Broadcast Indicator -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-container/20 text-primary-container font-label-sm text-label-sm uppercase tracking-widest backdrop-blur-md">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+          CineFlow Original Premiere
+        </span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high/70 text-secondary font-label-sm text-label-sm font-bold flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+          8.8 IMDb
+        </span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high/70 text-on-surface font-label-sm text-label-sm">2024</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high/70 text-tertiary font-label-sm text-label-sm font-bold tracking-wider">4K ULTRA HD</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high/70 text-tertiary-fixed-dim font-label-sm text-label-sm font-semibold">HDR10+</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high/70 text-secondary font-label-sm text-label-sm font-semibold">DOLBY ATMOS</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">2h 42m</span>
+</div>
+<!-- Main Cinematic Title & Logline -->
+<div class="flex flex-col gap-space-sm max-w-3xl">
+<h1 class="font-display-xl text-display-xl tracking-tight text-on-primary-container uppercase drop-shadow-[0_10px_25px_rgba(0,0,0,0.85)] leading-none select-none">
+          Chronos<span class="text-primary-container font-extrabold">:</span><br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-on-surface via-primary to-tertiary-fixed-dim">Beyond the Void</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl line-clamp-2 drop-shadow-md">
+          When temporal fractures threaten to tear human colonies apart across deep space, a renegade pilot and an enigmatic android must navigate uncharted wormholes to reclaim lost timelines.
+        </p>
+</div>
+<!-- Hero Interactive Controls & Utility -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-2">
+<!-- Main CTAs -->
+<div class="flex items-center gap-space-md flex-wrap">
+<button class="flex items-center gap-2.5 px-7 py-3 rounded bg-primary-container hover:bg-primary-container/90 text-on-primary-container font-title-md text-title-md font-bold shadow-[0_8px_30px_rgba(229,9,20,0.45)] hover:shadow-[0_12px_40px_rgba(229,9,20,0.65)] hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+            Play Now
+          </button>
+<button class="flex items-center gap-2 px-5 py-3 rounded bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface font-title-md text-title-md font-semibold backdrop-blur-xl shadow-md hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-[20px]">info</span>
+            More Info
+          </button>
+<button class="w-12 h-12 rounded-full bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface flex items-center justify-center backdrop-blur-xl shadow-md hover:scale-105 transition-all group" title="Add to My List">
+<span class="material-symbols-outlined text-[22px] group-hover:rotate-90 transition-transform">add</span>
+</button>
+</div>
+<!-- Carousel Progression & Sound Trigger -->
+<div class="flex items-center gap-space-lg">
+<!-- Slide Progress Indicators (Slide 2 of 5 Active) -->
+<div class="flex items-center gap-2">
+<div class="h-1 w-6 rounded-full bg-surface-variant"></div>
+<div class="h-1 w-12 rounded-full bg-primary-container relative overflow-hidden">
+<div class="absolute inset-0 bg-on-primary-container/50 animate-[shimmer_2s_infinite]"></div>
+</div>
+<div class="h-1 w-6 rounded-full bg-surface-variant"></div>
+<div class="h-1 w-6 rounded-full bg-surface-variant"></div>
+<div class="h-1 w-6 rounded-full bg-surface-variant"></div>
+</div>
+<!-- Mute/Unmute State Machine -->
+<button class="w-11 h-11 rounded-full bg-surface-container-high/70 hover:bg-surface-container text-on-surface flex items-center justify-center backdrop-blur-md transition-all shadow-md" id="heroAudioToggle">
+<span class="material-symbols-outlined text-[20px]" id="heroAudioIcon">volume_up</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- CONTENT HUB: Atmospheric Rows with Horizontal Scrollers -->
+<div class="flex flex-col gap-space-xl py-space-xl w-full">
+<!-- ROW 1: Trending Now (Top 10 Global with Overlaid Numeric Typography) -->
+<section class="flex flex-col gap-space-md w-full relative group/row">
+<div class="flex items-center justify-between px-gutter md:px-margin">
+<div class="flex items-baseline gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">Trending Now</h2>
+<span class="font-label-sm text-label-sm text-tertiary uppercase tracking-widest font-bold">Top 10 Worldwide</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all shadow-sm disabled:opacity-30" onclick="scrollRail('row-trending', -480)">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all shadow-sm" onclick="scrollRail('row-trending', 480)">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Scroller with Top 10 Numerals -->
+<div class="flex gap-space-lg overflow-x-auto scroll-smooth px-gutter md:px-margin no-scrollbar py-2" id="row-trending">
+<!-- Item 1 -->
+<div class="relative flex-none w-72 group cursor-pointer">
+<div class="flex items-end">
+<span class="font-display-xl text-[120px] leading-none font-black text-surface-container-high group-hover:text-primary-container transition-colors select-none -mr-7 z-0 drop-shadow-lg">1</span>
+<div class="relative w-56 aspect-[16/10] rounded-xl overflow-hidden shadow-xl bg-surface-container-low group-hover:scale-105 group-hover:shadow-[0_12px_40px_-8px_rgba(229,9,20,0.35)] transition-all duration-300 z-10">
+<div class="w-full h-full bg-cover bg-center" data-alt="Cyberpunk thriller movie still neon metropolis rain soaked highway with flying vehicles and glowing holographic billboards" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCwdGBn0LQXqwpZdg612hoSOtyWKOb7dON2MV56KOnPeWfASi55yE7SAXCAbhDW1IUZ2pHtCp0Iyg88dy5zu4bZ8wB4yMbzKfwnnlMt-D6uNsVPo0qGusq-Hmw8PIF1KUvzxPB9uR9RssHbV5pxQjByzE8ofzRn3K8nh27Zfh1I9lf9f_IwGGwfPhlRwFAWE0lfnRFB9uE9tiTYmYt7KhwxqXCpaG8UVrsg8IMuzZURDUczLmauw7J8AQ')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">Neon Reckoning</span>
+<div class="flex items-center gap-2">
+<span class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>9.1
+                  </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cyberpunk</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="relative flex-none w-72 group cursor-pointer">
+<div class="flex items-end">
+<span class="font-display-xl text-[120px] leading-none font-black text-surface-container-high group-hover:text-primary-container transition-colors select-none -mr-7 z-0 drop-shadow-lg">2</span>
+<div class="relative w-56 aspect-[16/10] rounded-xl overflow-hidden shadow-xl bg-surface-container-low group-hover:scale-105 group-hover:shadow-[0_12px_40px_-8px_rgba(229,9,20,0.35)] transition-all duration-300 z-10">
+<div class="w-full h-full bg-cover bg-center" data-alt="Dark fantasy medieval castle atop storm ravaged crag with crimson lightning storm and armored knight wielding a runic blade" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCA60gW-Eko2rn0QQdcBJ-6exxiua4Rf5XyQ36vfI1xoPYxnCpdWT0f7PqK9mrIWED5wtIyeg498Cpt58mzlyn_T__WUMhNEtx97h7Imaw01EsAPCzwboJtd5znSVj6ZbhkbfuzVyyniyYrGsCLyLOlWKLjS3Ife26MK8PUrmN3Qk0FfEgXgAcmBoqbLMy3SjgWLRwo5unXx1Rixy8uXXUihxVlKwFbxm6xpkBG4D0ddUnLT71x96YDxg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">Crown of Thorns</span>
+<div class="flex items-center gap-2">
+<span class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>8.7
+                  </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Dark Fantasy</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="relative flex-none w-72 group cursor-pointer">
+<div class="flex items-end">
+<span class="font-display-xl text-[120px] leading-none font-black text-surface-container-high group-hover:text-primary-container transition-colors select-none -mr-7 z-0 drop-shadow-lg">3</span>
+<div class="relative w-56 aspect-[16/10] rounded-xl overflow-hidden shadow-xl bg-surface-container-low group-hover:scale-105 group-hover:shadow-[0_12px_40px_-8px_rgba(229,9,20,0.35)] transition-all duration-300 z-10">
+<div class="w-full h-full bg-cover bg-center" data-alt="Deep ocean submersible facing colossal bioluminescent deep sea leviathan in abyssal oceanic trench with cyan glow and particle silt" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAv10uuEdNxyum5zldMa_M4EYSnyBZIt5AmJYi_eQzoYbOUt5mET9hyKQxMa1cnn9WdPEyLllFDXQOBQcKqzF1ZeJNE-J2Qh6e3BV9Q67z52n0wJoI46sBYN-WYWAsMZttnDDC-DsxXJZTDEuBRamliApcbQKCLMfCPyFLMPc3WoRBe7vFjtQCFKqjL2W_mdJqwgBAEezV5Gdl0qVMJvGUZ1ilKhuQWgk2bTqtalz6qYcnTz36bLlzoNw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">Abyssal Siren</span>
+<div class="flex items-center gap-2">
+<span class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>8.5
+                  </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sci-Fi Thriller</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="relative flex-none w-72 group cursor-pointer">
+<div class="flex items-end">
+<span class="font-display-xl text-[120px] leading-none font-black text-surface-container-high group-hover:text-primary-container transition-colors select-none -mr-7 z-0 drop-shadow-lg">4</span>
+<div class="relative w-56 aspect-[16/10] rounded-xl overflow-hidden shadow-xl bg-surface-container-low group-hover:scale-105 group-hover:shadow-[0_12px_40px_-8px_rgba(229,9,20,0.35)] transition-all duration-300 z-10">
+<div class="w-full h-full bg-cover bg-center" data-alt="Heist film moody cinematic shot of luxury safe vault with masked infiltrator and laser security grid in smoke" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDqH2wZndLF8nghAW_RiA4nbnpq0lTRLMmR8vIlio570tojJo269PMP52RUK3WbgxcrPCL3m96Fs31SAWAhYTLK_x9GPiGZ_8VJ9p7ljKEhCYlxyCRMuj_O4q9ha-HLDB8jNAeJy44Y7AS_vc76tmAVwmPqBFdEXC_fBNeFHzAg4KIitsYRgkV9GopoXOrtTgAS0AiICHYFim-j6Qn4rjZhpqL5QCp5V3XEBuNge93YO2vCm5UK0rgwdg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">Ghost Syndicate</span>
+<div class="flex items-center gap-2">
+<span class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>8.4
+                  </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Action Heist</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="relative flex-none w-72 group cursor-pointer">
+<div class="flex items-end">
+<span class="font-display-xl text-[120px] leading-none font-black text-surface-container-high group-hover:text-primary-container transition-colors select-none -mr-7 z-0 drop-shadow-lg">5</span>
+<div class="relative w-56 aspect-[16/10] rounded-xl overflow-hidden shadow-xl bg-surface-container-low group-hover:scale-105 group-hover:shadow-[0_12px_40px_-8px_rgba(229,9,20,0.35)] transition-all duration-300 z-10">
+<div class="w-full h-full bg-cover bg-center" data-alt="Psychological drama shot of mirror maze reflections with shattered glass shards and intense dramatic shadows" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzgbmTr5GhZ7_MhQ8q7ykoQIwA22N352Fz6jUy3j7L98uNDmManH7DSo-uI0PUwJHVs1061eN0HnzkVRUkKvcv4_urf70wKsjYALxgnJXnDm972eqtG47Qaz8nQazQ84VhzCF8vrXFn0tNwxwI3iilSr64O4zZineDmfm9RSyfcQQhlJY5R8nDmVqdJAO9S5ZjRcbVVyaMcge9tvk1mX1yq69E612ofrRwsOY0Wihv6QMqxBaanXO-Cw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-0.5">
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">Fracture of Ego</span>
+<div class="flex items-center gap-2">
+<span class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>8.3
+                  </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Psychological</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ROW 2: Popular Movies (2:3 Vertical Posters with Rich Hover States) -->
+<section class="flex flex-col gap-space-md w-full relative">
+<div class="flex items-center justify-between px-gutter md:px-margin">
+<div class="flex items-baseline gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">Popular Movies</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Curated box-office blockbusters &amp; festivals</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all shadow-sm" onclick="scrollRail('row-movies', -500)">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all shadow-sm" onclick="scrollRail('row-movies', 500)">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-space-md overflow-x-auto scroll-smooth px-gutter md:px-margin no-scrollbar py-3" id="row-movies">
+<!-- Card 1 -->
+<div class="flex-none w-48 sm:w-56 group cursor-pointer">
+<div class="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_14px_36px_-6px_rgba(229,9,20,0.3)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Vertical cinema movie poster of a lone astronaut walking across golden sands of a two-sun desert alien world with towering monolith structures" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCS71b867JqSleieQMqqve1PtXu5duF5_AGuuu7mVtDwFzxHPvUdfsBUVvZfVH_xPLonE216RUZd_esGkaPILocA2NRwQzWzeUNug3Y939wq_bq4sjj4F_plcQjnILJGwcD90jhYGTGnGSgxqnveGBmUwM5ymKNfk4YgC-IfSWjoGagVj4netbGE9_d746graw4MKyMMUkA4vr9bTsWzpYqzpbNHvRYg7MutUSNDx2rO7SXb-iiuVTAsw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-90"></div>
+<!-- Format Badges -->
+<div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">4K</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-secondary font-label-sm text-label-sm font-bold">ATMOS</span>
+</div>
+<!-- Hover Quick Action Overlay -->
+<div class="absolute inset-0 bg-surface-container-lowest/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Card Bottom Meta -->
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Solitary Horizon</span>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>2024 · 2h 18m</span>
+<span class="text-secondary font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span> 8.6
+                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex-none w-48 sm:w-56 group cursor-pointer">
+<div class="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_14px_36px_-6px_rgba(229,9,20,0.3)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Vertical cinema movie poster noir detective in trench coat standing under street lamp in rain holding an antique golden compass with mysterious mist" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAkRitF98WwKkCDndLN5yFmdDcX81IoiAF9f9rTlGUnHIoKgTVhhx30wqgAlSs36FklAkfqgJhpAaDl9Ja3c5ORE0s0gRrZ-FbeAVSA943ULIJTi4o_tD9FhyDPMVEIJrPbj48Eo2wiWb0vsCIEBRjc_r4ZnsSL0ipp6dYMPyGhFaDoTTrfZ_aRod-TYsE52mU5bOCNTRlsPxXa0r11sPnvUluLhmJBMH75Vu2IOCBQuaxIqhhURA1agA')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-90"></div>
+<div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">4K</span>
+</div>
+<div class="absolute inset-0 bg-surface-container-lowest/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Shadows of Venice</span>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>2023 · 1h 56m</span>
+<span class="text-secondary font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span> 8.4
+                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex-none w-48 sm:w-56 group cursor-pointer">
+<div class="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_14px_36px_-6px_rgba(229,9,20,0.3)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Vertical cinema movie poster high speed hypercar race on orbital ring track with neon orange velocity streaks and earth visible below in space" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD06cgLnlXoV5VO2N-mSfABpVd4H8JyBJ5xRPllLH_SOmDN6tyfjRhhEW6fqe3Dp1oWRI6nb04ujWQuO3dXdPuh1A91AaIwzMDe1Kh3EjDxmkdUlAnUZuKd3SL8UGTHXr2azRpo2JIZ0PMPpSRahdVEy2reZWl2wM6ABmhhXFs6sN1Y6W74DZHJziqqOOUWxUGKMrEobGJ4h1l7Ce4AjNqJibAnKm3FpQ2Wsko3-Hm1q9U2JeFr-LRlOA')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-90"></div>
+<div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">4K</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-primary font-label-sm text-label-sm font-bold">IMAX</span>
+</div>
+<div class="absolute inset-0 bg-surface-container-lowest/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Mach Infinite</span>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>2024 · 2h 05m</span>
+<span class="text-secondary font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span> 8.9
+                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="flex-none w-48 sm:w-56 group cursor-pointer">
+<div class="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_14px_36px_-6px_rgba(229,9,20,0.3)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Vertical movie poster of an ancient overgrown stone temple in a mist-filled bioluminescent jungle with an adventurous archeologist holding an energized relic" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDs4UoSthReALQHcAtmEsgttBWgcOBe6c81jArA0JdKM3Zp9dgy0c5y_ZLz-Q10eRpFZG5NWgpLWR6byiSIFz2RUnJkuwV0rIu9Zo0F4fqEHMpCgraRFtarkH-LhQgHtAdLk88z52Pt5bNu8KSRcDB2llJ84ivp1oCaLqHcnxzTL4h3NbeytCuJkl2JuZrGqWQqlOqEhxF5d5FfRAepWLqWBXufA2vVIQg57w2IJSbHDirikDRaWQ07Q')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-90"></div>
+<div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">4K</span>
+</div>
+<div class="absolute inset-0 bg-surface-container-lowest/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Eldritch Roots</span>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>2023 · 2h 28m</span>
+<span class="text-secondary font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span> 8.2
+                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="flex-none w-48 sm:w-56 group cursor-pointer">
+<div class="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_14px_36px_-6px_rgba(229,9,20,0.3)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Vertical movie poster of two samurai duelists crossing glowing katanas on a snow covered bridge under cherry blossoms illuminated by twilight lantern light" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDkfEW_F5QN0Q5ER0lxIRFC8NQGX6u_Ynvh4be6KtYe8PPZQG2u3KIGeLoCgelaHkVUGbu10SvnYs0UuNvaC8xhR7iArBeWv2_WaDTfsk9yYwNo6WSmGr8wPBEjzDfy8KUQkbU6X6GvL2XdqREFaoBGTDWcZDyDjrNppv64FD46sAvfowUBxMzxNKNlNJ03naN-Dj71LX-8CwLMB7fdXK_uMX05Do3hzfHSb1tUFbXcGDmqCVEZVhYnxg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/20 to-transparent opacity-90"></div>
+<div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold tracking-wider">4K</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-secondary font-label-sm text-label-sm font-bold">ATMOS</span>
+</div>
+<div class="absolute inset-0 bg-surface-container-lowest/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Blade of the Winter Sun</span>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>2024 · 2h 14m</span>
+<span class="text-secondary font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span> 9.0
+                </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ROW 3: Binge-Worthy TV Series (16:9 Landscape Episodic Formats with Progress/Ep Markers) -->
+<section class="flex flex-col gap-space-md w-full relative">
+<div class="flex items-center justify-between px-gutter md:px-margin">
+<div class="flex items-baseline gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">Binge-Worthy TV Series</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Original episodic multi-season sagas</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all shadow-sm" onclick="scrollRail('row-series', -500)">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all shadow-sm" onclick="scrollRail('row-series', 500)">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-space-lg overflow-x-auto scroll-smooth px-gutter md:px-margin no-scrollbar py-3" id="row-series">
+<!-- Series 1 -->
+<div class="flex-none w-80 group cursor-pointer">
+<div class="relative w-full aspect-video rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_36px_-6px_rgba(0,219,233,0.25)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="High quality episodic still of a futuristic command bridge with glowing holographic star charts and crew staring out at an interstellar anomaly" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjorsQb7_LXQ1Zbck8wgyUuaoDuaxSKMZFgv_l8hx3K2V-gWBtFjjwiwi6YRWNZ--MXsOO10F2gsiwhTk1dBTfCoHyRng1ky-XyxeMtB73WUuv1EyGgI3KnxM_TjZ6W58yjq_xe3E24LOFaMwxlvjtcqrD5rIVF-5AqTcwucSWeNANiydFfscp9jJUp5EEx5KKEodAT0SnXiMXPNvbK9jdgtjxmTbfbSyt-ejmpIDXd1R3-3e_Zsud0Q')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">NEW EPISODE</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-on-surface font-label-sm text-label-sm">Season 3</span>
+</div>
+<!-- Scrubber / Continue Watching Progress -->
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-surface-variant">
+<div class="h-full bg-primary-container w-2/3"></div>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Singularity Station</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">S3:E8 · The Event Horizon</span>
+</div>
+<div class="w-9 h-9 rounded-full bg-surface-container-high/90 text-on-surface flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Series 2 -->
+<div class="flex-none w-80 group cursor-pointer">
+<div class="relative w-full aspect-video rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_36px_-6px_rgba(0,219,233,0.25)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Dark gritty crime drama scene in a rain-soaked industrial shipping dock with undercover detectives surveilling a container exchange" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAyW7t0yPlx5gc7D6yBeCHIgXxA_12MzwWM6mMNs0yGhlvFw2NmInLm0YsLfkFWsdJT3xurFDHJzhT6XT2iTKtEtCorERdE5N8ZUxnxYCFRqEdcUKoJ0w5uHRtIEpO4vghSVMK8SJw6wtXazf-MqvPHiEr4iYfgqsJh2QBlTajIlSFzbyUpIc4DTbFlpjzXAnGOlF8S3xYtYYFk3vm3_sjuj9wc0IGXVK7q_RhfoLN8PzuoLf7uXeW3_Q')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-on-surface font-label-sm text-label-sm">5 Seasons</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-secondary font-label-sm text-label-sm font-bold">TV-MA</span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">The Rotterdam Protocol</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">42 Episodes Available</span>
+</div>
+<div class="w-9 h-9 rounded-full bg-surface-container-high/90 text-on-surface flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Series 3 -->
+<div class="flex-none w-80 group cursor-pointer">
+<div class="relative w-full aspect-video rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_36px_-6px_rgba(0,219,233,0.25)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Epic royal throne room in a fantasy steampunk empire with mechanical brass clocks, ornate stained glass and regal court members" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAhl-oJbbjBPqcniKB0JzDW-WqlmBjjKj-BigKtKU9bhlO0aio_APhr3bRww4v2FhtI4eekqvNaXd7__mSxeLcG1_qJbCUOmhgutSE68VM1Edy6nunpcd5CQhz5HOFTZJ4vl89zUa7pn_PUwn-arhTzGRMW8UZ-px-FE3Xv25MlXtxAKv3f-xKcwxxxVBhguTpUUD9EAU8Zbgv0lVe1OX27MdVes_osloONUqfQ4dEaPfcrUA6LItfVzw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">NEW EPISODE</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-on-surface font-label-sm text-label-sm">Season 2</span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Gilded Machinery</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">S2:E4 · Iron Decrees</span>
+</div>
+<div class="w-9 h-9 rounded-full bg-surface-container-high/90 text-on-surface flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Series 4 -->
+<div class="flex-none w-80 group cursor-pointer">
+<div class="relative w-full aspect-video rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_36px_-6px_rgba(0,219,233,0.25)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Nature documentary landscape of bioluminescent arctic glaciers illuminated by dramatic vivid green aurora borealis reflections in freezing waters" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBbCjUOPZH7wNcgSrzKmvdmmQqnpyYhmcw94cGaePKoRsGK0k2nfggtqaKp_o_vsqlU_JyDPHx0sELPD1sUSrkSJbq9vDqW1VUlCEfEW24k0gY8VEp0-lO9vRMnd2caG6zguEm1B5BzSqkr32pwzC7VNB_iTT72A5EiDRliTVLyU7I45N3wD2qy2irpAytUEKp5sS9TsIy7IhVdPiwXDsmfH92OivEOM2C2WvOputj4mKrnY6gi9T-6oA')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-tertiary font-label-sm text-label-sm font-bold">4K HDR</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md text-on-surface font-label-sm text-label-sm">Docuseries</span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Untamed Poles</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Narrated in Dolby Atmos</span>
+</div>
+<div class="w-9 h-9 rounded-full bg-surface-container-high/90 text-on-surface flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ROW 4: Critically Acclaimed (Gold Laurels, High Ratings, Festival Winners) -->
+<section class="flex flex-col gap-space-md w-full relative">
+<div class="flex items-center justify-between px-gutter md:px-margin">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[26px]">workspace_premium</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">Critically Acclaimed Cinema</h2>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all shadow-sm" onclick="scrollRail('row-critics', -500)">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all shadow-sm" onclick="scrollRail('row-critics', 500)">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-space-md overflow-x-auto scroll-smooth px-gutter md:px-margin no-scrollbar py-3" id="row-critics">
+<!-- Critic 1 -->
+<div class="flex-none w-64 group cursor-pointer">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_40px_-6px_rgba(255,185,95,0.25)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Cinematic still of an orchestral conductor in silhouette facing a grand dimly lit concert hall bathed in warm volumetric amber spotlights" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD7DuDqYGI4bdvzFc0dYzEWF2mOF-IPajgcFMqvtEPf4VniuHdN8oZ7MfH8Sb79Jn3moqx8KSo3IZHb9MqJ05YDvzKADojHtEAVJHpUs--9ZNoo4wG730OdVEbYhLTzuggTEhjBG_lxm0lO2lMeTm2pY1FkKAEpwbN6Z3tpw7psc9bEfyOnvenELNsAj6UUX_rEYygVPEvgvptsfHEVZBI6kAEu05E-e2EnnbeOi9OfFnn3oc8Q8qf4-g')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
+<!-- Festival Laurels Laurel SVG Vector Badge -->
+<div class="absolute top-3 left-3 right-3 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/30 text-secondary-fixed font-label-sm text-label-sm font-bold backdrop-blur-md">
+                ★ CANNES WINNER
+              </span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-sm text-label-sm font-black">
+                98% RT
+              </span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">The Master's Cadence</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Dir. Julian Vance · Drama</p>
+<div class="flex items-center gap-2 pt-1">
+<span class="text-tertiary font-label-sm text-label-sm font-semibold">Cinephile Choice</span>
+<span class="text-on-surface-variant/40 font-body-sm text-body-sm">·</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">8.9 IMDb</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Critic 2 -->
+<div class="flex-none w-64 group cursor-pointer">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_40px_-6px_rgba(255,185,95,0.25)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Minimalist cinematic still of an elderly watchmaker working with magnifying loupe in dusk golden hour workshop surrounded by clockwork gears" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBvwKjgDtjf5FUQkCh5okRVOUQ7wZCiglaUGD1zj7nIwIecY6atIx9wbB6MGYxpuNXUfWIUajdWSreo1rvEZXOB530yoRQItduJR-2v_kY5u3O0Z0DAJdkyfuZ6u1xxt4ebRZi-rcQaSFkODFHe3Pkefiw7FUVt8GJb6cOfkdH1EEphDHChB7-bWKFNiUuB_iAn54nQrWLERNzPC_08I_Qy9zZ8wPWILa83zdu2Mx6l0sg8z7b_Kq7HCA')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
+<div class="absolute top-3 left-3 right-3 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/30 text-secondary-fixed font-label-sm text-label-sm font-bold backdrop-blur-md">
+                ★ VENICE GOLDEN LION
+              </span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-sm text-label-sm font-black">
+                96% RT
+              </span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Seconds of Clay</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Dir. Hiroshi Tanaka · Poetic Cinema</p>
+<div class="flex items-center gap-2 pt-1">
+<span class="text-tertiary font-label-sm text-label-sm font-semibold">Grand Jury Prize</span>
+<span class="text-on-surface-variant/40 font-body-sm text-body-sm">·</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">8.8 IMDb</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Critic 3 -->
+<div class="flex-none w-64 group cursor-pointer">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_40px_-6px_rgba(255,185,95,0.25)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Black and white high contrast moody composition of a mountain climber reaching an icy jagged peak under cosmic starry skies" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDZGqPFy9Za1_BmC_r4FZsD9fjiYWG15QZWnPPqZzJAgSk7Wd3toXtpg3ruRTUV5yXZJcdnjocBD8R1MDxUFIoPkKr_yV5HDxocYNyMbEf_NOjZjkY33WLrpOlaSHo4Ql2-fNhOd_IRgOYsDUp6N_LeS6BfzNSBWGyLVRgxv7pehYyr-F5FL4UO2JIGOZyoPZdWlNd4urQjaCDiA6JtOXv6zCcbiH1wII3ud5yek4ku7VZxhp01ZSqBkg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
+<div class="absolute top-3 left-3 right-3 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/30 text-secondary-fixed font-label-sm text-label-sm font-bold backdrop-blur-md">
+                ★ BERLINALE BEAR
+              </span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-sm text-label-sm font-black">
+                99% RT
+              </span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Apex of Silence</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Dir. Elena Rostova · Docudrama</p>
+<div class="flex items-center gap-2 pt-1">
+<span class="text-tertiary font-label-sm text-label-sm font-semibold">Critics Top 10</span>
+<span class="text-on-surface-variant/40 font-body-sm text-body-sm">·</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">9.2 IMDb</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Critic 4 -->
+<div class="flex-none w-64 group cursor-pointer">
+<div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-container-low shadow-xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_40px_-6px_rgba(255,185,95,0.25)]">
+<div class="w-full h-full bg-cover bg-center" data-alt="Vivid expressionist film frame of two artists painting on an enormous canvas in an open industrial warehouse bathed in colored skylight streams" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5bWHIY01NRU-n2QWa-nJ5QtO9fjQtIX_jRYrI5RRjRyAJJKlLB1AFJHMk5hAZ0RhtTTbKTpMT-WOSH9vU9o81p9wjgY-YYIRMF9-jCfKxvgNiouvlTlkicytoq-Led3hvCHWnjHS6fUT2MGeKUYAHDcy-N-mreiNc5L1vk55VENosforc2-GQUu_wK7XKrUcUBytmXkHONzXwQA023EIQXr71uAleQcfRifwTAO-_qaNUffFrqyEY1A')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"></div>
+<div class="absolute top-3 left-3 right-3 flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/30 text-secondary-fixed font-label-sm text-label-sm font-bold backdrop-blur-md">
+                ★ SUNDANCE SELECT
+              </span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-sm text-label-sm font-black">
+                94% RT
+              </span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+<span class="font-title-md text-title-md font-bold text-on-surface truncate">Chromatic Echoes</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Dir. Marcus Thorne · Romance</p>
+<div class="flex items-center gap-2 pt-1">
+<span class="text-tertiary font-label-sm text-label-sm font-semibold">Special Citation</span>
+<span class="text-on-surface-variant/40 font-body-sm text-body-sm">·</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">8.7 IMDb</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- IMMERSIVE CURATED SPOTLIGHT BANNER: Director Spotlight -->
+<section class="w-full px-gutter md:px-margin pt-space-md pb-space-lg">
+<div class="relative w-full rounded-2xl overflow-hidden bg-surface-container-low shadow-2xl flex flex-col lg:flex-row items-center justify-between min-h-[320px]">
+<div class="absolute inset-0 bg-cover bg-center opacity-30" data-alt="Cinematic wide master shot of deep cosmic space station hub orbiting a turquoise gas giant planet with glowing ring systems" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBLC2lrmBNZpijJPbIOtzdURc4-B8WUVHGnb05JADDwzucFNbcbzLU6A6eeBOCsE2ko-AoxbA3tB2QIITEn6XwbqxUFqY8g6MvO5CLbXC0Gl_Wltsx1izdm3BQlKuQVIy6rGCHXS0l8aeoRAZlATi6Rl7WeK00POjKY-yGLk3wlhYwWLNxqDVviGuFGLCrk0F-TwjDdUOTkPaTuwsoL9mw_u2-U_-nohcRB2GOPfEFIX5nPAd9LBVWtkQ')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-surface-container-lowest via-surface-container-lowest/80 to-transparent"></div>
+<!-- Left Content -->
+<div class="relative z-10 p-8 md:p-12 max-w-xl flex flex-col gap-space-md">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 rounded bg-secondary/20 text-secondary font-label-sm text-label-sm font-bold uppercase tracking-wider">Curator Spotlight</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Special Retrospective</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface font-black tracking-tight">The Nolan Visionary Collection</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Explore 9 remastered masterworks in uncompressed 4K IMAX Enhanced format with groundbreaking 3D audio tracks and original director audio annotations.
+          </p>
+<div class="flex items-center gap-space-md pt-2">
+<button class="px-6 py-2.5 rounded bg-on-surface text-surface-container-lowest hover:bg-white font-title-md text-title-md font-bold transition-all shadow-lg hover:scale-105">
+              Explore Collection
+            </button>
+<span class="font-body-sm text-body-sm text-tertiary font-semibold">Includes 45m unseen commentary</span>
+</div>
+</div>
+<!-- Right Visual Badges / Graphic -->
+<div class="relative z-10 p-8 hidden lg:flex flex-col items-end gap-3 text-right">
+<div class="flex items-center gap-2">
+<span class="px-3 py-1 rounded bg-surface-container-high/90 text-tertiary font-label-sm text-label-sm font-bold">IMAX ENHANCED</span>
+<span class="px-3 py-1 rounded bg-surface-container-high/90 text-secondary font-label-sm text-label-sm font-bold">70MM REMASTER</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">Transferred directly from original camera negatives at 8K resolution.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+<script>
+  // Smooth Horizontal Rail Scroller
+  function scrollRail(id, offset) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+  }
+
+  // Audio mute/unmute micro-toggle
+  const audioBtn = document.getElementById('heroAudioToggle');
+  const audioIcon = document.getElementById('heroAudioIcon');
+  let isMuted = false;
+
+  if (audioBtn && audioIcon) {
+    audioBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      audioIcon.textContent = isMuted ? 'volume_off' : 'volume_up';
+      audioBtn.classList.toggle('text-primary-container', isMuted);
+    });
+  }
+</script></main><footer class="w-full bg-surface-container-lowest text-on-surface-variant"><div class="w-full px-gutter md:px-margin py-space-xl flex flex-col gap-space-xl"><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-space-lg"><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Browse</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">New &amp; Popular</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Originals</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Documentaries</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Collections</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">CineFlow Club</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Premieres &amp; Galas</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Director Commentary</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Cinephile Pass</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Curator Journal</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Supported Devices</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Apple TV &amp; Google TV</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">PlayStation &amp; Xbox</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Smart Displays</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">VR Immersion</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Assistance</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Help Center</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Stream Quality &amp; Audio</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Manage Account</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Contact Concierge</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider">Legal</span><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Privacy Policy</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Terms of Service</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Content Licensing</a><a class="font-body-sm text-body-sm hover:text-on-surface transition-colors" href="#">Cookie Preferences</a></div></div><div class="flex flex-wrap items-center justify-between gap-space-md pt-space-lg"><div class="flex flex-wrap items-center gap-space-md"><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-tertiary font-bold tracking-widest">4K ULTRA HD</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-tertiary font-bold tracking-widest">DOLBY VISION</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-secondary font-bold tracking-widest">DOLBY ATMOS</span><span class="px-space-sm py-1 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant font-bold tracking-widest">IMAX ENHANCED</span></div><div class="flex items-center gap-space-sm px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface"><span class="material-symbols-outlined text-[18px]">language</span><select class="bg-transparent font-body-sm text-body-sm text-on-surface outline-none cursor-pointer pr-space-xs"><option class="bg-surface-container-high text-on-surface" value="en-US">English (US)</option><option class="bg-surface-container-high text-on-surface" value="en-GB">English (UK)</option><option class="bg-surface-container-high text-on-surface" value="fr-FR">Français</option><option class="bg-surface-container-high text-on-surface" value="de-DE">Deutsch</option><option class="bg-surface-container-high text-on-surface" value="ja-JP">日本語</option></select></div></div><div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant"><p class="font-body-sm text-body-sm">© 2025 CineFlow Studios &amp; Entertainment LLC. All high-fidelity rights reserved.</p><p class="font-label-sm text-label-sm text-on-surface-variant/80">Cinema mastered at 24.000 fps · DCI-P3 wide color gamut</p></div></div></footer></body></html>

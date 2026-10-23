@@ -1,0 +1,24 @@
+name: Render Keep-Awake Autobot
+
+on:
+  schedule:
+    # Run every 10 minutes to prevent Render from idling/sleeping
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend
+        run: |
+          # Replace with your actual Render deployment URL or set RENDER_URL in GitHub Repo Secrets
+          TARGET_URL="${{ secrets.RENDER_BACKEND_URL || 'https://YOUR-APP-NAME.onrender.com' }}/api/health"
+          echo "Pinging: $TARGET_URL"
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$TARGET_URL")
+          echo "Response HTTP Status: $RESPONSE"
+          if [ "$RESPONSE" -eq 200 ] || [ "$RESPONSE" -eq 301 ] || [ "$RESPONSE" -eq 302 ]; then
+            echo "Server is awake and healthy!"
+          else
+            echo "Server returned status: $RESPONSE (waking up or offline)"
+          fi

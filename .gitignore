@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Reverse engineering APK dumps & decompiled trees (not needed for deployment)
+reverse_engineering/
+rea/
+
+# Temporary files & logs
+*.log
+*.mp4
+*.mpd
+scratch/
+.tempmediaStorage/
+
+# Zip archives
+*.zip
+
+# Local IDE & OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

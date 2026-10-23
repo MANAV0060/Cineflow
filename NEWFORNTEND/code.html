@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Movie love - Stream Movies &amp; TV Series</title>
+<!-- Tailwind CSS CDN with forms and container queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandYellow: '#f5c518',
+            brandBlue: '#0075ff',
+            darkBg: '#08080a',
+            cardBg: '#111216',
+          },
+          fontFamily: {
+            cinematic: ['Cinzel', 'Trajan Pro', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Fonts for cinematic headings -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- BEGIN: CustomStyles -->
+<style data-purpose="custom-typography">
+    .font-cinematic {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.05em;
+    }
+    .text-shadow-hero {
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 117, 255, 0.4);
+    }
+    .text-shadow-lightning {
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.9), 0 0 15px rgba(245, 197, 24, 0.5);
+    }
+  </style>
+<style data-purpose="custom-decorations">
+    /* Custom subtle gradient overlays and glowing elements */
+    .hero-glow-overlay {
+      background: radial-gradient(circle at 75% 35%, rgba(0, 180, 255, 0.25) 0%, rgba(13, 17, 27, 0.85) 60%, #08080a 100%);
+    }
+    .black-adam-glow {
+      background: radial-gradient(circle at 60% 40%, rgba(245, 197, 24, 0.15) 0%, rgba(20, 20, 24, 0.85) 55%, #08080a 100%);
+    }
+    .flash-glow {
+      background: radial-gradient(circle at 65% 50%, rgba(220, 38, 38, 0.25) 0%, rgba(24, 8, 12, 0.9) 60%, #08080a 100%);
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<!-- END: CustomStyles -->
+</head>
+<body class="bg-[#08080a] text-slate-200 font-sans antialiased selection:bg-brandBlue selection:text-white">
+<!-- BEGIN: MainHeader -->
+<header class="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-12 py-5 bg-gradient-to-b from-black/85 via-black/40 to-transparent">
+<!-- Brand Logo -->
+<a class="text-2xl md:text-3xl font-extrabold text-[#f5c518] tracking-tight hover:opacity-90 transition" href="#">
+      Movie love
+    </a>
+<!-- Main Navigation Links -->
+<nav class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
+<a class="text-white/80 hover:text-white transition" href="#">Home</a>
+<a class="text-white/80 hover:text-white transition" href="#">Tv Show</a>
+<!-- Active navigation link with yellow glow border -->
+<a class="text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold" href="#">Movie</a>
+<a class="text-white/80 hover:text-white transition" href="#">Upcoming</a>
+</nav>
+<!-- Header Actions: Search Input & Profile Avatar -->
+<div class="flex items-center space-x-4">
+<div class="relative hidden sm:block">
+<input class="bg-black/40 border border-white/20 text-xs rounded-full pl-9 pr-4 py-1.5 focus:outline-none focus:border-[#f5c518] focus:ring-1 focus:ring-[#f5c518] w-40 md:w-52 transition placeholder-white/50 text-white" placeholder="Search movie" type="text"/>
+<svg class="w-4 h-4 text-white/60 absolute left-3 top-2 pointer-events-none" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-4.35-4.35M16.65 11a5.65 5.65 0 11-11.3 0 5.65 5.65 0 0111.3 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- User Profile Avatar -->
+<div class="relative group cursor-pointer">
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-white/30 object-cover ring-2 ring-transparent group-hover:ring-[#f5c518] transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj9m65q3rgA2iwlUqCpdLZpPqB5V1b7oVaQEKpa6YF4Izo4vJXiO_R0_RBVamIOKwvcX1k9HO1KCjwLwFia1bWaD-cwbDZ3yfhzaayNKWvJn8ndpe03imDQ_9dKqZ7cyXCKbN6hCp5f3TYkhO9Z0I0Jp_qag3JssdVyTf6MI85XudIcXiOiHojn_KsCvl4u6-rZPZhXyMhjsFVwNQ5uJ28GuHQjlanahZtjgUdkMn1OKIgRZ4XgMcO3Q"/>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: HeroBannerSection (Raya and the Last Dragon) -->
+<section class="relative min-h-[720px] md:min-h-[840px] flex flex-col justify-end overflow-hidden pb-12 pt-32 px-6 md:px-14">
+<!-- Hero Background Graphic -->
+<div class="absolute inset-0 z-0">
+<img alt="Raya and the Last Dragon" class="w-full h-full object-cover object-center scale-105 filter brightness-90 contrast-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmHP4G7tciaNtl9zkfB-hi3Gvnrb1TlHg8WiHwgapYUmmr8MenuAapmL9r5lj2gH8xa9OfRTFT4KUxUIuS-PaB56myG-olMmY55JhZhvSyVq2iLgsBIbL7Lh03xh9AeCLta6m4t2MEs_KB4OFNpk40ZOgwPMq26bkIOFgPqVafN09IKMbz7j2bUDVMuqfyCNVv--SrC5R2t28DRYNO6_xk8QeomvClPC3mAJWYvwRnG4JlAXLHwQT-JQ"/>
+<div class="absolute inset-0 hero-glow-overlay"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/60 to-transparent"></div>
+</div>
+<!-- Hero Content Overlay -->
+<div class="relative z-10 max-w-2xl text-left mt-12">
+<!-- Title -->
+<h1 class="text-4xl md:text-6xl font-cinematic font-black text-white text-shadow-hero leading-tight uppercase tracking-wider">
+        Raya and the<br/>Last Dragon
+      </h1>
+<!-- Metadata & Release Tags -->
+<p class="mt-3 text-sm md:text-base font-medium text-slate-300 flex items-center space-x-2">
+<span>A quest to save her world.</span>
+<span class="text-[#4ade80] font-semibold">Mar. 03, 2021 USA</span>
+</p>
+<!-- Synopsis -->
+<p class="mt-3 text-xs md:text-sm text-slate-300/90 leading-relaxed max-w-lg line-clamp-3">
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters.
+      </p>
+<!-- Rating Row -->
+<div class="mt-4 flex items-center space-x-2">
+<div class="flex text-[#f5c518] text-sm">
+<span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-500">★</span>
+</div>
+<span class="text-xs font-bold text-white tracking-wider">8.0 RATING</span>
+</div>
+<!-- Action Buttons -->
+<div class="mt-6 flex items-center space-x-4">
+<button class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+<span>PLAY</span>
+</button>
+<button aria-label="Add to favorites" class="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center text-white hover:border-white hover:bg-white/10 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Thumbnail Strip Carousel in Hero Bottom -->
+<div class="relative z-10 mt-12 flex flex-col items-center">
+<div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 w-full max-w-5xl">
+<div class="overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer">
+<img alt="Scene Still 1" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4KpiWbfheYgQgfSDtvo4e8ZAIVLNZ2w_mma8g-W8bBuI5LaBBoz7FUConinmW2lpYTLyfu_klaqe1oXWkHsaymp2DJOuSe4e429s1pMeG748j9ebb2HacbBtUADSnolBgxJzY7151dCA5Y9I6nmFnltXp8j2Xq6DkTJGlO4tDjDvxB4OBvVk2cvtQNdRA8GKPhL5_Dce7adlepC0DpEX5OCRmYuQYS0yreAVtNs947xR-nSCtxEwcVQ"/>
+</div>
+<div class="overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer">
+<img alt="Scene Still 2" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVrf2Icm8tZ1cedc2iBFjrDSsgN3Oo1vmXX7x80AqywDEtWUdUdHYeHUgExnK9oPhUD-YAvXDeyPGFk4P2t0gwmMnpAe6b8_O7e5fIloixc19NdgGMw2y_lhO-aSBFNxWdc6XMZ2xO_or2EmSAPIV2dcvdxcQHKYJIE6pADbOoL_O3TNSFtz4W1lqIdvSlJZj_hnD5Gzd-ycq2_LA5UAYOjvIvD99pQEQ8D-PMHOhxbr7fMeGv97mJmQ"/>
+</div>
+<div class="overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer">
+<img alt="Scene Still 3" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsrNuxv50gOO6mZq3IjGUvyrLacRlWG6GN2D5fdU6JzORXbp_Qk0N09kgQvmQ5-7MNLrJw7iudHbLjYV3JR83cfBARpkUiO_hBqbWTb8Oo8MxzBVmLC_hxnaP4KwMDBFivtJNRPMfZEQ_gLnpmNL3S3orleAVfwPkmj18ynnF9Ob-lpwaUvcZw32tCqQlBmJQ2ulZ_VvYHeOcQN-EcWCJ0yWBJ402SOownuh0iNHRPCdxjGwOKOmxaFQ"/>
+</div>
+<div class="overflow-hidden rounded-xl border-2 border-[#0075ff] aspect-video group cursor-pointer shadow-lg shadow-blue-500/20">
+<img alt="Active Scene Still" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAgdjRHtMVfcWKBolE5m2bFf8ur9D3VIret1aytupfEo64V27C0tE3iyATW229CMp-pWIYYpVu4nrmfTgpDykTk-DtwA_AWtWc-7CwD0dbDFCMPwHzsGbhDtpoDzM3L1VbOaNLfc5EKDC8u_d01fV5siwtvMfldn93DfC3PV-kkyC_axvkk0HrMyWnmqj8Gi3e9i96mjpCqQwOLAsDA3HX7f7nN69-3KjToQYjzUlDLr0p1vAuOP_coQ"/>
+</div>
+<div class="hidden md:block overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer">
+<img alt="Scene Still 5" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVSJFj7_NtptMn__cVjalVC03djB-PrlWS6TwUCx_DdLf6rzTR_SdWYdpynxfsxtfdi5ZVSA08EmRwTXkh6HOn6Fc00aKDogdKvtm0lbjGHAzhF0jtfPs0OKTzFU3pqg4Sz5wcK60kGHzY_P9kjqO8UyF8UY1-yFIbob-BUlMwFh9MmFnyDZJ4_M40loT1aB2QWv-__ZtqEZy3Bt0T0VNDk9ZsN_f5DVpwhMZm9cWY6fFJg3rnQDhu0g"/>
+</div>
+</div>
+<!-- Dots Indicator -->
+<div class="flex items-center space-x-2 mt-4">
+<span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>
+<span class="w-5 h-1.5 rounded-full bg-[#f5c518]"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>
+</div>
+</div>
+</section>
+<!-- END: HeroBannerSection -->
+<!-- BEGIN: FilterRow -->
+<section class="py-6 px-6 md:px-14 flex items-center justify-start md:justify-center overflow-x-auto hide-scrollbar space-x-3">
+<!-- Active Pill -->
+<button class="bg-[#f5c518] text-black font-semibold text-xs uppercase px-7 py-2 rounded-full shadow-sm hover:opacity-90 transition">
+      ALL
+    </button>
+<!-- Filter Pills -->
+<button class="border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition">
+      Action
+    </button>
+<button class="border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition">
+      Comedy
+    </button>
+<button class="border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition">
+      Series
+    </button>
+<button class="border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition">
+      Adventure
+    </button>
+<button class="border border-white/20 text-white/80 hover:border-white/60 hover:text-white font-medium text-xs px-6 py-2 rounded-full transition flex items-center space-x-2">
+<span>Other</span>
+<span class="text-xs">+</span>
+</button>
+</section>
+<!-- END: FilterRow -->
+<!-- BEGIN: SectionMostViewed -->
+<section class="py-6 px-6 md:px-14">
+<!-- Section Title & Link -->
+<div class="flex items-center justify-between mb-5">
+<h2 class="text-lg md:text-xl font-bold text-white tracking-wide">Most Viewed</h2>
+<a class="text-xs text-white/60 hover:text-white flex items-center space-x-1 transition group" href="#">
+<span>View all</span>
+<span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+</a>
+</div>
+<!-- Movies Grid Cards -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+<!-- Card 1 -->
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Mavka: The Forest Song" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf8vo28QbiJDUTvSXfswwZ3lP0iyf5mnfdWa33GzUwYUXaRk-SYkOhTqsHt5g2t-ZJ2XCSP3tz4-Pfo-V4G4nMDB_sLm2SQVU3dWY1BMCl_l5XgZKJP7P0l3hwS0R4eaGQvRM4LI5xU38oJkR79O12oQQeT2S73aTVwVW--HfZRmA3JKmfNcGgFgxHRy7vxJOjcOxnvq9yIm_vhd2QS1t1ksg3khYg2tf3JoZWh0oAIZKYhaMEk9qIxw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Mavka: The Forest Song</h3>
+<p class="text-[11px] text-white/50">(2023) Mar. 02, 2023</p>
+</article>
+<!-- Card 2 -->
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Tom Clancy's Jack Ryan" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpf63Dcg2VM8DZG1yWbGkTBBZtVUbiSDv5rFpHt5fjrZnFXdic3X94DjBrav2XXeDwq_30Dv4VGsS8jjlcPd7To0fLnvoq7qprOnG4EhvFPXhm5GOIr4g2pBhOOylV1-pzqRd7bhKFFFp_EMO8hxtvJCGztq-Do1o4NhOtBv5j0OIKwIb7ECphYMy1ffK8r-AfFyX-fsbqc5HexgvPgA1k6zHoMfq1VHjeIOAefDkiaFJkISxC-B9rjw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Tom Clancy's Jack Ryan</h3>
+<p class="text-[11px] text-white/50">Season 1-4 Dual Audio</p>
+</article>
+<!-- Card 3 -->
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="The Boss Baby: Back in the Crib" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7hlnQa3j1uPUayj5r_QG3khMVH6WqTgs5Kw0HJ6CK0msCfZZhQshHZYlGte0UM85wKdf9InRlhDIULWPz0ni2O_mNCMbtvbgSy0fPCB0oULTz_ebwv-GiMU9GHP2w7JMt5zFAVOfcK4IHg4_d8dpUb1moRuBbQT8hJEFFcjnYImv66cPF1ifRAC8f07953YVgr5U1fkwibnL5TTiJgcJE907Kq0ZImGj5VJkAOZnseaxB4stfzM1Cdw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">The Boss Baby: Back in</h3>
+<p class="text-[11px] text-white/50">the Crib : Season 1-2</p>
+</article>
+<!-- Card 4 -->
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Bird Box Barcelona" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo3mGHoHUzx_77L6HqCIHhjsszUFe4aRWVoLYL25YZ5YXX_PLQO2TFTk04OqkgkpZm46ElgaabnbDd3TMl1wsoqcEsc5OhMQRqUYV7-bA4TkuH1T9GgamEfnSkFOG2t9tPcO0XDiP1fn9F9oODuXR88YxkrN-O_IkwK8DqxWuQvfRNGKBYa_PLUu8_uf4745ZLmdLfvBUuczNytAZ6g_LsJjBdVpr7Pr4m67qK--SFjj7UF73IHLi-jA"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Bird Box Barcelona</h3>
+<p class="text-[11px] text-white/50">(2023) Jul. 14, 2023</p>
+</article>
+<!-- Card 5 -->
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Day Shift" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmZ9dJsNNMfVVHdEV0k2_4c2MsSZsdr32d5uFqUXVgZInSom-1sdfa6c9A51LOLhmsjjnM8HlsR7Q_wDUyceGJfT9DGmOZRWTJmOp13JlzYQI0engch1nUv-fAXm0W78CD2UEfwqx45mrjqu8DTT9sp6d86Zd4aiV0OXzDBrRZYefqM0PVFYE2TqJxstR0S4RkTZ7xZhHbu9wVyHeU1B-HWeHJfRRxMDnNbb7BuY8FQ_8IcSwsfi_kWg"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Day Shift (2022) Dual</h3>
+<p class="text-[11px] text-white/50">Audio Aug. 12, 2022</p>
+</article>
+<!-- Card 6 -->
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Sonic Prime" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6wt_NB58iWAJhYm4h_5LsuQ2UaLY-tI7CtX1KD7jmLIsLNkD9gUJFd6LUym5RNH4EqcgjegTqDIB5ZMjFocxGAQfdybeyKXOOTAWOj7Phdrt3sOIXW-N_Ez2Bw0QnS0mIduM4ae1ho03W4GRlWMz_QCYpTndOxoSNpwZCgL0gctD2ktGVI9ph2NvtUTk1S9xpeq7qkOKPcTfwOVXYx4BfhwTe2tD3Z9gMTsxXpFLiOs6gUsNvgQGktQ"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Sonic Prime : Season 2</h3>
+<p class="text-[11px] text-white/50">(2023) Jul. 13, 2023</p>
+</article>
+</div>
+</section>
+<!-- END: SectionMostViewed -->
+<!-- BEGIN: SpotlightBlackAdam -->
+<section class="my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-6 md:px-14 py-14">
+<!-- Spotlight Background Poster & Effects -->
+<div class="absolute inset-0 z-0">
+<img alt="Black Adam Background" class="w-full h-full object-cover object-right md:object-center filter brightness-60 contrast-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkzEzhq2R3OUCWJeQJky46slW71wrMwDBMWO2SCKE6AbTFGN8Py5NJyusoxj_iMoaxLQYnlt4nI2e-e8YHGcgi4SdCsEoAuIYN49BcthXsWEB9_GEtLnfZ4Skb_b3CSfrCiVgGRa0NZxlBu-KGiEB5jZRmGjmEFh3W1Upt0T3HiuHGDwKCMTWTvfpIYy_5tf2z3PdDrnA-xqHF6jx8ktvJMn8-9VS0ovUFB7zMmI9HO6bkTTOgnxmhdg"/>
+<div class="absolute inset-0 black-adam-glow"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent"></div>
+</div>
+<!-- Content Layout Grid -->
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<!-- Left Column Details -->
+<div class="lg:col-span-7 max-w-xl">
+<h2 class="text-3xl md:text-5xl font-cinematic font-black text-white text-shadow-lightning tracking-wider">
+          BLACK ADAM
+        </h2>
+<!-- Ratings -->
+<div class="mt-3 flex items-center space-x-2">
+<div class="flex text-[#f5c518] text-sm">
+<span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-600">★</span>
+</div>
+<span class="text-xs font-bold text-white tracking-wide">IMDb 8.1</span>
+</div>
+<!-- Description -->
+<p class="mt-4 text-xs md:text-sm text-slate-300/90 leading-relaxed">
+          Shazam | Death Adam (2022) Nearly 5,000 years after he was bestowed with the almighty powers of the Egyptian gods—and imprisoned just as quickly—Black Adam is freed from his earthly tomb, ready to unleash his unique form of justice on the modern world.
+        </p>
+<!-- CTA Buttons -->
+<div class="mt-6 flex items-center space-x-4">
+<button class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+<span>PLAY</span>
+</button>
+<button aria-label="Add to favorites" class="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center text-white hover:border-white hover:bg-white/10 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Right Column Stills Vertical Stack -->
+<div class="lg:col-span-5 flex flex-col space-y-3.5 max-w-xs ml-auto">
+<div class="overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer shadow-lg">
+<img alt="Black Adam Still 1" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZsUNhEKzc_3OjUoBa3m3Ib-fEcTpHCoyDunqQzeDgTBZjstI7_p1cV7lgxf-U82FDE0cJrA1EeP-U9s8EflxS20jELsbPmjpBAyyiP3kVPs41ImAa8YS4JCsutAsjpz6ttLEUzDrgBHifjxM464P6ogADBnUW46DaGIvj9hUji8HmZxt1XLWlv5jpmVDYt5WR9iEAkl5-tmN3x_avE6iTu-7Bry7RxZdvn_wxZOJhPZHRbml14y0jAQ"/>
+</div>
+<div class="overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer shadow-lg">
+<img alt="Black Adam Still 2" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6OyZNiIFVfx8Ixq41IRd6XNz0a-oGfzAG3kt67eRz1VItCRi8VLvC8iYWlIb66gsd3_BWzteq-eTCDgINUvltiEx7BXyykqL6lNYuhaU0um14_eDNRtQ45oPLgCKbaA1iYRUj-fkVUarJRZcmELwU3rpO-0gPgY8edIybDqxC3U5X1GyPP7UsHzSzDoSMcJaTJ8GQT_jvAu9aIsLv8uCviKcKLf4r4KZD_AGkw8NLqGK6ICMtmJdiIg"/>
+</div>
+<div class="overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer shadow-lg">
+<img alt="Black Adam Still 3" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCi7SABuGov2US1nIAKfU9-K6EQ0-6gagZYw1X77Uaw0zPOjTZC4hAkZ_G7_pn__2Yy6jRS5PPYdk3E-AvShpXrioQvGN0JO2oP-mvphChPJTRGewAnvY2cmu2jTDuRT6MUH4pSkfdvoChQ_y7ya9q2QzE7_7-kWtdiYCVpz1-2BLmhR58K3RqxLzZnRbuDazvcJEBq_4Ujz0Ty5SpDdJMf60zFt9VW6z5IZ3fOYVa67pDqjZ1GUoTI3g"/>
+</div>
+</div>
+</div>
+</section>
+<!-- END: SpotlightBlackAdam -->
+<!-- BEGIN: SectionMostPopular1 -->
+<section class="py-6 px-6 md:px-14">
+<!-- Section Title & Link -->
+<div class="flex items-center justify-between mb-5">
+<h2 class="text-lg md:text-xl font-bold text-white tracking-wide">Most Popular</h2>
+<a class="text-xs text-white/60 hover:text-white flex items-center space-x-1 transition group" href="#">
+<span>View all</span>
+<span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+</a>
+</div>
+<!-- Cards Row -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="John Wick: Chapter 4" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRDHZfmpX5tmj6PDN-cKeeAdk-KetNzpV_cd2chylU2AQTiTKekLW97wlRVFwI6tZyiQdS0EVous6pMwCOlpuQ-iesTPaxRvt2J28spwqolbgJ-Vmp8n90T_0_rHQwYAcGglHNS7sKdJKzOwqo6KCNaaDgTK1wcKEFwhc73zL89HXJpeyfCfRkh0X3ya337RZZ2yBRiu2TDmDxacN9NjI-MVgQ1qz90OIT_ZAsfzD0lS4oPeMAYK6fwg"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">John Wick: Chapter 4</h3>
+<p class="text-[11px] text-white/50">(2023) Mar. 22, 2023</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Kohrra" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDs1XU0Sg6cosacVxOu1gZ6Fq9vUXzmf6y-FeWYTrZVcvNJrYzIGyc0jKX8brwVWymM4nrExgNnEPa0FKhcDZA56WtSCOlNBrT61YFS0QlX7hR3-xsaJYNxzBSfN-Eta7YGEF1HJj36Gd2xYvvTHPOb7eX5oBGMzlPaWGlmS2chpU5lTNMe0R9PELwxSB3FY6zCx34NOUd7nomwFK5vWwHHkZLf66cVPIBSap-PusngFPYLjU6vMhhw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Kohrra : Season 1 Dual</h3>
+<p class="text-[11px] text-white/50">Audio</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Avatar: The Way of Water" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTejfWKT61Ej37tPYVSO4ud15a9a_Xbzgq6ZxozTvETuysx8Mahcv5xmmAtHiQqCMabfVFzDt5aTFEz-R5Zf0LE7ecgSLUn_Hk77yUHle3mTHPP4olHVDzC4oMoV28Rpl9FfjBDyFIeIS1o0UJsvOoBcEQtTijytBNaysQzYDMPLotoflNkH7bm6CT7F0bwvjnaB4wvaPptOTZpGwwYcRlOSylI-ZUgVcR58FV1xG3rgbJftulZLndCw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Avatar: The Way of</h3>
+<p class="text-[11px] text-white/50">Water (2022) Dec. 14, 2022</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="The New Liaozhai" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1Bg6VEqB0O1c--Fwm7CB9_8rhoqXdjNn_YHtADDkHgM3wpbDxrDO8xfpV7W4glmDfCaY1vx7CXtuv62WJK5wgOvLHDEe7npX4VnSCOsmZdEU-_Jn2TJDm3uw7YXfyG-1usxgTHQpU31CGG8W2HmJZ706jjjvHSHDO3rP5LHw8y0ewsGyLtpEuK0NMBLzWCrOxG1NmgXCIGSOcX6wSlFaYx4GBOvsfvzNSug8Dp353U88kcK6qVOkKEQ"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">The New Liaozhai</h3>
+<p class="text-[11px] text-white/50">Legend: The Male Fox (2021)</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Foundation : Season 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX4erXKkL8krTwY68RmcOhpNziw-XAQdu7bSJjuJPoTrvkwgxNF3wogyqdANkwPY3P20c2_oC5ULr5mky_OrOdkPPFBObwCfUNZ65AB067ccnEmeFz_dZHxMik_sE3q4_WQ1KFRV7C1Q764BYmYNH6AOySAjDgKFuImsxt9616dtnfRz-ov63LJKD4wE_Hw9dV3N083-rZNymxrYYL1EI6_pD0Aoa6JWYRc93iSiOThn50cm-g4KIeTA"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Foundation : Season 2</h3>
+<p class="text-[11px] text-white/50">WEB-DL 720p &amp; 1080p</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Wanted" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2KzNZOdU31P6f_J-7dBk9KoHzfScBcNj4UJY7K5FNab6ywWbz_X0wTX9Owbx-RD2HGYSNgrLbXi0k0T40PEuCt68e_5LyCayKwUrHqXj4QyWw6_cytNn-qL0anWlt2q49wj7nbMDMkBwYrt5m1I-jztXoij1V81W9p6gjDNtWoS7IEW8i4uDjdZIDI7qIs5ZeIWNo4WfVEmPTsNqhhnKYEjGiFtzPrlOnVnQkRxbbEQZu6fET9Q6nOg"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Wanted</h3>
+<p class="text-[11px] text-white/50">(2008)</p>
+</article>
+</div>
+</section>
+<!-- END: SectionMostPopular1 -->
+<!-- BEGIN: SectionMostPopular2 -->
+<section class="py-6 px-6 md:px-14">
+<!-- Section Title & Link -->
+<div class="flex items-center justify-between mb-5">
+<h2 class="text-lg md:text-xl font-bold text-white tracking-wide">Most Popular</h2>
+<a class="text-xs text-white/60 hover:text-white flex items-center space-x-1 transition group" href="#">
+<span>View all</span>
+<span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+</a>
+</div>
+<!-- Cards Row -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Janaki Jaane" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDADKhBfjplPKL-gT-NGsy0gs1glqohRRPgEJIdEOrIR5qUDAANjHOgMfB5KkUyWIDAM_QRDrVhMgcEAgT3lAoSF1xlXvdQPOJiNfGqAbM_HMy8paX0veEYAPodSjcIrXnNBSFOFg973r3l5p_ahWxECu0L2P6dKLk0yLObGXti4v3PwvRD8XWOiliQ4R-0_naJEPXS4CINW5cypR-LAiTpIhAhqvUF0ffSO_G2vG5fscNvjxK-wqmwZQ"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Janaki Jaane (2023) Dual</h3>
+<p class="text-[11px] text-white/50">Audio . May. 12, 2023</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Zoom" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFMJkvEU07vJWPgulUEm47PbaVtFMsmy_1kkRzQZa-G_QWwyXBQ_U_CVZOc_ko0D71yHMh9sihZu1zLo4bAZ7ypHViLmSsewohitSBBDhnIBNeEyDltTUCBsTt_skrx3x8fNWbzav69WBVtg1QMwl0Nvtj64ZzL3zWBAHI_HE28h_EJmHBNGjQIotpvd3rg50yZU3VroU7MguqdcCP9XWT-gXva6Nh09JmnJFYteP-tcRjkLuUCGtSSg"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Zoom (2006) AMZN</h3>
+<p class="text-[11px] text-white/50">Aug. 11, 2006</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="She-Hulk: Attorney at Law" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxmKojvqWobALDiWooKSsUPf69TjjYqtKfgkX32q82jlIRVoqTJixfQt3dRJ0lI2Gdkr9Mzg-M3ys2LBnk5L5rDH71lRWLuvv9XlZmecKZaSAUikbez4eIgTmQoEOQ7Qjl89zkCgSLIc_qZDv165BUnh-4bpGznWRWlcAD2eD_pe7RXvBkF9tZN5Ct6swLUxzzHjtgEXTeHW1ny55rUonD_emUaaKS3jRxiGxbYO4jqKXMvW42HZFqoQ"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">She-Hulk: Attorney at</h3>
+<p class="text-[11px] text-white/50">Law : Season 1</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Avatar: The Way of Water" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT81U7LCiORJSlRUP2dXBiQjAWAnW4TNQnFa_jvIUk7JRwZSlB1UMG2bxTqM2YkdJ6suyl60gxTtbVdnxY1EhId4neCTk2S8U9JX6y65mIkruECS4wcE6hnaRZLrK31jmRxTEz5aBq5DDPPhrP7I-M5K_0R-yGx3WRJhHOoS-1iawWn_h4dnOjq-YIEiL_SF3t4Qz7-97l92_BgX7IFfD8C3hi2Wpv7zvPJCsVzNEPtRYUVYeeaSUruw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Avatar: The Way of</h3>
+<p class="text-[11px] text-white/50">Water (2022) Dec. 14, 2022</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Godzilla vs. Kong" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrJX7-i_gjPQ1-Ksz5imFY574KNChCq4ut6V97udCC6VIXlifN98UaITsEX6glYv-UwBO_qF6Myi1pCu9AjOdRBzzwDjcabWInI78FvZsi7blihAJYlpWXS9UoCMvH5XG43nP8--WArYBUujIZqajgnEpwN5ajvHb0kCDBkTqYsLIZ78QMLB48Bakl13WU07pm5CI3uqZaMqBi4d_c8xM8FxaBidV1HDKkJ3deyeRMdPwKigjuUfEhaw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Godzilla vs. Kong (2021)</h3>
+<p class="text-[11px] text-white/50">Dual Audio Mar. 24, 2021</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Wanted" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6QtYz2PjIJjg--Un6BxRrW8JfqDb5yhu12gSzrpW4Bpu_bWLZd7hYB9GAONL1PSyYUOjXu-aUC34uJuNUcur6fQoHLqZNPd5cPyP2Sd6iVLwfQiMYqluD07UUtou-ImBBYK7jWaM7tlyn_9gzmCyWeOZOejtOpTyHwTN06DzNhOi6AXgyly30RJiumkZ9iLqO21K3z19Tq_uRdWrAi1P2Z37JxRXUn7WjlGpkxZBVRGV8WmrAcr5MNw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Wanted</h3>
+<p class="text-[11px] text-white/50">(2008)</p>
+</article>
+</div>
+</section>
+<!-- END: SectionMostPopular2 -->
+<!-- BEGIN: CenterHeadingBanner -->
+<div class="py-12 text-center">
+<h2 class="text-3xl md:text-5xl font-black text-white tracking-wide drop-shadow-lg font-cinematic">
+      Popular TV Series
+    </h2>
+</div>
+<!-- END: CenterHeadingBanner -->
+<!-- BEGIN: SpotlightTheFlash -->
+<section class="mb-12 relative overflow-hidden bg-cardBg border-y border-white/5 px-6 md:px-14 py-14">
+<!-- Speedster Lightning Atmosphere -->
+<div class="absolute inset-0 z-0">
+<img alt="The Flash Season 9" class="w-full h-full object-cover object-center filter brightness-60 contrast-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl6Na-QENU3u7AALAj_7Uof9EUz2X2RxWH41iWyEYEOKny1v8nwewse5Kwxbbo8p4TZZkV2HxZ5PCpkiYnDZNkqXR4EaHfm4Pa_Bm5B6EKBmgyH5X8H_8yBTpBOozLuz3pTq-dfy58MvgspVUlwxSvwGKTEqFZccpnXeaqvhd2wxEA0j3Sz11vUFLSi0V9OBSJn_AEkwvWAtV_GkF6lNp_z5KO4q-1zdu6fXvJU4wIs2VAFeqatDqfwg"/>
+<div class="absolute inset-0 flash-glow"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent"></div>
+</div>
+<!-- Spotlight Content Grid -->
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<!-- Left Column Content -->
+<div class="lg:col-span-7 max-w-xl">
+<h2 class="text-3xl md:text-5xl font-cinematic font-black text-white leading-tight tracking-wider">
+          THE FLASH :<br/>SEASON 9
+        </h2>
+<!-- Ratings -->
+<div class="mt-3 flex items-center space-x-2">
+<div class="flex text-[#f5c518] text-sm">
+<span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-600">★</span>
+</div>
+<span class="text-xs font-bold text-white tracking-wide">IMDb 7.8</span>
+</div>
+<!-- Synopsis -->
+<p class="mt-4 text-xs md:text-sm text-slate-300/90 leading-relaxed">
+          After being struck by lightning, Barry Allen wakes up from his coma to discover he's been given the power of super speed, becoming the next Flash, fighting crime in Central City.
+        </p>
+<!-- CTA Buttons -->
+<div class="mt-6 flex items-center space-x-4">
+<button class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+<span>PLAY</span>
+</button>
+<button aria-label="Add to favorites" class="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center text-white hover:border-white hover:bg-white/10 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Right Column Visual Tile Showcase -->
+<div class="lg:col-span-5 flex flex-col space-y-3.5 max-w-sm ml-auto">
+<div class="overflow-hidden rounded-xl border-2 border-red-500/50 aspect-video shadow-2xl relative group cursor-pointer">
+<img alt="The Flash Poster Showcase" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-K_yObVTYNUOVcKK4hp2aEF_k5sSfvQL-3xuhGsreBfdLH_xUy_CpmgphM-Pj7Nsk1ecWkjED8OlfGdy5PHRqH6hzm5FaEl9uneu9vZed2jpfweBhEXv76vfUliZXliT4m7Nfr-vDVbBEWH3UnenJh5e2ROyOcwO5uYnuSA8vSEoi3d7UqWWY6ToTyP6-bqL_3K76pzt-wPcR8MUaoHvB0I0oIqid8gCA2F9HUsnIlaPzxJEZtHGV-g"/>
+<div class="absolute bottom-2 right-2 px-2 py-0.5 bg-black/70 backdrop-blur-md rounded text-[10px] text-white/80 uppercase font-bold tracking-widest">
+            S9 PREVIEW
+          </div>
+</div>
+<div class="overflow-hidden rounded-xl border border-white/20 aspect-video shadow-lg group cursor-pointer">
+<img alt="The Flash Episode Scene" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGPOKXWzRP3MetZufIkubv03st1UnMmMBJS_Y92E9g1Bl7VU4jrQLbw74stF0jzItcbIMhbASvLP_uFO-IgyaF3n-h8KE_OyxorIl5MzBqQ_D_KfKxkboldNdVhW-Ca8sYRTeu3Dk3BcM9N3NIql_uG29o_lU-WoFtYkXXFm8oUyb5ppt7te3HsHgZmTupUdjf6R7UDY-3uF0Ue-fsDUHzZQJyW_5qrpXLgF6Bar1HbOwxFdiIBXaVHg"/>
+</div>
+</div>
+</div>
+</section>
+<!-- END: SpotlightTheFlash -->
+<!-- BEGIN: SectionTVSeriesRow -->
+<section class="py-6 px-6 md:px-14">
+<!-- Section Link -->
+<div class="flex items-center justify-end mb-4">
+<a class="text-xs text-white/60 hover:text-white flex items-center space-x-1 transition group" href="#">
+<span>View all</span>
+<span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+</a>
+</div>
+<!-- Cards Row -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Stranger Things" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8n16zckCrXedCS5ubNazbTaudz3ES-NM7G-FG7fnG16nmw0usLkllbNxGzAX54u-1O9h03vEBYEAJw8LG7rhFWkEi3A6LAnPoDYI_e_iTnuo4Z3rkQwTk6k2Y96ib5Ccu0ubtN1umFreB-NFEelUcQ1sIUlPdQas731BxSjsH9RX2FX-hTOz-NSRoEzc4Sqhfuso6cxBcWzwuCLmnxFUYEqNEh0sYG252kJKcjv9AvMzcDKx1iq8Wjw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Stranger Things : Season</h3>
+<p class="text-[11px] text-white/50">1-3 Dual Audio</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="The Boys" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5x34VMA1e9QQtrhDw8jBu8s-552LjweDEsWQgWMneFxWstnkN_MUAfgTPvzNUD4UmmBfzFyMlpnVmYIfXC25zOathbDF2vY9M0qXGOM3CnF5qPtPji64byz4Yb8Aj5BujwO5D_ydNTQ9WQbvwdGCva3-S-VlBLhDlrtdYW4-1gw5MLNtMT2mU7XRuQfepwUuATq6FA9U8QjAe5fzW_Bu9m4-vZdcVIgV9hMRHEDRa8O_wEgXKu1a4Sg"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">The Boys : Season 3 Dual</h3>
+<p class="text-[11px] text-white/50">Audio</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="She-Hulk: Attorney at Law" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCk_Zynle7Blkdqal77QOaKqMUCpfjPifkD29PAai8uONgVW9gPxBvsHHj9lw-nBoTD754SBbF920HsDkaIeKuIxoQt59goOTqaXJg5uqteDrQJRYOuApgiu48J2G0eczx75moRFIVWnK05rF9CCF9mglZgXS3N4xDkkFrHSE02kh_5nvnR9g01u9xgXrGKj6gEqvVNBldgBZzszo8PNgCJLlEWkjFXSt5GYwM11rYPI8xesEtAI-GeUw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">She-Hulk: Attorney at</h3>
+<p class="text-[11px] text-white/50">Law : Season 1</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Game of Thrones" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCraiqOY89vIp4clsvajSQJHyAi4kaLdt4aeC79p9aUsspltRXkJEnrXilgpWUSypmpOv3aqdORAYNxFQHUZWBLqvuZ2LL1bx06IzI3VFdMc6T0PuiXGwaFI8L7VVJLg4c9MIdKMVBb8TkdD0RJTFXJvmyr74VqF1c1_30JzxNJWKxx0hM9t0oyqo8qExi20FYCwFYbZA0c5qfyHfFOauGUxDrgc-XI_4vtVWw1CLyYDqkkBCIYuALfnw"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">GOT ~ Game of Thrones</h3>
+<p class="text-[11px] text-white/50">Dual Audio</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="1899" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHDPeYkm-uXTLQYXNmqHJ5VSS4L1KjIF_I6YyeIgfO_3_bEgqyAHXUccXmIU9b5dEz4JW_JscgTr2sBMl6PlGesvhp-7n71ogFvvEfPjvt7zX1aC5YHgw9A74pEMqwWrc2DL-x-X3SCsik4Q-cx4_q0_aZkvEry8gdQC4linaQfD87iwH9qr840PK0u-Y7J2P6xtGKAAGJFcHxEJyTZVIaS2zC1B3MnjhA89G_1zJoQjgIU2wojob8rA"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">1899 : Season 1 Dual</h3>
+<p class="text-[11px] text-white/50">Multi Audio</p>
+</article>
+<article class="flex flex-col group cursor-pointer" data-purpose="movie-card">
+<div class="overflow-hidden rounded-xl border border-white/10 aspect-[2/3] bg-cardBg relative shadow-md">
+<img alt="Wanted" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4UQ7pd50UuMus0ulX76-vxPYpGM-y1qy6X1AyOh-HbmLoTccOGF5h8HuebP1XzFhmn1nd8BjW2iSHmRp4tRMi91fa0AwvZA9139bELNs_ZOUenghdtaAGKHLtJGilwBUPkDhFksENSN8rbNKwOhdoxEhstckPd0yGjiychpOEqX7ZSbLlagBZO-rki25X9jVSpjlDqLJU_PAn00Z5_Pkv5cCF8BXQJaKdmQ2fH8vXUsTIdmTrHe6vzg"/>
+</div>
+<h3 class="text-xs font-semibold text-white mt-2.5 truncate group-hover:text-[#f5c518] transition">Wanted</h3>
+<p class="text-[11px] text-white/50">(2008)</p>
+</article>
+</div>
+</section>
+<!-- END: SectionTVSeriesRow -->
+<!-- BEGIN: MainFooter -->
+<footer class="mt-20 border-t border-white/10 bg-black/95 pt-12 pb-16 px-6 md:px-14">
+<!-- Top Footer Bar: Logo & Social Media Links -->
+<div class="flex flex-col sm:flex-row items-center justify-between pb-10 border-b border-white/10 gap-6">
+<a class="text-2xl font-bold text-[#f5c518] tracking-tight" href="#">
+        Movie love
+      </a>
+<!-- Social Media Connect Icons -->
+<div class="flex items-center space-x-6 text-sm text-slate-300">
+<span class="font-medium text-white/90">Follow Us on:</span>
+<!-- Facebook Icon -->
+<a aria-label="Facebook" class="text-[#f5c518] hover:text-white transition" href="#">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.667 5H18V0h-3.889C10.667 0 9 1.667 9 4.667V8z"></path>
+</svg>
+</a>
+<!-- Google Icon -->
+<a aria-label="Google" class="text-[#f5c518] hover:text-white transition" href="#">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M12.24 10.285V14.4h6.887C18.2 16.8 15.6 18.5 12.24 18.5c-3.59 0-6.5-2.91-6.5-6.5s2.91-6.5 6.5-6.5c1.61 0 3.09.59 4.23 1.57l3.1-3.1C17.65 2.2 15.1 1.3 12.24 1.3 6.36 1.3 1.6 6.06 1.6 11.94s4.76 10.64 10.64 10.64c5.98 0 10.36-4.21 10.36-10.36 0-.7-.08-1.37-.2-1.935H12.24z"></path>
+</svg>
+</a>
+<!-- Twitter Icon -->
+<a aria-label="Twitter" class="text-[#f5c518] hover:text-white transition" href="#">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+</svg>
+</a>
+</div>
+</div>
+<!-- Navigation Columns -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-8 pt-10 text-xs">
+<!-- Column 1: Movie -->
+<div>
+<h4 class="text-base font-bold text-[#f5c518] mb-4">Movie</h4>
+<ul class="space-y-2.5 text-slate-400">
+<li><a class="hover:text-white transition" href="#">Action</a></li>
+<li><a class="hover:text-white transition" href="#">Comedy</a></li>
+<li><a class="hover:text-white transition" href="#">Horror</a></li>
+<li><a class="hover:text-white transition" href="#">Animation</a></li>
+<li><a class="hover:text-white transition" href="#">Fantasy</a></li>
+</ul>
+</div>
+<!-- Column 2: Series -->
+<div>
+<h4 class="text-base font-bold text-[#f5c518] mb-4">Series</h4>
+<ul class="space-y-2.5 text-slate-400">
+<li><a class="hover:text-white transition" href="#">Reality Shows</a></li>
+<li><a class="hover:text-white transition" href="#">Classic Shows</a></li>
+<li><a class="hover:text-white transition" href="#">Valentine Day</a></li>
+<li><a class="hover:text-white transition" href="#">Comedy</a></li>
+<li><a class="hover:text-white transition" href="#">Fantasy</a></li>
+</ul>
+</div>
+<!-- Column 3: Support -->
+<div>
+<h4 class="text-base font-bold text-[#f5c518] mb-4">Support</h4>
+<ul class="space-y-2.5 text-slate-400">
+<li><a class="hover:text-white transition" href="#">General Info</a></li>
+<li><a class="hover:text-white transition" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-white transition" href="#">Terms of service</a></li>
+<li><a class="hover:text-white transition" href="#">Help Center</a></li>
+</ul>
+</div>
+<!-- Column 4: Contact / Support -->
+<div>
+<h4 class="text-base font-bold text-[#f5c518] mb-4">Support</h4>
+<ul class="space-y-2.5 text-slate-400">
+<li class="break-all">support@rovies.com</li>
+<li>Tel : 01987523****</li>
+</ul>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+</body></html>
