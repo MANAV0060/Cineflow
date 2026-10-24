@@ -2999,14 +2999,10 @@
           </div>
         `;
 
-        card.onclick = () => {
+        card.onclick = (e) => {
+          if (e) e.stopPropagation();
           switchPlayerEpisode(ep.epNumber, ep.se);
-          if (currentView === 'detail') {
-            playSelectedSubject();
-            toggleEpisodesDrawer();
-          } else if (currentView === 'player') {
-            toggleEpisodesDrawer();
-          }
+          toggleEpisodesDrawer();
         };
 
         list.appendChild(card);
@@ -3015,10 +3011,10 @@
 
     async function switchPlayerEpisode(epNum, seNum) {
       selectedEp = epNum;
-      selectedSe = seNum;
+      selectedSe = seNum || activeDrawerSeason || 1;
 
       // Update active skip times for this episode
-      const epList = seriesEpisodesBySeason[seNum] || [];
+      const epList = seriesEpisodesBySeason[selectedSe] || [];
       const currentEpObj = epList.find(e => e.epNumber === epNum);
       currentEpisodeSkipTimes = currentEpObj?.skip_times || [];
       const skipBtn = document.getElementById('btn-skip-intro');
@@ -3028,33 +3024,26 @@
       const epBadge = document.getElementById('player-header-ep');
       const formattedEp = String(epNum).padStart(2, '0');
       if (epBadge) {
-        epBadge.textContent = (seNum > 1 ? `S0${seNum} • E${formattedEp}` : `Part ${formattedEp}`);
+        epBadge.textContent = (selectedSe > 1 ? `S0${selectedSe} • E${formattedEp}` : `Part ${formattedEp}`);
       }
 
       const streamStatus = document.getElementById('player-stream-status');
       if (streamStatus) {
-        streamStatus.textContent = `Season ${seNum} • Episode ${epNum}`;
+        streamStatus.textContent = `Season ${selectedSe} • Episode ${epNum}`;
       }
 
       // Update Detail screen badge
       const detailEpBadge = document.getElementById('detail-active-ep-badge');
       if (detailEpBadge) {
-        detailEpBadge.textContent = `SEASON ${seNum} • EP ${epNum}`;
+        detailEpBadge.textContent = `SEASON ${selectedSe} • EP ${epNum}`;
       }
 
-      // Re-render drawer episode list immediately so "Playing" indicator updates instantly
+      // Re-render carousel and drawer episode lists immediately so "Playing" indicator updates instantly
+      renderSemicircularStage();
       renderDrawerEpisodes();
 
-      // If user is currently in the Player view, mount and switch the stream immediately
-      if (currentView === 'player') {
-        mountStream(0);
-        // Refresh subtitles for this specific episode
-        const targetSubjectId = activePlaybackSubjectId || selectedSubject.subjectId || selectedSubject.id;
-        loadPlayerSubtitlesAndDubs(activeRootSubjectId || targetSubjectId);
-      } else {
-        // If on details screen, update carousel selection as well
-        selectEpisodeFromCarousel(epNum, `Episode ${epNum}`);
-      }
+      // Launch and play the episode directly in the video player
+      playSelectedSubject();
     }
 
     function createEpisodeCardElement(ep, slotIdx, isAnimated = false) {
@@ -3102,14 +3091,15 @@
               ${escapeHtml(ep.title || `Part 0${ep.epNumber}`)}
             </h4>
             <span class="text-[10px] text-white/50 truncate mt-0.5">
-              ${isSelected ? 'Currently Selected' : 'Click to select'}
+              ${isSelected ? '▶ Play Episode (Selected)' : '▶ Click to Play'}
             </span>
           </div>
         </div>
       `;
 
-      el.onclick = () => {
-        selectEpisodeFromCarousel(ep.epNumber, ep.title || `Part 0${ep.epNumber}`);
+      el.onclick = (e) => {
+        if (e) e.stopPropagation();
+        switchPlayerEpisode(ep.epNumber, ep.se || activeDrawerSeason || 1);
       };
 
       return el;
@@ -3143,7 +3133,10 @@
       const skipBtn = document.getElementById('btn-skip-intro');
       if (skipBtn) skipBtn.classList.add('hidden');
 
-      document.getElementById('detail-active-ep-badge').textContent = `PART 0${epNum} — ${epTitle.toUpperCase()}`;
+      const badge = document.getElementById('detail-active-ep-badge');
+      if (badge) {
+        badge.textContent = `PART 0${epNum} — ${epTitle.toUpperCase()}`;
+      }
       renderSemicircularStage();
       renderDrawerEpisodes();
     }
@@ -3393,6 +3386,21 @@
       }
     }
 
+    function isSeriesSubject(subject, targetSubjectId) {
+      if (!subject) return false;
+      const sId = String(targetSubjectId || subject.subjectId || subject.id || '');
+      return Boolean(
+        subject.subjectType === 2 ||
+        subject.isAnime ||
+        sId.startsWith('anime_') ||
+        sId.includes('dragonball') ||
+        (subject.format && subject.format !== 'MOVIE') ||
+        (allSeriesSeasons && allSeriesSeasons.length > 0 && allSeriesSeasons[0].maxEp > 1) ||
+        (carouselEpisodesList && carouselEpisodesList.length > 1) ||
+        (seriesEpisodesBySeason && Object.keys(seriesEpisodesBySeason).length > 0)
+      );
+    }
+
     // -------------------------------------------------------------
     // SCREEN 3: CINEMA VIDEO STREAMING PLAYER CORE
     // -------------------------------------------------------------
@@ -3400,7 +3408,7 @@
       if (!selectedSubject) return;
       const targetSubjectId = activePlaybackSubjectId || selectedSubject.subjectId || selectedSubject.id;
       const title = selectedSubject.title || selectedSubject.subjectName || "Movie";
-      const isSeries = selectedSubject.subjectType === 2;
+      const isSeries = isSeriesSubject(selectedSubject, targetSubjectId);
 
       showPlayerView();
 
@@ -3500,7 +3508,7 @@
     function mountStream(startTime = 0) {
       const video = document.getElementById('videoElement');
       const targetSubjectId = activePlaybackSubjectId || selectedSubject.subjectId || selectedSubject.id;
-      const isSeries = selectedSubject.subjectType === 2;
+      const isSeries = isSeriesSubject(selectedSubject, targetSubjectId);
 
       currentOffsetSeconds = Math.max(0, startTime);
       setPlayerLoading(true);
