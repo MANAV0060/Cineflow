@@ -6,6 +6,7 @@ __pycache__/
 # Reverse engineering APK dumps & decompiled trees (not needed for deployment)
 reverse_engineering/
 rea/
+base1_decompiled/
 
 # Temporary files & logs
 *.log

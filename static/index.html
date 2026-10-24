@@ -66,6 +66,7 @@
       }
     };
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -251,6 +252,7 @@
         <a href="#" onclick="filterCategory('tv'); return false;" id="nav-tv" class="text-white/80 hover:text-white transition">TV Shows</a>
         <a href="#" onclick="filterCategory('movie'); return false;" id="nav-movie" class="text-white/80 hover:text-white transition">Movies</a>
         <a href="#" onclick="showAnimeSection(); return false;" id="nav-anime" class="text-white/80 hover:text-white transition cursor-pointer">Anime</a>
+        <a href="#" onclick="showLiveTvSection(); return false;" id="nav-livetv" class="text-white/80 hover:text-white transition cursor-pointer flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span><span>Live TV</span></a>
       </nav>
 
       <!-- Header Search Input & Profile -->
@@ -302,6 +304,13 @@
           <button onclick="mobileNavSelect('anime')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/5 text-white/90 hover:bg-white/15 transition text-left cursor-pointer">
             <span class="material-symbols-outlined text-lg">auto_awesome</span>
             <span>Anime</span>
+          </button>
+          <button onclick="mobileNavSelect('livetv')" class="col-span-2 flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-red-600/30 to-amber-600/20 border border-red-500/30 text-white hover:from-red-600/40 transition text-left cursor-pointer shadow-lg">
+            <div class="flex items-center space-x-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+              <span class="font-bold">Live TV Channels</span>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/30 text-red-300 font-bold uppercase">37 Channels</span>
           </button>
         </div>
 
@@ -627,6 +636,7 @@
         <a href="#" onclick="showHome(); filterCategory('tv'); return false;" class="text-white/80 hover:text-white transition">TV Shows</a>
         <a href="#" onclick="showHome(); filterCategory('movie'); return false;" class="text-white/80 hover:text-white transition">Movies</a>
         <a href="#" onclick="showAnimeSection(); return false;" class="text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold">Anime</a>
+        <a href="#" onclick="showLiveTvSection(); return false;" class="text-white/80 hover:text-white transition cursor-pointer flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span><span>Live TV</span></a>
       </nav>
 
       <!-- Anime Search Input & Profile -->
@@ -838,6 +848,138 @@
     </footer>
   </div>
 
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN: LIVE TV CHANNELS HUB (Consolidated Multi-Source & Failover)        -->
+  <!-- ========================================================================= -->
+  <div id="screen-livetv" class="screen-view hidden w-full overflow-x-hidden min-h-screen bg-[#08080a]">
+
+    <!-- Top Navigation Header for Live TV Section -->
+    <header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-3.5 sm:px-6 md:px-14 py-3 sm:py-4 bg-gradient-to-b from-black/95 via-black/80 to-transparent backdrop-blur-md border-b border-white/5 transition-all">
+      <!-- Left: Mobile Nav Toggle + Brand Logo -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <button onclick="toggleMobileNav()" class="md:hidden flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all cursor-pointer shrink-0" aria-label="Toggle Navigation Menu">
+          <span class="material-symbols-outlined text-xl">menu</span>
+        </button>
+
+        <a href="#" onclick="showHome(); return false;" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#f5c518] tracking-tight hover:opacity-90 transition flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+          <span class="material-symbols-outlined text-2xl sm:text-3xl text-[#f5c518]">movie</span>
+          <span>Cineflow</span>
+        </a>
+        <span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-red-600 text-white tracking-widest uppercase shadow-md animate-pulse">
+          <span class="w-1.5 h-1.5 rounded-full bg-white inline-block"></span>
+          <span>LIVE TV</span>
+        </span>
+      </div>
+
+      <!-- Main Navigation Links (Desktop md+) -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
+        <a href="#" onclick="showHome(); return false;" class="text-white/80 hover:text-white transition">Home</a>
+        <a href="#" onclick="showHome(); filterCategory('tv'); return false;" class="text-white/80 hover:text-white transition">TV Shows</a>
+        <a href="#" onclick="showHome(); filterCategory('movie'); return false;" class="text-white/80 hover:text-white transition">Movies</a>
+        <a href="#" onclick="showAnimeSection(); return false;" class="text-white/80 hover:text-white transition cursor-pointer">Anime</a>
+        <a href="#" onclick="showLiveTvSection(); return false;" class="text-red-500 border-b-2 border-red-500 pb-1 font-semibold flex items-center space-x-1.5">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          <span>Live TV</span>
+        </a>
+      </nav>
+
+      <!-- Search Input & Profile -->
+      <div class="flex items-center space-x-2 sm:space-x-4 relative">
+        <div class="relative flex items-center">
+          <input id="livetv-search-input" 
+                 type="text" 
+                 oninput="onLiveTvSearchInput(this.value)"
+                 placeholder="Search channels (Sony, Star, Disney...)" 
+                 class="bg-black/60 border border-white/20 text-xs rounded-full pl-8 sm:pl-9 pr-7 sm:pr-8 py-1.5 sm:py-2 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 w-36 xs:w-48 sm:w-64 md:w-80 transition-all placeholder-white/50 text-white"
+                 autocomplete="off"/>
+          <span class="material-symbols-outlined text-sm sm:text-base text-white/60 absolute left-2.5 sm:left-3 pointer-events-none">search</span>
+          <button id="livetv-search-clear" onclick="clearLiveTvSearch()" class="hidden absolute right-2.5 sm:right-3 text-white/50 hover:text-white">
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="pt-24 sm:pt-28 pb-20 px-3.5 sm:px-6 md:px-14 max-w-7xl mx-auto space-y-8">
+      
+      <!-- Hero Header Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-950/60 via-purple-950/40 to-slate-900/60 border border-red-500/20 p-6 sm:p-10 shadow-2xl">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-2xl space-y-3">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-semibold tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+            <span>AUTOMATIC MULTI-SOURCE FAILOVER</span>
+          </div>
+          <h1 class="font-headline text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+            Live Television Channels
+          </h1>
+          <p class="text-xs sm:text-sm text-white/70 leading-relaxed">
+            Curated top-rated Indian television networks. Duplicate channels are automatically unified under a single record with backup server failover.
+          </p>
+        </div>
+
+        <!-- Live Statistics Badges -->
+        <div class="mt-6 pt-6 border-t border-white/10 flex flex-wrap gap-4 sm:gap-8 text-xs font-mono">
+          <div class="flex items-center space-x-2">
+            <span class="text-white/40">Verified Channels:</span>
+            <span id="livetv-stat-channels" class="text-white font-bold text-sm">37</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-white/40">Total Stream Sources:</span>
+            <span id="livetv-stat-sources" class="text-green-400 font-bold text-sm">80+ Servers</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-white/40">Failover Engine:</span>
+            <span class="text-[#00dbe9] font-bold text-sm">Active (0ms Auto-Switch)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex items-center space-x-2 overflow-x-auto pb-2 hide-scrollbar">
+        <button onclick="filterLiveTvCategory('All')" id="btn-ltv-cat-all" class="ltv-cat-btn px-4 py-2 rounded-full bg-red-600 text-white font-bold text-xs shadow-lg transition-all shrink-0 cursor-pointer">
+          All Channels
+        </button>
+        <button onclick="filterLiveTvCategory('Entertainment')" id="btn-ltv-cat-entertainment" class="ltv-cat-btn px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-semibold border border-white/10 transition-all shrink-0 cursor-pointer flex items-center space-x-1.5">
+          <span>🎭</span>
+          <span>Entertainment</span>
+        </button>
+        <button onclick="filterLiveTvCategory('Movies')" id="btn-ltv-cat-movies" class="ltv-cat-btn px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-semibold border border-white/10 transition-all shrink-0 cursor-pointer flex items-center space-x-1.5">
+          <span>🎬</span>
+          <span>Movies</span>
+        </button>
+        <button onclick="filterLiveTvCategory('Kids')" id="btn-ltv-cat-kids" class="ltv-cat-btn px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-semibold border border-white/10 transition-all shrink-0 cursor-pointer flex items-center space-x-1.5">
+          <span>🧒</span>
+          <span>Kids & Cartoons</span>
+        </button>
+        <button onclick="filterLiveTvCategory('News')" id="btn-ltv-cat-news" class="ltv-cat-btn px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-semibold border border-white/10 transition-all shrink-0 cursor-pointer flex items-center space-x-1.5">
+          <span>📰</span>
+          <span>News</span>
+        </button>
+        <button onclick="filterLiveTvCategory('Sports')" id="btn-ltv-cat-sports" class="ltv-cat-btn px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-semibold border border-white/10 transition-all shrink-0 cursor-pointer flex items-center space-x-1.5">
+          <span>⚽</span>
+          <span>Sports</span>
+        </button>
+      </div>
+
+      <!-- Channels Grid -->
+      <div id="livetv-channels-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-5">
+        <!-- Dynamically Populated by renderLiveTvChannels() -->
+      </div>
+
+      <!-- Empty Search Fallback -->
+      <div id="livetv-empty-state" class="hidden flex flex-col items-center justify-center py-16 text-center space-y-3">
+        <span class="material-symbols-outlined text-5xl text-white/20">tv_off</span>
+        <h3 class="text-white font-bold text-lg">No Matching Channels Found</h3>
+        <p class="text-white/50 text-xs max-w-sm">Try searching for networks like "Sony", "Star", "Colors", "Disney", or "Aaj Tak".</p>
+        <button onclick="clearLiveTvSearch()" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold mt-2 cursor-pointer">
+          Reset Filter
+        </button>
+      </div>
+    </main>
+  </div>
 
   <!-- ========================================================================= -->
   <!-- SCREEN 2: MOVIE & SERIES DETAIL (Atmospheric Backdrop + Arc Episode Dial)  -->
@@ -1093,6 +1235,22 @@
             <span class="material-symbols-outlined text-base">menu</span>
             <span class="hidden sm:inline font-semibold">Episodes</span>
           </button>
+
+          <!-- In-Player Live TV Server Selector Trigger & Popover -->
+          <div id="wrapper-server-trigger" class="hidden relative">
+            <button id="btn-server-trigger" onclick="toggleServerPopover()" class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-red-600/30 hover:bg-red-600/50 backdrop-blur-xl border border-red-500/40 text-xs font-medium text-white transition-all cursor-pointer shadow-lg hover:border-red-400">
+              <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+              <span id="active-server-label" class="font-semibold text-[11px] sm:text-xs">Server 1</span>
+              <span class="material-symbols-outlined text-xs text-white/70 ml-0.5">dns</span>
+            </button>
+            <div id="popover-server" class="hidden absolute right-0 top-full mt-2 w-64 max-w-[calc(100vw-24px)] bg-[#121318]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 z-50 text-left">
+              <div class="px-3 py-2 border-b border-white/10 mb-1 flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-white/50">Streaming Servers</span>
+                <span class="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded font-mono font-semibold">Auto-Failover</span>
+              </div>
+              <div id="server-options-list" class="space-y-1"></div>
+            </div>
+          </div>
 
           <!-- Resolution Selector Trigger & Popover -->
           <div class="relative">
@@ -1530,6 +1688,15 @@
     let seekDebounceTimer = null;
     let hudHideTimer = null;
 
+    // Live TV Multi-Source Engine State
+    let liveTvChannels = [];
+    let liveTvLoaded = false;
+    let currentLiveCategory = 'All';
+    let currentLiveSearchQuery = '';
+    let currentLiveChannel = null;
+    let currentLiveSourceIndex = 0;
+    let currentLiveStreamUrl = '';
+
     // INITIALIZATION
     window.addEventListener('DOMContentLoaded', () => {
       loadAudioDelaySetting();
@@ -1551,13 +1718,16 @@
       
       if (window.location.hash === '#anime' || tabTarget === 'anime') {
         showAnimeSection();
+      } else if (window.location.hash === '#livetv' || tabTarget === 'livetv' || tabTarget === 'live') {
+        showLiveTvSection();
       } else if (playTarget && (playTarget.toLowerCase().includes('dragon') || playTarget === '223')) {
         setTimeout(playDragonBall, 350);
       } else if (playTarget) {
         setTimeout(() => showDetailView(playTarget), 350);
       } else {
-        // Pre-fetch anime catalog in background for instant switching
+        // Pre-fetch anime and live tv catalogs in background for instant switching
         setTimeout(loadAnimeCatalog, 400);
+        setTimeout(loadLiveTvCatalog, 800);
       }
     });
 
@@ -1566,6 +1736,7 @@
       if (e.state && e.state.view) {
         if (e.state.view === 'home') showHome(false);
         else if (e.state.view === 'anime') showAnimeSection(false);
+        else if (e.state.view === 'livetv') showLiveTvSection(false);
         else if (e.state.view === 'detail' && e.state.subject) showDetailView(e.state.subject, false);
       } else {
         showHome(false);
@@ -1615,6 +1786,7 @@
     function updateNavLinks(activeTab) {
       const navHome = document.getElementById('nav-home');
       const navAnime = document.getElementById('nav-anime');
+      const navLiveTv = document.getElementById('nav-livetv');
       if (navHome && navAnime) {
         if (activeTab === 'home') {
           navHome.className = "text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold cursor-pointer";
@@ -1622,6 +1794,16 @@
         } else if (activeTab === 'anime') {
           navHome.className = "text-white/80 hover:text-white transition cursor-pointer";
           navAnime.className = "text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold cursor-pointer";
+        } else {
+          navHome.className = "text-white/80 hover:text-white transition cursor-pointer";
+          navAnime.className = "text-white/80 hover:text-white transition cursor-pointer";
+        }
+      }
+      if (navLiveTv) {
+        if (activeTab === 'livetv') {
+          navLiveTv.className = "text-[#f5c518] border-b-2 border-[#f5c518] pb-1 font-semibold cursor-pointer flex items-center space-x-1.5";
+        } else {
+          navLiveTv.className = "text-white/80 hover:text-white transition cursor-pointer flex items-center space-x-1.5";
         }
       }
       const navAnimeHome = document.getElementById('nav-anime-home');
@@ -1666,6 +1848,8 @@
         showHome();
       } else if (category === 'anime' || category === 'Anime') {
         showAnimeSection();
+      } else if (category === 'livetv' || category === 'Live TV') {
+        showLiveTvSection();
       } else {
         filterCategory(category);
       }
@@ -1678,6 +1862,8 @@
       document.getElementById('screen-home').classList.remove('hidden');
       const sAnime = document.getElementById('screen-anime');
       if (sAnime) sAnime.classList.add('hidden');
+      const sLive = document.getElementById('screen-livetv');
+      if (sLive) sLive.classList.add('hidden');
       document.getElementById('screen-detail').classList.add('hidden');
       document.getElementById('screen-player').classList.add('hidden');
       updateNavLinks('home');
@@ -1695,6 +1881,8 @@
       document.getElementById('screen-home').classList.add('hidden');
       const sAnime = document.getElementById('screen-anime');
       if (sAnime) sAnime.classList.remove('hidden');
+      const sLive = document.getElementById('screen-livetv');
+      if (sLive) sLive.classList.add('hidden');
       document.getElementById('screen-detail').classList.add('hidden');
       document.getElementById('screen-player').classList.add('hidden');
       updateNavLinks('anime');
@@ -1709,9 +1897,33 @@
       setupAnimeSearch();
     }
 
+    function showLiveTvSection(pushHistory = true) {
+      closeMobileNav();
+      currentView = 'livetv';
+      lastBrowseView = 'livetv';
+      document.getElementById('screen-home').classList.add('hidden');
+      const sAnime = document.getElementById('screen-anime');
+      if (sAnime) sAnime.classList.add('hidden');
+      document.getElementById('screen-detail').classList.add('hidden');
+      document.getElementById('screen-player').classList.add('hidden');
+      const sLive = document.getElementById('screen-livetv');
+      if (sLive) sLive.classList.remove('hidden');
+      updateNavLinks('livetv');
+      pausePlayer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (pushHistory && window.history) {
+        history.pushState({ view: 'livetv' }, '', '#livetv');
+      }
+      if (!liveTvLoaded) {
+        loadLiveTvCatalog();
+      }
+    }
+
     function goBackFromDetail() {
       if (lastBrowseView === 'anime' || selectedSubject?.isAnime || String(selectedSubject?.subjectId).startsWith('anime_')) {
         showAnimeSection();
+      } else if (lastBrowseView === 'livetv') {
+        showLiveTvSection();
       } else {
         showHome();
       }
@@ -1785,6 +1997,8 @@
       document.getElementById('screen-home').classList.add('hidden');
       const sAnime = document.getElementById('screen-anime');
       if (sAnime) sAnime.classList.add('hidden');
+      const sLive = document.getElementById('screen-livetv');
+      if (sLive) sLive.classList.add('hidden');
       document.getElementById('screen-player').classList.add('hidden');
       document.getElementById('screen-detail').classList.remove('hidden');
 
@@ -1802,6 +2016,8 @@
       document.getElementById('screen-home').classList.add('hidden');
       const sAnime = document.getElementById('screen-anime');
       if (sAnime) sAnime.classList.add('hidden');
+      const sLive = document.getElementById('screen-livetv');
+      if (sLive) sLive.classList.add('hidden');
       document.getElementById('screen-detail').classList.add('hidden');
       document.getElementById('screen-player').classList.remove('hidden');
       updateSubtitlePosition();
@@ -1811,14 +2027,424 @@
     function exitPlayer() {
       removeSubtitles();
       pausePlayer();
-      if (selectedSubject) {
+      if (currentLiveChannel) {
+        currentLiveChannel = null;
+        showLiveTvSection();
+      } else if (selectedSubject) {
         showDetailView(selectedSubject);
       } else if (lastBrowseView === 'anime') {
         showAnimeSection();
+      } else if (lastBrowseView === 'livetv') {
+        showLiveTvSection();
       } else {
         showHome();
       }
     }
+
+    // -------------------------------------------------------------
+    // LIVE TV MULTI-SOURCE & AUTO-FAILOVER ENGINE
+    // -------------------------------------------------------------
+    async function loadLiveTvCatalog() {
+      try {
+        const res = await fetch(apiUrl('/api/livetv/channels'));
+        const data = await res.json();
+        if (data && data.data) {
+          liveTvChannels = data.data;
+          liveTvLoaded = true;
+
+          const statChannels = document.getElementById('livetv-stat-channels');
+          if (statChannels) statChannels.textContent = liveTvChannels.length;
+
+          const totalSources = liveTvChannels.reduce((sum, c) => sum + (c.sources ? c.sources.length : 0), 0);
+          const statSources = document.getElementById('livetv-stat-sources');
+          if (statSources) statSources.textContent = `${totalSources} Verified Servers`;
+
+          renderLiveTvChannels();
+        }
+      } catch (e) {
+        console.error("Failed to load Live TV catalog:", e);
+      }
+    }
+
+    function filterLiveTvCategory(cat) {
+      currentLiveCategory = cat;
+      document.querySelectorAll('.ltv-cat-btn').forEach(btn => {
+        btn.className = 'ltv-cat-btn px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-semibold border border-white/10 transition-all shrink-0 cursor-pointer';
+      });
+      const activeBtn = document.getElementById(`btn-ltv-cat-${cat.toLowerCase()}`);
+      if (activeBtn) {
+        activeBtn.className = 'ltv-cat-btn px-4 py-2 rounded-full bg-red-600 text-white font-bold text-xs shadow-lg transition-all shrink-0 cursor-pointer';
+      }
+      renderLiveTvChannels();
+    }
+
+    function onLiveTvSearchInput(query) {
+      currentLiveSearchQuery = (query || '').trim().toLowerCase();
+      const clearBtn = document.getElementById('livetv-search-clear');
+      if (clearBtn) {
+        if (currentLiveSearchQuery) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+      renderLiveTvChannels();
+    }
+
+    function clearLiveTvSearch() {
+      currentLiveSearchQuery = '';
+      const input = document.getElementById('livetv-search-input');
+      if (input) input.value = '';
+      const clearBtn = document.getElementById('livetv-search-clear');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      renderLiveTvChannels();
+    }
+
+    function renderLiveTvChannels() {
+      const grid = document.getElementById('livetv-channels-grid');
+      const emptyState = document.getElementById('livetv-empty-state');
+      if (!grid) return;
+
+      let filtered = liveTvChannels;
+      if (currentLiveCategory && currentLiveCategory !== 'All') {
+        filtered = filtered.filter(c => (c.category || '').toLowerCase() === currentLiveCategory.toLowerCase());
+      }
+
+      if (currentLiveSearchQuery) {
+        filtered = filtered.filter(c => 
+          (c.name || '').toLowerCase().includes(currentLiveSearchQuery) ||
+          (c.category || '').toLowerCase().includes(currentLiveSearchQuery) ||
+          (c.language || '').toLowerCase().includes(currentLiveSearchQuery)
+        );
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(ch => {
+        const sourceCount = ch.sources ? ch.sources.length : 1;
+        const serverBadge = sourceCount > 1 
+          ? `<span class="px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 font-mono font-semibold text-[10px] border border-green-500/30 flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span><span>${sourceCount} Servers</span></span>`
+          : `<span class="px-1.5 py-0.5 rounded bg-white/10 text-white/50 font-mono text-[10px]">1 Server</span>`;
+
+        const qualityBadge = `<span class="px-1.5 py-0.5 rounded bg-white/10 text-white/80 font-mono text-[10px] font-bold">${ch.badge || ch.quality || 'HD'}</span>`;
+
+        return `
+          <div onclick="playLiveChannel('${ch.id}')" class="group relative bg-[#121318]/90 hover:bg-[#1a1b22] border border-white/10 hover:border-red-500/40 rounded-2xl p-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer flex flex-col justify-between overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-red-600/10 group-hover:bg-red-600/25 rounded-full blur-2xl transition-all duration-500 pointer-events-none"></div>
+
+            <div class="flex items-center justify-between mb-3 relative z-10">
+              <div class="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-red-600/20 border border-red-500/30 text-red-400 text-[10px] font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                <span>LIVE</span>
+              </div>
+              <div class="flex items-center space-x-1">
+                ${serverBadge}
+                ${qualityBadge}
+              </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center my-2 py-2 text-center relative z-10">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-black/40 border border-white/10 p-2 flex items-center justify-center mb-3 shadow-inner group-hover:scale-105 transition-transform duration-300">
+                <img src="${ch.logo}" alt="${ch.name}" class="max-w-full max-h-full object-contain filter drop-shadow" onerror="this.src='https://cdn-icons-png.flaticon.com/512/771/771249.png'">
+              </div>
+              <h3 class="font-headline font-bold text-sm sm:text-base text-white group-hover:text-red-400 transition-colors line-clamp-1">${ch.name}</h3>
+              <span class="text-[11px] text-white/50 font-medium mt-0.5">${ch.category} · ${ch.language}</span>
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-white/60 relative z-10">
+              <span class="text-[10px] text-white/40 font-mono">${ch.region || 'India'}</span>
+              <span class="inline-flex items-center space-x-1 text-red-400 font-semibold group-hover:translate-x-1 transition-transform">
+                <span>Watch</span>
+                <span class="material-symbols-outlined text-xs">play_arrow</span>
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function playLiveChannel(channelId, sourceIndex = 0) {
+      const channel = liveTvChannels.find(c => c.id === channelId);
+      if (!channel || !channel.sources || channel.sources.length === 0) return;
+
+      currentLiveChannel = channel;
+      currentLiveSourceIndex = sourceIndex;
+      selectedSubject = null;
+      lastBrowseView = 'livetv';
+
+      showPlayerView();
+
+      const video = document.getElementById('videoElement');
+      if (video) {
+        video.muted = false;
+        video.volume = 1.0;
+        updateVolumeIcon(1.0);
+        const vf = document.getElementById('volume-fill');
+        if (vf) vf.style.width = '100%';
+      }
+
+      document.getElementById('player-header-title').textContent = channel.name;
+      const epBadge = document.getElementById('player-header-ep');
+      if (epBadge) {
+        epBadge.classList.remove('hidden');
+        epBadge.innerHTML = `<span class="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-red-600 text-white font-bold text-[11px]"><span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span><span>LIVE BROADCAST</span></span>`;
+      }
+
+      const streamStatus = document.getElementById('player-stream-status');
+      if (streamStatus) {
+        streamStatus.textContent = `${channel.language || 'Hindi'} · ${channel.badge || channel.quality || 'HD'} · Low Latency`;
+      }
+
+      const drawerBtn = document.getElementById('btn-episodes-drawer');
+      if (drawerBtn) drawerBtn.classList.add('hidden');
+      const hamburgerBtn = document.getElementById('btn-player-hamburger');
+      if (hamburgerBtn) hamburgerBtn.classList.add('hidden');
+      const skipBtn = document.getElementById('btn-skip-intro');
+      if (skipBtn) skipBtn.classList.add('hidden');
+
+      const serverTriggerWrap = document.getElementById('wrapper-server-trigger');
+      if (serverTriggerWrap) serverTriggerWrap.classList.remove('hidden');
+
+      const timeCur = document.getElementById('timeCurrent');
+      if (timeCur) timeCur.textContent = "LIVE";
+      const timeDur = document.getElementById('timeDuration');
+      if (timeDur) timeDur.textContent = "24/7";
+
+      mountLiveStream(channel, sourceIndex);
+    }
+
+    function mountLiveStream(channel, sourceIndex) {
+      const video = document.getElementById('videoElement');
+      if (!video) return;
+
+      setPlayerLoading(true);
+
+      if (window.currentHlsInstance) {
+        try {
+          window.currentHlsInstance.destroy();
+        } catch(e) {}
+        window.currentHlsInstance = null;
+      }
+
+      const source = channel.sources[sourceIndex];
+      if (!source) {
+        showFailoverToast(`No available streaming sources for ${channel.name}`, 'error');
+        setPlayerLoading(false);
+        return;
+      }
+
+      let streamUrl = source.url;
+      if (source.worker_key) {
+        streamUrl = apiUrl(`/api/livetv/stream?key=${encodeURIComponent(source.worker_key)}`);
+      }
+
+      currentLiveStreamUrl = streamUrl;
+
+      const serverLabel = document.getElementById('active-server-label');
+      if (serverLabel) {
+        serverLabel.textContent = `Server ${sourceIndex + 1}`;
+      }
+      renderPlayerServerList();
+
+      let failoverHandled = false;
+      const triggerFailover = (reason) => {
+        if (failoverHandled) return;
+        failoverHandled = true;
+
+        console.warn(`[LiveTV Failover] Server ${sourceIndex + 1} (${source.name}) failed: ${reason}`);
+
+        const nextIndex = sourceIndex + 1;
+        if (nextIndex < channel.sources.length) {
+          const nextSource = channel.sources[nextIndex];
+          showFailoverToast(`Server ${sourceIndex + 1} unavailable. Switching to Server ${nextIndex + 1} (${nextSource.name})...`, 'warning');
+          currentLiveSourceIndex = nextIndex;
+          setTimeout(() => {
+            mountLiveStream(channel, nextIndex);
+          }, 400);
+        } else {
+          setPlayerLoading(false);
+          showFailoverToast(`All ${channel.sources.length} servers for ${channel.name} are offline.`, 'error');
+        }
+      };
+
+      video.onerror = () => {
+        if (currentLiveChannel && !failoverHandled) {
+          triggerFailover("Video element error");
+        }
+      };
+
+      if (window.Hls && Hls.isSupported()) {
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          liveSyncDurationCount: 3,
+          liveMaxLatencyDurationCount: 6,
+          fragLoadingTimeOut: 12000,
+          manifestLoadingTimeOut: 10000
+        });
+        window.currentHlsInstance = hls;
+
+        hls.loadSource(streamUrl);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          setPlayerLoading(false);
+          unfreezeFrame();
+          video.play().catch(e => {
+            console.log("Autoplay waiting for user gesture:", e);
+          });
+          isPlaying = true;
+          updatePlayIcons(true);
+        });
+
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          if (data.fatal) {
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                console.error("HLS fatal network error encountered:", data);
+                hls.destroy();
+                window.currentHlsInstance = null;
+                triggerFailover(`Network Error (${data.details})`);
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                console.warn("HLS media error, attempting recovery:", data);
+                hls.recoverMediaError();
+                break;
+              default:
+                hls.destroy();
+                window.currentHlsInstance = null;
+                triggerFailover(`Fatal Error (${data.details})`);
+                break;
+            }
+          }
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = streamUrl;
+        video.addEventListener('loadedmetadata', () => {
+          setPlayerLoading(false);
+          unfreezeFrame();
+          video.play().catch(e => {});
+          isPlaying = true;
+          updatePlayIcons(true);
+        }, { once: true });
+        video.addEventListener('error', () => {
+          triggerFailover("Native playback error");
+        }, { once: true });
+      } else {
+        video.src = streamUrl;
+        video.load();
+        video.play().then(() => {
+          setPlayerLoading(false);
+          isPlaying = true;
+          updatePlayIcons(true);
+        }).catch(e => {
+          triggerFailover("Direct source error");
+        });
+      }
+    }
+
+    function toggleServerPopover() {
+      const popover = document.getElementById('popover-server');
+      if (!popover) return;
+      popover.classList.toggle('hidden');
+      if (!popover.classList.contains('hidden')) {
+        renderPlayerServerList();
+      }
+    }
+
+    function renderPlayerServerList() {
+      const container = document.getElementById('server-options-list');
+      if (!container || !currentLiveChannel) return;
+
+      container.innerHTML = currentLiveChannel.sources.map((src, idx) => {
+        const isActive = idx === currentLiveSourceIndex;
+        const isPrimary = idx === 0;
+        return `
+          <button onclick="switchLiveServer(${idx})" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left transition-all cursor-pointer ${
+            isActive 
+              ? 'bg-red-600/30 border border-red-500/40 text-white font-semibold' 
+              : 'hover:bg-white/5 text-white/70 hover:text-white border border-transparent'
+          }">
+            <div class="flex items-center space-x-2.5">
+              <span class="w-2 h-2 rounded-full ${isActive ? 'bg-green-400 animate-pulse' : 'bg-white/30'}"></span>
+              <div>
+                <div class="text-xs font-bold flex items-center space-x-1.5">
+                  <span>Server ${idx + 1}</span>
+                  ${isPrimary ? '<span class="text-[9px] px-1 rounded bg-white/10 text-white/50">Primary</span>' : '<span class="text-[9px] px-1 rounded bg-amber-500/20 text-amber-300">Backup</span>'}
+                </div>
+                <div class="text-[10px] text-white/50 font-mono truncate max-w-[140px]">${src.name || src.provider || 'Live Stream'}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] font-mono ${isActive ? 'text-green-400 font-bold' : 'text-white/40'}">${src.quality || '720p'}</span>
+              ${isActive ? '<span class="block text-[9px] text-green-300 font-bold">Active</span>' : ''}
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function switchLiveServer(index) {
+      if (!currentLiveChannel || index === currentLiveSourceIndex) return;
+      const popover = document.getElementById('popover-server');
+      if (popover) popover.classList.add('hidden');
+
+      currentLiveSourceIndex = index;
+      showFailoverToast(`Switching to Server ${index + 1}...`, 'info');
+      mountLiveStream(currentLiveChannel, index);
+    }
+
+    function showFailoverToast(message, type = 'info') {
+      let toast = document.getElementById('livetv-failover-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'livetv-failover-toast';
+        toast.className = 'fixed top-16 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform -translate-y-4 opacity-0 pointer-events-none';
+        document.body.appendChild(toast);
+      }
+
+      const bgColors = {
+        warning: 'bg-amber-600/90 border-amber-500 text-amber-100',
+        error: 'bg-red-600/90 border-red-500 text-red-100',
+        info: 'bg-slate-800/95 border-slate-700 text-white'
+      };
+
+      const icons = {
+        warning: 'sync',
+        error: 'error',
+        info: 'info'
+      };
+
+      toast.innerHTML = `
+        <div class="flex items-center space-x-2.5 px-4 py-2.5 rounded-2xl backdrop-blur-xl border ${bgColors[type] || bgColors.info} shadow-2xl text-xs font-semibold">
+          <span class="material-symbols-outlined text-sm ${type === 'warning' ? 'animate-spin' : ''}">${icons[type] || 'info'}</span>
+          <span>${message}</span>
+        </div>
+      `;
+
+      toast.classList.remove('opacity-0', '-translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(window._failoverToastTimer);
+      window._failoverToastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', '-translate-y-4');
+      }, 4000);
+    }
+
+    // Dismiss server dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const triggerWrap = document.getElementById('wrapper-server-trigger');
+      const popover = document.getElementById('popover-server');
+      if (triggerWrap && popover && !popover.classList.contains('hidden')) {
+        if (!triggerWrap.contains(e.target)) {
+          popover.classList.add('hidden');
+        }
+      }
+    });
 
     // -------------------------------------------------------------
     // CATALOG & HOMEPAGE DATA FETCHING
@@ -3862,6 +4488,10 @@
     }
 
     function mountStream(startTime = 0) {
+      currentLiveChannel = null;
+      const serverWrap = document.getElementById('wrapper-server-trigger');
+      if (serverWrap) serverWrap.classList.add('hidden');
+
       const video = document.getElementById('videoElement');
       const targetSubjectId = activePlaybackSubjectId || selectedSubject.subjectId || selectedSubject.id;
       const isSeries = isSeriesSubject(selectedSubject, targetSubjectId);
@@ -3978,6 +4608,12 @@
     }
 
     function pausePlayer() {
+      if (window.currentHlsInstance) {
+        try {
+          window.currentHlsInstance.destroy();
+        } catch(e) {}
+        window.currentHlsInstance = null;
+      }
       const video = document.getElementById('videoElement');
       if (video) {
         video.pause();

@@ -13,3 +13,6 @@ reverse_engineering/
 designs/
 rea/
 NEWFORNTEND/
+base1_decompiled/
+*.apk
+*.zip

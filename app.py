@@ -914,6 +914,53 @@ def api_debug_ffmpeg():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+# ==============================================================================
+# LIVE TV ENGINE INTEGRATION (TOP RATED CHANNELS & MULTI-SOURCE FAILOVER)
+# ==============================================================================
+import livetv_engine
+
+@app.route("/api/livetv/channels")
+def api_livetv_channels():
+    category = request.args.get("category", "").strip().lower()
+    channels = livetv_engine.get_channels_catalog()
+    if category and category != "all":
+        channels = [c for c in channels if c.get("category", "").lower() == category]
+    return jsonify({
+        "code": 200,
+        "status": "success",
+        "total": len(channels),
+        "data": channels
+    })
+
+@app.route("/api/livetv/stream")
+def api_livetv_stream():
+    """Resolves dynamic Akamai tokens for Sony Network and proxies live HLS playlists."""
+    key = request.args.get("key", "").strip()
+    raw_url = request.args.get("url", "").strip()
+    
+    target_url = None
+    if key:
+        target_url = livetv_engine.resolve_stream_url(key)
+    elif raw_url:
+        target_url = raw_url
+        
+    if not target_url:
+        return jsonify({"code": 400, "error": "Missing stream key or url"}), 400
+        
+    try:
+        req = urllib.request.Request(target_url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        })
+        with urllib.request.urlopen(req, context=ctx, timeout=8) as resp:
+            content = resp.read()
+            mimetype = resp.headers.get("Content-Type", "application/vnd.apple.mpegurl")
+            
+        res = Response(content, mimetype=mimetype)
+        res.headers["Access-Control-Allow-Origin"] = "*"
+        res.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        return res
+    except Exception as e:
+        return jsonify({"code": 502, "error": f"Failed fetching live stream: {str(e)}", "target": target_url}), 502
 
 if __name__ == "__main__":
     os.makedirs("static", exist_ok=True)
