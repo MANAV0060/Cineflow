@@ -432,41 +432,41 @@
       </div>
     </section>
 
-    <!-- SPOTLIGHT 1: BLACK ADAM CINEMATIC BANNER -->
+    <!-- SPOTLIGHT 1: DYNAMIC MOVIE CINEMATIC BANNER -->
     <section id="spotlight-section-1" class="my-6 sm:my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-4 sm:px-6 md:px-14 py-8 sm:py-14">
       <div class="absolute inset-0 z-0">
-        <img alt="Black Adam Background" class="w-full h-full object-cover object-right md:object-center filter brightness-60 contrast-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkzEzhq2R3OUCWJeQJky46slW71wrMwDBMWO2SCKE6AbTFGN8Py5NJyusoxj_iMoaxLQYnlt4nI2e-e8YHGcgi4SdCsEoAuIYN49BcthXsWEB9_GEtLnfZ4Skb_b3CSfrCiVgGRa0NZxlBu-KGiEB5jZRmGjmEFh3W1Upt0T3HiuHGDwKCMTWTvfpIYy_5tf2z3PdDrnA-xqHF6jx8ktvJMn8-9VS0ovUFB7zMmI9HO6bkTTOgnxmhdg"/>
+        <img id="spotlight-1-bg" alt="Spotlight Movie Background" class="w-full h-full object-cover object-right md:object-center filter brightness-60 contrast-110 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkzEzhq2R3OUCWJeQJky46slW71wrMwDBMWO2SCKE6AbTFGN8Py5NJyusoxj_iMoaxLQYnlt4nI2e-e8YHGcgi4SdCsEoAuIYN49BcthXsWEB9_GEtLnfZ4Skb_b3CSfrCiVgGRa0NZxlBu-KGiEB5jZRmGjmEFh3W1Upt0T3HiuHGDwKCMTWTvfpIYy_5tf2z3PdDrnA-xqHF6jx8ktvJMn8-9VS0ovUFB7zMmI9HO6bkTTOgnxmhdg"/>
         <div class="absolute inset-0 black-adam-glow"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent"></div>
       </div>
       <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
         <div class="lg:col-span-7 max-w-xl">
-          <h2 class="text-2xl sm:text-3xl md:text-5xl font-cinematic font-black text-white text-shadow-lightning tracking-wider">
+          <h2 id="spotlight-1-title" class="text-2xl sm:text-3xl md:text-5xl font-cinematic font-black text-white text-shadow-lightning tracking-wider">
             BLACK ADAM
           </h2>
           <div class="mt-2.5 sm:mt-3 flex items-center space-x-2">
-            <div class="flex text-[#f5c518] text-sm"><span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-600">★</span></div>
-            <span class="text-xs font-bold text-white tracking-wide">IMDb 8.1</span>
+            <div id="spotlight-1-stars" class="flex text-[#f5c518] text-sm"><span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-600">★</span></div>
+            <span id="spotlight-1-rating" class="text-xs font-bold text-white tracking-wide">IMDb 8.1</span>
           </div>
-          <p class="mt-3 sm:mt-4 text-xs sm:text-sm text-slate-300/90 leading-relaxed">
+          <p id="spotlight-1-synopsis" class="mt-3 sm:mt-4 text-xs sm:text-sm text-slate-300/90 leading-relaxed">
             Nearly 5,000 years after he was bestowed with the almighty powers of the ancient gods—and imprisoned just as quickly—Black Adam is freed from his earthly tomb, ready to unleash his unique form of justice on the modern world.
           </p>
           <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
-            <button onclick="searchAndPlay('Black Adam')" class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-6 sm:px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
+            <button onclick="playSpotlight(1)" class="bg-[#0075ff] hover:bg-blue-600 text-white font-semibold text-xs tracking-wider uppercase px-6 sm:px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
               <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
               <span>WATCH NOW</span>
             </button>
-            <button onclick="searchAndDetail('Black Adam')" class="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center text-white hover:border-white hover:bg-white/10 transition cursor-pointer">
+            <button onclick="detailSpotlight(1)" class="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center text-white hover:border-white hover:bg-white/10 transition cursor-pointer" title="More Info">
               <span class="material-symbols-outlined text-base">info</span>
             </button>
           </div>
         </div>
-        <div class="lg:col-span-5 hidden lg:flex flex-col space-y-3 max-w-xs ml-auto">
+        <div id="spotlight-1-side-stills" class="lg:col-span-5 hidden lg:flex flex-col space-y-3 max-w-xs ml-auto">
           <div class="overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer shadow-lg">
-            <img alt="Black Adam Still 1" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZsUNhEKzc_3OjUoBa3m3Ib-fEcTpHCoyDunqQzeDgTBZjstI7_p1cV7lgxf-U82FDE0cJrA1EeP-U9s8EflxS20jELsbPmjpBAyyiP3kVPs41ImAa8YS4JCsutAsjpz6ttLEUzDrgBHifjxM464P6ogADBnUW46DaGIvj9hUji8HmZxt1XLWlv5jpmVDYt5WR9iEAkl5-tmN3x_avE6iTu-7Bry7RxZdvn_wxZOJhPZHRbml14y0jAQ"/>
+            <img alt="Still 1" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZsUNhEKzc_3OjUoBa3m3Ib-fEcTpHCoyDunqQzeDgTBZjstI7_p1cV7lgxf-U82FDE0cJrA1EeP-U9s8EflxS20jELsbPmjpBAyyiP3kVPs41ImAa8YS4JCsutAsjpz6ttLEUzDrgBHifjxM464P6ogADBnUW46DaGIvj9hUji8HmZxt1XLWlv5jpmVDYt5WR9iEAkl5-tmN3x_avE6iTu-7Bry7RxZdvn_wxZOJhPZHRbml14y0jAQ"/>
           </div>
           <div class="overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer shadow-lg">
-            <img alt="Black Adam Still 2" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6OyZNiIFVfx8Ixq41IRd6XNz0a-oGfzAG3kt67eRz1VItCRi8VLvC8iYWlIb66gsd3_BWzteq-eTCDgINUvltiEx7BXyykqL6lNYuhaU0um14_eDNRtQ45oPLgCKbaA1iYRUj-fkVUarJRZcmELwU3rpO-0gPgY8edIybDqxC3U5X1GyPP7UsHzSzDoSMcJaTJ8GQT_jvAu9aIsLv8uCviKcKLf4r4KZD_AGkw8NLqGK6ICMtmJdiIg"/>
+            <img alt="Still 2" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6OyZNiIFVfx8Ixq41IRd6XNz0a-oGfzAG3kt67eRz1VItCRi8VLvC8iYWlIb66gsd3_BWzteq-eTCDgINUvltiEx7BXyykqL6lNYuhaU0um14_eDNRtQ45oPLgCKbaA1iYRUj-fkVUarJRZcmELwU3rpO-0gPgY8edIybDqxC3U5X1GyPP7UsHzSzDoSMcJaTJ8GQT_jvAu9aIsLv8uCviKcKLf4r4KZD_AGkw8NLqGK6ICMtmJdiIg"/>
           </div>
         </div>
       </div>
@@ -489,31 +489,31 @@
       </div>
     </section>
 
-    <!-- SPOTLIGHT 2: THE FLASH TV SERIES BANNER -->
+    <!-- SPOTLIGHT 2: DYNAMIC TV SERIES BANNER -->
     <section id="spotlight-section-2" class="my-6 sm:my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-4 sm:px-6 md:px-14 py-8 sm:py-14">
       <div class="absolute inset-0 z-0">
-        <img alt="The Flash Season 9" class="w-full h-full object-cover object-center filter brightness-60 contrast-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl6Na-QENU3u7AALAj_7Uof9EUz2X2RxWH41iWyEYEOKny1v8nwewse5Kwxbbo8p4TZZkV2HxZ5PCpkiYnDZNkqXR4EaHfm4Pa_Bm5B6EKBmgyH5X8H_8yBTpBOozLuz3pTq-dfy58MvgspVUlwxSvwGKTEqFZccpnXeaqvhd2wxEA0j3Sz11vUFLSi0V9OBSJn_AEkwvWAtV_GkF6lNp_z5KO4q-1zdu6fXvJU4wIs2VAFeqatDqfwg"/>
+        <img id="spotlight-2-bg" alt="Spotlight Series Background" class="w-full h-full object-cover object-center filter brightness-60 contrast-110 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl6Na-QENU3u7AALAj_7Uof9EUz2X2RxWH41iWyEYEOKny1v8nwewse5Kwxbbo8p4TZZkV2HxZ5PCpkiYnDZNkqXR4EaHfm4Pa_Bm5B6EKBmgyH5X8H_8yBTpBOozLuz3pTq-dfy58MvgspVUlwxSvwGKTEqFZccpnXeaqvhd2wxEA0j3Sz11vUFLSi0V9OBSJn_AEkwvWAtV_GkF6lNp_z5KO4q-1zdu6fXvJU4wIs2VAFeqatDqfwg"/>
         <div class="absolute inset-0 flash-glow"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent"></div>
       </div>
       <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
         <div class="lg:col-span-7 max-w-xl">
-          <h2 class="text-2xl sm:text-3xl md:text-5xl font-cinematic font-black text-white leading-tight tracking-wider">
+          <h2 id="spotlight-2-title" class="text-2xl sm:text-3xl md:text-5xl font-cinematic font-black text-white leading-tight tracking-wider">
             THE FLASH :<br/>SEASON 9
           </h2>
           <div class="mt-2.5 sm:mt-3 flex items-center space-x-2">
-            <div class="flex text-[#f5c518] text-sm"><span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-600">★</span></div>
-            <span class="text-xs font-bold text-white tracking-wide">TV SERIES</span>
+            <div id="spotlight-2-stars" class="flex text-[#f5c518] text-sm"><span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-600">★</span></div>
+            <span id="spotlight-2-badge" class="text-xs font-bold text-white tracking-wide">TV SERIES</span>
           </div>
-          <p class="mt-3 sm:mt-4 text-xs sm:text-sm text-slate-300/90 leading-relaxed">
+          <p id="spotlight-2-synopsis" class="mt-3 sm:mt-4 text-xs sm:text-sm text-slate-300/90 leading-relaxed">
             After defeating the Reverse Flash once and for all, Barry Allen and Iris West-Allen reconnect. But when a deadly group of Rogues descends on Central City led by a powerful new threat, the Flash must once again push his powers to the limit.
           </p>
           <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
-            <button onclick="searchAndPlay('The Flash')" class="bg-[#e50914] hover:bg-red-700 text-white font-semibold text-xs tracking-wider uppercase px-6 sm:px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-red-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
+            <button onclick="playSpotlight(2)" class="bg-[#e50914] hover:bg-red-700 text-white font-semibold text-xs tracking-wider uppercase px-6 sm:px-7 py-2.5 rounded-full flex items-center space-x-2 shadow-lg shadow-red-500/30 transition transform hover:-translate-y-0.5 cursor-pointer">
               <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
               <span>WATCH SERIES</span>
             </button>
-            <button onclick="searchAndDetail('The Flash')" class="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center text-white hover:border-white hover:bg-white/10 transition cursor-pointer">
+            <button onclick="detailSpotlight(2)" class="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center text-white hover:border-white hover:bg-white/10 transition cursor-pointer" title="More Info">
               <span class="material-symbols-outlined text-base">info</span>
             </button>
           </div>
@@ -1823,6 +1823,9 @@
           populateHeroBanner(topItem);
         }
 
+        // Populate Dynamic Spotlights (Movies & Series)
+        populateSpotlights(movies, series);
+
         // Render Grids
         renderCardsGrid('grid-most-viewed', [...movies.slice(0, 3), ...series.slice(0, 3)]);
         renderCardsGrid('grid-popular-movies', movies.slice(0, 6));
@@ -2079,6 +2082,148 @@
       document.getElementById('home-hero-section').classList.remove('hidden');
       document.getElementById('spotlight-section-1').classList.remove('hidden');
       document.getElementById('spotlight-section-2').classList.remove('hidden');
+    }
+
+    // -------------------------------------------------------------
+    // DYNAMIC SPOTLIGHT CONTROLLER (Movies & Series Banners)
+    // -------------------------------------------------------------
+    let currentSpotlightMovie = null;
+    let currentSpotlightSeries = null;
+
+    function renderStarsHtml(score) {
+      const rating5 = Math.max(1, Math.min(5, Math.round((score || 8.0) / 2)));
+      let stars = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= rating5) {
+          stars += '<span>★</span>';
+        } else {
+          stars += '<span class="text-slate-600">★</span>';
+        }
+      }
+      return stars;
+    }
+
+    function populateSpotlights(movies, series) {
+      if (Array.isArray(movies) && movies.length > 0) {
+        // Pick a featured movie (use movies[1] to avoid duplicating the hero if possible)
+        const movie = (movies.length > 1) ? movies[1] : movies[0];
+        setSpotlightMovie(movie, movies);
+      }
+      if (Array.isArray(series) && series.length > 0) {
+        // Pick a featured TV series from the series catalog
+        const tvSeries = (series[0]?.subjectId === 'dragonball' && series.length > 1) ? series[1] : series[0];
+        setSpotlightSeries(tvSeries);
+      }
+    }
+
+    function setSpotlightMovie(movie, allMovies = catalogMovies) {
+      if (!movie) return;
+      currentSpotlightMovie = movie;
+
+      const titleEl = document.getElementById('spotlight-1-title');
+      const bgEl = document.getElementById('spotlight-1-bg');
+      const synopsisEl = document.getElementById('spotlight-1-synopsis');
+      const ratingEl = document.getElementById('spotlight-1-rating');
+      const starsEl = document.getElementById('spotlight-1-stars');
+      const sideStillsEl = document.getElementById('spotlight-1-side-stills');
+
+      const title = movie.title || movie.subjectName || "Featured Movie";
+      if (titleEl) titleEl.textContent = title;
+
+      const bg = movie.banner || movie.backdrop || movie.cover?.url || movie.thumbnail;
+      if (bgEl && bg) bgEl.src = bg;
+
+      const score = movie.score || 8.4;
+      if (ratingEl) ratingEl.textContent = `IMDb ${Number(score).toFixed(1)}`;
+      if (starsEl) starsEl.innerHTML = renderStarsHtml(score);
+
+      if (synopsisEl) {
+        synopsisEl.textContent = movie.description || movie.synopsis || "Now streaming on CineFlow in cinematic high definition 4K UHD.";
+      }
+
+      // Populate interactive side stills using other popular movies from the catalog
+      if (sideStillsEl && Array.isArray(allMovies)) {
+        const candidateStills = allMovies.filter(m => (m.subjectId || m.id) !== (movie.subjectId || movie.id)).slice(0, 2);
+        if (candidateStills.length > 0) {
+          sideStillsEl.innerHTML = '';
+          candidateStills.forEach(otherMovie => {
+            const stillImg = otherMovie.cover?.url || otherMovie.thumbnail;
+            if (!stillImg) return;
+            const card = document.createElement('div');
+            card.className = "overflow-hidden rounded-xl border border-white/20 aspect-video group cursor-pointer shadow-lg relative transition-all duration-300 hover:border-[#0075ff] hover:scale-105";
+            card.title = otherMovie.title || otherMovie.subjectName || "Movie";
+            card.innerHTML = `
+              <img src="${stillImg}" alt="${escapeHtml(otherMovie.title || otherMovie.subjectName || '')}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300"/>
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-base opacity-0 group-hover:opacity-100 transition-opacity">visibility</span>
+              </div>
+              <div class="absolute bottom-1 left-2 right-2 pointer-events-none">
+                <p class="text-[10px] font-bold text-white truncate drop-shadow">${escapeHtml(otherMovie.title || otherMovie.subjectName || '')}</p>
+              </div>
+            `;
+            card.onclick = () => {
+              setSpotlightMovie(otherMovie, allMovies);
+            };
+            sideStillsEl.appendChild(card);
+          });
+        }
+      }
+    }
+
+    function setSpotlightSeries(seriesItem) {
+      if (!seriesItem) return;
+      currentSpotlightSeries = seriesItem;
+
+      const titleEl = document.getElementById('spotlight-2-title');
+      const bgEl = document.getElementById('spotlight-2-bg');
+      const synopsisEl = document.getElementById('spotlight-2-synopsis');
+      const badgeEl = document.getElementById('spotlight-2-badge');
+      const starsEl = document.getElementById('spotlight-2-stars');
+
+      const title = seriesItem.title || seriesItem.subjectName || "Featured Series";
+      if (titleEl) {
+        titleEl.innerHTML = escapeHtml(title).replace(":", ":<br/>");
+      }
+
+      const bg = seriesItem.banner || seriesItem.backdrop || seriesItem.cover?.url || seriesItem.thumbnail;
+      if (bgEl && bg) bgEl.src = bg;
+
+      const score = seriesItem.score || 8.6;
+      if (starsEl) starsEl.innerHTML = renderStarsHtml(score);
+
+      if (badgeEl) {
+        const yr = seriesItem.year || "2024";
+        badgeEl.textContent = `TV SERIES • ${yr}`;
+      }
+
+      if (synopsisEl) {
+        synopsisEl.textContent = seriesItem.description || seriesItem.synopsis || "Stream complete seasons, original audio tracks, and latest episodes on CineFlow.";
+      }
+    }
+
+    function playSpotlight(num) {
+      const item = (num === 1) ? currentSpotlightMovie : currentSpotlightSeries;
+      if (item) {
+        selectedSubject = item;
+        selectedSe = 1;
+        selectedEp = 1;
+        activeRootSubjectId = item.subjectId || item.id;
+        activePlaybackSubjectId = activeRootSubjectId;
+        playSelectedSubject();
+      } else {
+        if (num === 1) searchAndPlay('Black Adam');
+        else searchAndPlay('The Flash');
+      }
+    }
+
+    function detailSpotlight(num) {
+      const item = (num === 1) ? currentSpotlightMovie : currentSpotlightSeries;
+      if (item) {
+        showDetailView(item);
+      } else {
+        if (num === 1) searchAndDetail('Black Adam');
+        else searchAndDetail('The Flash');
+      }
     }
 
     async function searchAndPlay(title) {
