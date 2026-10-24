@@ -354,7 +354,7 @@
     <section id="home-hero-section" class="relative min-h-[500px] sm:min-h-[620px] md:min-h-[760px] flex flex-col justify-end overflow-hidden pb-8 sm:pb-12 pt-20 sm:pt-28 px-4 sm:px-6 md:px-14">
       <!-- Hero Background Graphic -->
       <div class="absolute inset-0 z-0">
-        <img id="hero-bg-img" alt="Hero Featured" class="w-full h-full object-cover object-center filter brightness-90 contrast-105 scale-105 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmHP4G7tciaNtl9zkfB-hi3Gvnrb1TlHg8WiHwgapYUmmr8MenuAapmL9r5lj2gH8xa9OfRTFT4KUxUIuS-PaB56myG-olMmY55JhZhvSyVq2iLgsBIbL7Lh03xh9AeCLta6m4t2MEs_KB4OFNpk40ZOgwPMq26bkIOFgPqVafN09IKMbz7j2bUDVMuqfyCNVv--SrC5R2t28DRYNO6_xk8QeomvClPC3mAJWYvwRnG4JlAXLHwQT-JQ"/>
+        <img id="hero-bg-img" alt="Hero Featured" class="w-full h-full object-cover object-top filter brightness-90 contrast-105 transition-all duration-700" style="object-position: top center;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmHP4G7tciaNtl9zkfB-hi3Gvnrb1TlHg8WiHwgapYUmmr8MenuAapmL9r5lj2gH8xa9OfRTFT4KUxUIuS-PaB56myG-olMmY55JhZhvSyVq2iLgsBIbL7Lh03xh9AeCLta6m4t2MEs_KB4OFNpk40ZOgwPMq26bkIOFgPqVafN09IKMbz7j2bUDVMuqfyCNVv--SrC5R2t28DRYNO6_xk8QeomvClPC3mAJWYvwRnG4JlAXLHwQT-JQ"/>
         <div class="absolute inset-0 hero-glow-overlay"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/60 to-transparent"></div>
       </div>
@@ -395,8 +395,19 @@
         </div>
       </div>
 
-      <!-- Thumbnail Strip Carousel in Hero Bottom -->
-      <div class="relative z-10 mt-8 sm:mt-12 flex flex-col items-center w-full">
+      <!-- Thumbnail Strip Carousel & Dotted Timer in Hero Bottom -->
+      <div class="relative z-10 mt-6 sm:mt-10 flex flex-col items-center w-full">
+        <!-- Dotted Timer Bar Navigation -->
+        <div class="w-full max-w-5xl flex items-center justify-between mb-3 px-1">
+          <div class="flex items-center space-x-2 sm:space-x-3" id="hero-dotted-bar">
+            <!-- Dynamically populated dotted progress segments -->
+          </div>
+          <div class="flex items-center space-x-2 text-xs font-mono text-white/70 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-[#f5c518] animate-pulse"></span>
+            <span id="hero-timer-countdown">7s</span>
+          </div>
+        </div>
+
         <div id="hero-stills-strip" class="flex sm:grid sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-3 w-full max-w-5xl overflow-x-auto sm:overflow-visible hide-scrollbar pb-1">
           <!-- Dynamically populated or interactive hero scene cards -->
         </div>
@@ -433,13 +444,13 @@
     </section>
 
     <!-- SPOTLIGHT 1: DYNAMIC MOVIE CINEMATIC BANNER -->
-    <section id="spotlight-section-1" class="my-6 sm:my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-4 sm:px-6 md:px-14 py-8 sm:py-14">
+    <section id="spotlight-section-1" class="my-6 sm:my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-4 sm:px-6 md:px-14 py-8 sm:py-14 min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center">
       <div class="absolute inset-0 z-0">
-        <img id="spotlight-1-bg" alt="Spotlight Movie Background" class="w-full h-full object-cover object-right md:object-center filter brightness-60 contrast-110 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkzEzhq2R3OUCWJeQJky46slW71wrMwDBMWO2SCKE6AbTFGN8Py5NJyusoxj_iMoaxLQYnlt4nI2e-e8YHGcgi4SdCsEoAuIYN49BcthXsWEB9_GEtLnfZ4Skb_b3CSfrCiVgGRa0NZxlBu-KGiEB5jZRmGjmEFh3W1Upt0T3HiuHGDwKCMTWTvfpIYy_5tf2z3PdDrnA-xqHF6jx8ktvJMn8-9VS0ovUFB7zMmI9HO6bkTTOgnxmhdg"/>
+        <img id="spotlight-1-bg" alt="Spotlight Movie Background" class="w-full h-full object-cover object-top filter brightness-60 contrast-110 transition-all duration-700" style="object-position: top center;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkzEzhq2R3OUCWJeQJky46slW71wrMwDBMWO2SCKE6AbTFGN8Py5NJyusoxj_iMoaxLQYnlt4nI2e-e8YHGcgi4SdCsEoAuIYN49BcthXsWEB9_GEtLnfZ4Skb_b3CSfrCiVgGRa0NZxlBu-KGiEB5jZRmGjmEFh3W1Upt0T3HiuHGDwKCMTWTvfpIYy_5tf2z3PdDrnA-xqHF6jx8ktvJMn8-9VS0ovUFB7zMmI9HO6bkTTOgnxmhdg"/>
         <div class="absolute inset-0 black-adam-glow"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent"></div>
       </div>
-      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center w-full">
         <div class="lg:col-span-7 max-w-xl">
           <h2 id="spotlight-1-title" class="text-2xl sm:text-3xl md:text-5xl font-cinematic font-black text-white text-shadow-lightning tracking-wider">
             BLACK ADAM
@@ -490,13 +501,13 @@
     </section>
 
     <!-- SPOTLIGHT 2: DYNAMIC TV SERIES BANNER -->
-    <section id="spotlight-section-2" class="my-6 sm:my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-4 sm:px-6 md:px-14 py-8 sm:py-14">
+    <section id="spotlight-section-2" class="my-6 sm:my-10 relative overflow-hidden bg-cardBg border-y border-white/5 px-4 sm:px-6 md:px-14 py-8 sm:py-14 min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center">
       <div class="absolute inset-0 z-0">
-        <img id="spotlight-2-bg" alt="Spotlight Series Background" class="w-full h-full object-cover object-center filter brightness-60 contrast-110 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl6Na-QENU3u7AALAj_7Uof9EUz2X2RxWH41iWyEYEOKny1v8nwewse5Kwxbbo8p4TZZkV2HxZ5PCpkiYnDZNkqXR4EaHfm4Pa_Bm5B6EKBmgyH5X8H_8yBTpBOozLuz3pTq-dfy58MvgspVUlwxSvwGKTEqFZccpnXeaqvhd2wxEA0j3Sz11vUFLSi0V9OBSJn_AEkwvWAtV_GkF6lNp_z5KO4q-1zdu6fXvJU4wIs2VAFeqatDqfwg"/>
+        <img id="spotlight-2-bg" alt="Spotlight Series Background" class="w-full h-full object-cover object-top filter brightness-60 contrast-110 transition-all duration-700" style="object-position: top center;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl6Na-QENU3u7AALAj_7Uof9EUz2X2RxWH41iWyEYEOKny1v8nwewse5Kwxbbo8p4TZZkV2HxZ5PCpkiYnDZNkqXR4EaHfm4Pa_Bm5B6EKBmgyH5X8H_8yBTpBOozLuz3pTq-dfy58MvgspVUlwxSvwGKTEqFZccpnXeaqvhd2wxEA0j3Sz11vUFLSi0V9OBSJn_AEkwvWAtV_GkF6lNp_z5KO4q-1zdu6fXvJU4wIs2VAFeqatDqfwg"/>
         <div class="absolute inset-0 flash-glow"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/80 to-transparent"></div>
       </div>
-      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center w-full">
         <div class="lg:col-span-7 max-w-xl">
           <h2 id="spotlight-2-title" class="text-2xl sm:text-3xl md:text-5xl font-cinematic font-black text-white leading-tight tracking-wider">
             THE FLASH :<br/>SEASON 9
@@ -641,7 +652,8 @@
         <img id="anime-hero-bg-img" 
              src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1920" 
              alt="Anime Spotlight" 
-             class="w-full h-full object-cover object-center filter brightness-[0.68] contrast-[1.08] transition-all duration-700"/>
+             class="w-full h-full object-cover object-top filter brightness-[0.68] contrast-[1.08] transition-all duration-700"
+             style="object-position: top center;"/>
         <div class="absolute inset-0 bg-gradient-to-t from-[#08080a] via-[#08080a]/65 to-transparent"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#08080a] via-[#08080a]/75 to-transparent"></div>
         <div class="crt-scanlines absolute inset-0 opacity-20 pointer-events-none"></div>
@@ -854,7 +866,7 @@
     <main class="relative min-h-[calc(100vh-80px)] flex flex-col justify-center px-4 sm:px-6 md:px-14 pb-12">
       <!-- Background Backdrop with CRT Scanline & Atmospheric Glow -->
       <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <img id="detail-bg-img" alt="Backdrop" class="w-full h-full object-cover object-center filter brightness-[0.75] contrast-[1.08] transition-all duration-700"/>
+        <img id="detail-bg-img" alt="Backdrop" class="w-full h-full object-cover object-top filter brightness-[0.75] contrast-[1.08] transition-all duration-700" style="object-position: top center;"/>
         <div class="absolute inset-0 bg-gradient-to-r from-black/95 via-black/60 to-black/85"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/30"></div>
         <div class="crt-scanlines absolute inset-0 opacity-25"></div>
@@ -1816,11 +1828,23 @@
         catalogMovies = movies;
         catalogSeries = series;
 
-        // Populate Hero with high-rated item
-        const topItem = movies[0] || series[0];
-        if (topItem) {
-          heroSubject = topItem;
-          populateHeroBanner(topItem);
+        // Populate Hero Auto-Carousel (5 diverse featured movies & series)
+        const featuredPool = [
+          movies[0],
+          series[0],
+          movies[1],
+          series[1] || movies[3],
+          movies[2]
+        ].filter(Boolean);
+
+        if (featuredPool.length > 0) {
+          initHeroCarousel(featuredPool);
+        } else {
+          const topItem = movies[0] || series[0];
+          if (topItem) {
+            heroSubject = topItem;
+            populateHeroBanner(topItem);
+          }
         }
 
         // Populate Dynamic Spotlights (Movies & Series)
@@ -1835,35 +1859,218 @@
       }
     }
 
-    function populateHeroBanner(item) {
-      document.getElementById('hero-title').innerHTML = escapeHtml(item.title || item.subjectName || "Featured").replace(":", "<br/>");
-      document.getElementById('hero-release').textContent = `${item.year || '2023'} • ${item.subjectType === 2 ? 'TV SERIES' : '4K UHD'}`;
-      document.getElementById('hero-rating').textContent = `${(item.score || 8.2).toFixed(1)} RATING`;
+    // -------------------------------------------------------------
+    // HERO AUTO-CYCLE CAROUSEL & ANIMATED DOTTED TIMER BAR
+    // -------------------------------------------------------------
+    let heroFeaturedItems = [];
+    let currentHeroIndex = 0;
+    const HERO_TIMER_DURATION_MS = 7500; // 7.5 seconds (within 5-10s requirement)
+    const HERO_TICK_INTERVAL_MS = 50;   // 50ms smooth 60fps timer updates
+    let heroElapsedMs = 0;
+    let heroTimerInterval = null;
+    let isHeroHovered = false;
+
+    function initHeroCarousel(items) {
+      if (!Array.isArray(items) || items.length === 0) return;
+      heroFeaturedItems = items.slice(0, 5);
+      currentHeroIndex = 0;
       
-      const img = item.cover?.url || item.thumbnail || "https://lh3.googleusercontent.com/aida-public/AB6AXuAmHP4G7tciaNtl9zkfB-hi3Gvnrb1TlHg8WiHwgapYUmmr8MenuAapmL9r5lj2gH8xa9OfRTFT4KUxUIuS-PaB56myG-olMmY55JhZhvSyVq2iLgsBIbL7Lh03xh9AeCLta6m4t2MEs_KB4OFNpk40ZOgwPMq26bkIOFgPqVafN09IKMbz7j2bUDVMuqfyCNVv--SrC5R2t28DRYNO6_xk8QeomvClPC3mAJWYvwRnG4JlAXLHwQT-JQ";
-      document.getElementById('hero-bg-img').src = img;
+      const heroSection = document.getElementById('home-hero-section');
+      if (heroSection && !heroSection._hasHoverListeners) {
+        heroSection._hasHoverListeners = true;
+        heroSection.addEventListener('mouseenter', () => {
+          isHeroHovered = true;
+          const cd = document.getElementById('hero-timer-countdown');
+          if (cd) cd.textContent = 'PAUSED ⏸';
+        });
+        heroSection.addEventListener('mouseleave', () => {
+          isHeroHovered = false;
+        });
+      }
 
-      // Stills Strip
-      const strip = document.getElementById('hero-stills-strip');
-      strip.innerHTML = '';
-      const sampleStills = [
-        item.cover?.url,
-        catalogMovies[1]?.cover?.url,
-        catalogSeries[0]?.cover?.url,
-        catalogMovies[2]?.cover?.url,
-        catalogSeries[1]?.cover?.url
-      ].filter(Boolean);
+      renderHeroDottedBar();
+      renderHeroStillsStrip();
+      switchHeroSlide(0, false);
+      startHeroTimer();
+    }
 
-      sampleStills.slice(0, 5).forEach((url, idx) => {
-        const div = document.createElement('div');
-        div.className = `overflow-hidden rounded-xl border ${idx === 0 ? 'border-2 border-[#0075ff] shadow-lg shadow-blue-500/20' : 'border-white/20'} aspect-video group cursor-pointer`;
-        div.innerHTML = `<img src="${url}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300"/>`;
-        div.onclick = () => {
-          if (idx === 0) showDetailView(item);
-          else if (catalogMovies[idx]) showDetailView(catalogMovies[idx]);
+    function renderHeroDottedBar() {
+      const barContainer = document.getElementById('hero-dotted-bar');
+      if (!barContainer) return;
+      barContainer.innerHTML = '';
+
+      heroFeaturedItems.forEach((item, idx) => {
+        const isActive = (idx === currentHeroIndex);
+        const segment = document.createElement('div');
+        segment.className = 'hero-dot-segment cursor-pointer flex items-center group py-1 select-none';
+        segment.title = item.title || item.subjectName || `Slide ${idx + 1}`;
+        segment.onclick = (e) => {
+          e.stopPropagation();
+          switchHeroSlide(idx, true);
         };
+
+        if (isActive) {
+          // Expanded active capsule with smooth animated loading timer bar
+          segment.innerHTML = `
+            <div class="relative h-2 sm:h-2.5 w-16 sm:w-24 rounded-full bg-white/20 border border-white/30 overflow-hidden shadow-[0_0_12px_rgba(245,197,24,0.35)]">
+              <div id="hero-active-loading-bar" class="h-full bg-gradient-to-r from-[#f5c518] via-amber-300 to-[#f5c518] rounded-full transition-[width] duration-75 ease-linear" style="width: 0%;"></div>
+            </div>
+          `;
+        } else {
+          // Clean inactive capsule segment
+          const isPassed = idx < currentHeroIndex;
+          segment.innerHTML = `
+            <div class="h-2 sm:h-2.5 w-6 sm:w-8 rounded-full ${isPassed ? 'bg-[#f5c518]/60' : 'bg-white/25 group-hover:bg-white/45'} border border-white/10 transition-all duration-300"></div>
+          `;
+        }
+        barContainer.appendChild(segment);
+      });
+    }
+
+    function renderHeroStillsStrip() {
+      const strip = document.getElementById('hero-stills-strip');
+      if (!strip) return;
+      strip.innerHTML = '';
+
+      heroFeaturedItems.forEach((item, idx) => {
+        const isActive = (idx === currentHeroIndex);
+        const url = item.cover?.url || item.thumbnail || "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400";
+        const title = item.title || item.subjectName || "Featured";
+
+        const div = document.createElement('div');
+        div.className = `overflow-hidden rounded-xl border-2 ${isActive ? 'border-[#f5c518] ring-2 ring-[#f5c518]/50 shadow-lg shadow-amber-500/30 scale-[1.03]' : 'border-white/20 hover:border-white/60 opacity-80 hover:opacity-100'} aspect-video group cursor-pointer transition-all duration-300 relative select-none`;
+        div.onclick = (e) => {
+          e.stopPropagation();
+          switchHeroSlide(idx, true);
+        };
+        div.innerHTML = `
+          <img src="${url}" alt="${escapeHtml(title)}" class="w-full h-full object-cover object-top group-hover:scale-110 transition duration-300"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-1 left-1.5 right-1.5 pointer-events-none">
+            <p class="text-[10px] font-bold text-white truncate drop-shadow">${escapeHtml(title)}</p>
+          </div>
+        `;
         strip.appendChild(div);
       });
+    }
+
+    function switchHeroSlide(idx, restartTimer = true) {
+      if (idx < 0 || idx >= heroFeaturedItems.length) return;
+      currentHeroIndex = idx;
+      const item = heroFeaturedItems[currentHeroIndex];
+      heroSubject = item;
+
+      // Smooth crossfade transition
+      const heroBg = document.getElementById('hero-bg-img');
+      const heroContent = document.querySelector('#home-hero-section > div.relative.z-10.max-w-2xl');
+
+      if (heroBg) {
+        heroBg.style.opacity = '0.5';
+      }
+      if (heroContent) {
+        heroContent.style.opacity = '0.7';
+        heroContent.style.transition = 'opacity 250ms ease';
+      }
+
+      setTimeout(() => {
+        // Update Title
+        const titleEl = document.getElementById('hero-title');
+        if (titleEl) {
+          titleEl.innerHTML = escapeHtml(item.title || item.subjectName || "Featured").replace(":", "<br/>");
+        }
+
+        // Update Tagline / Release
+        const releaseEl = document.getElementById('hero-release');
+        if (releaseEl) {
+          releaseEl.textContent = `${item.year || '2024'} • ${item.subjectType === 2 ? 'TV SERIES' : '4K UHD'}`;
+        }
+        const taglineEl = document.getElementById('hero-tagline');
+        if (taglineEl) {
+          taglineEl.textContent = item.genre ? `${item.genre} • Spotlight` : (item.subjectType === 2 ? "Binge the complete series." : "A quest to save her world.");
+        }
+
+        // Update Rating
+        const ratingEl = document.getElementById('hero-rating');
+        if (ratingEl) {
+          ratingEl.textContent = `${(item.score || 8.4).toFixed(1)} RATING`;
+        }
+
+        // Update Synopsis
+        const synopsisEl = document.getElementById('hero-synopsis');
+        if (synopsisEl) {
+          synopsisEl.textContent = item.description || item.synopsis || "Now streaming in ultra high definition exclusively on CineFlow.";
+        }
+
+        // Update Backdrop Image with object-top anchoring
+        const img = item.cover?.url || item.thumbnail || "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1920";
+        if (heroBg) {
+          heroBg.src = img;
+          heroBg.style.objectPosition = "top center";
+          heroBg.style.opacity = '1';
+        }
+        if (heroContent) {
+          heroContent.style.opacity = '1';
+        }
+
+        // Re-render Dotted Bar & Thumbnails active state
+        renderHeroDottedBar();
+        renderHeroStillsStrip();
+      }, 150);
+
+      if (restartTimer) {
+        heroElapsedMs = 0;
+        updateTimerDisplay();
+      }
+    }
+
+    function startHeroTimer() {
+      if (heroTimerInterval) clearInterval(heroTimerInterval);
+      heroElapsedMs = 0;
+
+      heroTimerInterval = setInterval(() => {
+        // Do not advance if user hovers or hero section / home screen is hidden
+        const heroSection = document.getElementById('home-hero-section');
+        const screenHome = document.getElementById('screen-home');
+        if (isHeroHovered || document.hidden || (heroSection && heroSection.classList.contains('hidden')) || (screenHome && screenHome.classList.contains('hidden'))) {
+          return;
+        }
+
+        heroElapsedMs += HERO_TICK_INTERVAL_MS;
+        if (heroElapsedMs >= HERO_TIMER_DURATION_MS) {
+          heroElapsedMs = 0;
+          // Switch to next slide
+          const nextIdx = (currentHeroIndex + 1) % (heroFeaturedItems.length || 1);
+          switchHeroSlide(nextIdx, false);
+        } else {
+          updateTimerDisplay();
+        }
+      }, HERO_TICK_INTERVAL_MS);
+    }
+
+    function updateTimerDisplay() {
+      const progressPercent = Math.min(100, (heroElapsedMs / HERO_TIMER_DURATION_MS) * 100);
+      const activeBar = document.getElementById('hero-active-loading-bar');
+      if (activeBar) {
+        activeBar.style.width = `${progressPercent}%`;
+      }
+
+      const cd = document.getElementById('hero-timer-countdown');
+      if (cd && !isHeroHovered) {
+        const remainingSec = Math.ceil((HERO_TIMER_DURATION_MS - heroElapsedMs) / 1000);
+        cd.textContent = `${remainingSec}s`;
+      }
+    }
+
+    function populateHeroBanner(item) {
+      if (heroFeaturedItems.length > 0) {
+        const foundIdx = heroFeaturedItems.findIndex(it => (it.subjectId || it.id) === (item.subjectId || item.id));
+        if (foundIdx !== -1) {
+          switchHeroSlide(foundIdx, true);
+          return;
+        }
+      }
+      heroFeaturedItems = [item];
+      initHeroCarousel([item]);
     }
 
     function openHeroPlay() {
