@@ -3,6 +3,7 @@ import sys
 import json
 import time
 import gzip
+import re
 import urllib.request
 import urllib.parse
 from typing import Dict, List, Any, Optional
@@ -10,10 +11,18 @@ from typing import Dict, List, Any, Optional
 ANILIST_GQL = "https://graphql.anilist.co"
 MIRURO_HOST = "https://www.miruro.bz"
 
+# External API executor hook (connected from app.py)
+_api_executor = None
+
+def set_api_executor(func):
+    global _api_executor
+    _api_executor = func
+
 # In-memory caches
 _catalog_cache = None
 _catalog_cache_time = 0
 _anime_details_cache: Dict[int, Any] = {}
+_anime_aoneroom_cache: Dict[str, Any] = {}
 _miruro_id_cache: Dict[int, str] = {}
 _episodes_cache: Dict[str, Any] = {}
 _play_stream_cache: Dict[str, Any] = {}
@@ -505,79 +514,150 @@ def get_anime_details(anilist_id: int) -> dict:
         "relations": []
     }
 
+def get_clean_titles(title: str) -> List[str]:
+    candidates = []
+    cleaned = title.strip()
+    candidates.append(cleaned)
+    
+    # 1. Season/part removal: "Attack on Titan Season 3 Part 2" -> "Attack on Titan"
+    season_clean = re.sub(r'(?i)\s+(season|part|arc|cour|the final season|\d+(st|nd|rd|th)\s+season).*', '', cleaned).strip()
+    if len(season_clean) >= 3 and season_clean not in candidates:
+        candidates.append(season_clean)
+
+    # 2. Parentheses removal: "Hunter x Hunter (2011)" -> "Hunter x Hunter"
+    paren_clean = re.sub(r'[\(\[\{].*?[\)\]\}]', '', cleaned).strip()
+    if len(paren_clean) >= 3 and paren_clean not in candidates:
+        candidates.append(paren_clean)
+
+    # 3. Colon subtitle removal: "BLEACH: Thousand-Year Blood War" -> "BLEACH"
+    if ":" in cleaned:
+        prefix = cleaned.split(":")[0].strip()
+        if len(prefix) >= 3 and prefix not in candidates:
+            candidates.append(prefix)
+            
+    # 4. Dash removal: "One Piece - Fishman Island" -> "One Piece"
+    if " - " in cleaned:
+        prefix = cleaned.split(" - ")[0].strip()
+        if len(prefix) >= 3 and prefix not in candidates:
+            candidates.append(prefix)
+
+    return candidates
+
+def find_aoneroom_anime(title: str, is_dub: bool = False) -> Optional[dict]:
+    if not _api_executor:
+        return None
+    cache_key = f"{title.lower()}_{is_dub}"
+    if cache_key in _anime_aoneroom_cache:
+        return _anime_aoneroom_cache[cache_key]
+
+    candidates = get_clean_titles(title)
+    search_queries = []
+    if is_dub:
+        for c in candidates:
+            search_queries.append(f"{c} English")
+    for c in candidates:
+        search_queries.append(c)
+
+    seen = set()
+    for q in search_queries:
+        if q.lower() in seen:
+            continue
+        seen.add(q.lower())
+        try:
+            res = _api_executor('/wefeed-tv-bff/search/result', f'keyword={urllib.parse.quote(q)}&page=1&perPage=5&subjectType=0')
+            items = res.get('data', {}).get('items', [])
+            for it in items:
+                if not it.get('hasResource'):
+                    continue
+                it_title = it.get('title', '')
+                for c in candidates:
+                    if c.lower() in it_title.lower() or it_title.lower() in c.lower():
+                        _anime_aoneroom_cache[cache_key] = it
+                        return it
+        except Exception as e:
+            print(f"[AnimeEngine] Error searching AoneRoom for {q}: {e}")
+            continue
+
+    _anime_aoneroom_cache[cache_key] = None
+    return None
+
 def resolve_miruro_id(anilist_id: int) -> Optional[str]:
-    """Resolves Miruro internal anime ID using /api/v1/anime?anilist_id_in={id}&limit=100."""
-    if anilist_id in _miruro_id_cache:
-        return _miruro_id_cache[anilist_id]
-
-    # Dragon Ball Special Match
-    if anilist_id == 223:
-        _miruro_id_cache[anilist_id] = "rqxAbYshiv3CtbJ4cetuZ-yKIe2Cyjqr"
-        return "rqxAbYshiv3CtbJ4cetuZ-yKIe2Cyjqr"
-
-    url = f"{MIRURO_HOST}/api/v1/anime?anilist_id_in={anilist_id}&limit=100"
-    try:
-        req = urllib.request.Request(url, headers=miruro_headers())
-        with urllib.request.urlopen(req, timeout=7) as r:
-            payload = json.loads(decode_miruro_payload(r.read(), r.headers.get("Content-Type", "")))
-            items = payload.get("data", [])
-            if items:
-                m_id = items[0].get("id")
-                if m_id:
-                    _miruro_id_cache[anilist_id] = m_id
-                    return m_id
-    except Exception as e:
-        print(f"[AnimeEngine] Error resolving Miruro ID for {anilist_id}: {e}")
-
+    """Compatibility stub."""
     return None
 
 def get_anime_episodes(anilist_id: int, fallback_poster: str = "") -> List[dict]:
-    """Fetches full episode roster from Miruro API with titles, TMDB stills, and skip times."""
+    """Fetches full episode roster instantly without blocking timeouts."""
     cache_key = str(anilist_id)
     if cache_key in _episodes_cache:
         return _episodes_cache[cache_key]
 
-    miruro_id = resolve_miruro_id(anilist_id)
+    details = get_anime_details(anilist_id)
+    title = details.get("title", "Anime")
     episodes = []
 
-    if miruro_id:
-        url = f"{MIRURO_HOST}/api/v1/anime/{miruro_id}/episodes?limit=10000"
-        try:
-            req = urllib.request.Request(url, headers=miruro_headers())
-            with urllib.request.urlopen(req, timeout=8) as r:
-                payload = json.loads(decode_miruro_payload(r.read(), r.headers.get("Content-Type", "")))
-                raw_eps = payload.get("data", [])
-                for ep in raw_eps:
-                    ep_num = ep.get("number") or ep.get("episode") or len(episodes) + 1
-                    ep_title = ep.get("title") or f"Episode {ep_num}"
-                    ep_thumb = ep.get("thumbnail_url") or fallback_poster or "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400"
-                    ep_desc = ep.get("overview") or ep.get("description") or f"Episode {ep_num} of Season 1"
-                    skip_times = ep.get("skip_times") or []
-                    
+    # 1. Try to fetch real episode metadata from native AoneRoom CDN
+    if _api_executor:
+        # Dragon Ball Special Case
+        if anilist_id == 223 or "dragonball" in title.lower():
+            db_sid = "5616484647824673120"
+            try:
+                s_info = _api_executor('/wefeed-tv-bff/subject/season-info', f'subjectId={db_sid}')
+                seasons = s_info.get('data', {}).get('seasons', [])
+                max_eps = seasons[0].get('maxEp', 153) if seasons else 153
+                thumb = details.get("cover", {}).get("url") or fallback_poster or "https://image.tmdb.org/t/p/w500/2RSrQ82HNbBBVM3omiHObQ0EvqI.jpg"
+                for i in range(1, max_eps + 1):
                     episodes.append({
                         "se": 1,
-                        "epNumber": ep_num,
-                        "title": f"{String_pad(ep_num)}. {ep_title}" if not str(ep_title).startswith(f"{String_pad(ep_num)}.") else ep_title,
+                        "epNumber": i,
+                        "title": f"{String_pad(i)}. Secret of the Dragon Balls" if i == 1 else f"{String_pad(i)}. Episode {i}",
                         "runtime": "24 MIN",
-                        "synopsis": ep_desc,
-                        "thumbnail": ep_thumb,
-                        "skip_times": skip_times
+                        "synopsis": f"Episode {i} of Dragon Ball",
+                        "thumbnail": thumb,
+                        "skip_times": []
                     })
-        except Exception as e:
-            print(f"[AnimeEngine] Error fetching Miruro episodes for {anilist_id}: {e}")
+            except Exception as e:
+                print(f"[AnimeEngine] Error resolving Dragon Ball episodes: {e}")
 
-    # Fallback if Miruro episode roster is empty: build based on anime details episode count
+        if not episodes:
+            match = find_aoneroom_anime(title, is_dub=False)
+            if match:
+                sid = match.get("subjectId")
+                try:
+                    s_info = _api_executor('/wefeed-tv-bff/subject/season-info', f'subjectId={sid}')
+                    seasons = s_info.get('data', {}).get('seasons', [])
+                    max_eps = 0
+                    for s in seasons:
+                        max_eps = max(max_eps, s.get('maxEp', 0))
+                    if max_eps == 0 and seasons:
+                        max_eps = seasons[0].get('maxEp', 0)
+                    
+                    if max_eps > 0:
+                        thumb = details.get("cover", {}).get("url") or fallback_poster
+                        for i in range(1, max_eps + 1):
+                            ep_title = f"{String_pad(i)}. Episode {i}"
+                            episodes.append({
+                                "se": 1,
+                                "epNumber": i,
+                                "title": ep_title,
+                                "runtime": "24 MIN",
+                                "synopsis": f"Episode {i} of {title}",
+                                "thumbnail": thumb,
+                                "skip_times": []
+                            })
+                except Exception as e:
+                    print(f"[AnimeEngine] Error resolving AoneRoom episodes for {title}: {e}")
+
+    # Fallback: Instant generation using anime details or local index count (0ms)
     if not episodes:
-        details = get_anime_details(anilist_id)
         max_eps = details.get("episodes") or 12
-        thumb = details.get("cover", {}).get("url") or fallback_poster
+        thumb = details.get("cover", {}).get("url") or fallback_poster or "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400"
         for i in range(1, max_eps + 1):
             episodes.append({
                 "se": 1,
                 "epNumber": i,
                 "title": f"{String_pad(i)}. Episode {i}",
                 "runtime": "24 MIN",
-                "synopsis": f"Episode {i} of {details.get('title', 'Anime')}",
+                "synopsis": f"Episode {i} of {title}",
                 "thumbnail": thumb,
                 "skip_times": []
             })
@@ -588,8 +668,8 @@ def get_anime_episodes(anilist_id: int, fallback_poster: str = "") -> List[dict]
 def String_pad(n: int) -> str:
     return str(n).zfill(2)
 
-def resolve_anime_stream(anilist_id: int, ep: int = 1, is_dub: bool = True) -> dict:
-    """Dynamically resolves fresh playable HLS stream and Origin/Referer headers from Miruro."""
+def resolve_anime_stream(anilist_id: int, ep: int = 1, is_dub: bool = True) -> Optional[dict]:
+    """Dynamically resolves fresh playable stream from native high-speed CDN without freezing."""
     cache_key = f"{anilist_id}_{ep}_{is_dub}"
     now = time.time()
     if cache_key in _play_stream_cache:
@@ -597,74 +677,72 @@ def resolve_anime_stream(anilist_id: int, ep: int = 1, is_dub: bool = True) -> d
         if now - cached_time < 1800:
             return cached_val
 
-    miruro_id = resolve_miruro_id(anilist_id)
-    if miruro_id:
-        url = f"{MIRURO_HOST}/api/v1/anime/{miruro_id}/episodes/{ep}/play"
-        try:
-            req = urllib.request.Request(url, headers=miruro_headers())
-            with urllib.request.urlopen(req, timeout=8) as r:
-                payload = json.loads(decode_miruro_payload(r.read(), r.headers.get("Content-Type", "")))
-                wanted_track = "dub" if is_dub else "sub"
-                provider_priority = {"icarus": 1, "anikoto": 2, "aniwaves": 3, "animepahe": 4}
-                
-                # Preferred providers: prioritize icarus (Anilili native ultracloud CDN)
-                for track_obj in payload.get("tracks", []):
-                    if track_obj.get("track") == wanted_track:
-                        sorted_providers = sorted(
-                            track_obj.get("providers", []),
-                            key=lambda p: provider_priority.get(p.get("provider"), 99)
-                        )
-                        for p in sorted_providers:
-                            for s in p.get("servers", []):
-                                if s.get("streams"):
-                                    st_url = s["streams"][0]["url"]
-                                    h = s.get("headers", {})
-                                    res = {
-                                        "url": st_url,
-                                        "origin": h.get("Origin", "https://ultracloud.cc"),
-                                        "referer": h.get("Referer", "https://ultracloud.cc/"),
-                                        "provider": p.get("provider"),
-                                        "server": s.get("server"),
-                                        "track": wanted_track
-                                    }
-                                    _play_stream_cache[cache_key] = (now, res)
-                                    return res
+    # 1. Dragon Ball Special Handling
+    if anilist_id == 223:
+        if _api_executor:
+            db_sid = "5616484647824673120" if is_dub else "5971941144341667848"
+            try:
+                p = _api_executor('/wefeed-tv-bff/subject/play-info/v2', f'subjectId={db_sid}&se=1&ep={ep}')
+                streams = p.get('data', {}).get('streams', [])
+                if streams:
+                    st = streams[0]
+                    res = {
+                        "url": st.get("url"),
+                        "cookie": st.get("signCookie", ""),
+                        "format": "DASH" if ".mpd" in st.get("url", "") else "HLS",
+                        "resolutions": st.get("resolutions", "1080p,720p,480p"),
+                        "provider": "aoneroom-native",
+                        "server": "cdn-1",
+                        "track": "dub" if is_dub else "sub"
+                    }
+                    _play_stream_cache[cache_key] = (now, res)
+                    return res
+            except Exception as e:
+                print(f"[AnimeEngine] Error resolving Dragon Ball AoneRoom stream: {e}")
 
-                # Fallback to any track available if preferred was not found
-                for track_obj in payload.get("tracks", []):
-                    sorted_providers = sorted(
-                        track_obj.get("providers", []),
-                        key=lambda p: provider_priority.get(p.get("provider"), 99)
-                    )
-                    for p in sorted_providers:
-                        for s in p.get("servers", []):
-                            if s.get("streams"):
-                                st_url = s["streams"][0]["url"]
-                                h = s.get("headers", {})
-                                res = {
-                                    "url": st_url,
-                                    "origin": h.get("Origin", "https://ultracloud.cc"),
-                                    "referer": h.get("Referer", "https://ultracloud.cc/"),
-                                    "provider": p.get("provider"),
-                                    "server": s.get("server"),
-                                    "track": track_obj.get("track")
-                                }
-                                _play_stream_cache[cache_key] = (now, res)
-                                return res
-        except Exception as e:
-            print(f"[AnimeEngine] Error resolving Miruro play stream for {anilist_id} ep {ep}: {e}")
+        # Dragon Ball verified stream fallback (ONLY for Dragon Ball)
+        fallback_url = (
+            "https://fielddewice-31.trail29.top/m/ASBoHpTyH_HbHf1LpHCUWXZQ3NxDMFrGpi3cn8UMpHLxd2TW8nrT_jE_yWnSflFed1nr-Hv-wERqQclSHMZlN_Sj-nHE1ziZ23UupVFLjlIAcfmithVDi6hiUZXo-sLadDj90kQOda_LQAPOke5et4DOPla_O-w4joTGpkAHoChWdO3cp-TmbHfLpeaaurQoVBEcw7vQb9L3TcSdQNu0nzWpc-ZIPB1dXleliaRBMKXLQAvzQAokJ2Y9ZVyqATGFGFSy8wIy-ruVO4Z3D_dQcQw3n6IOHJY13ziXZvBfp6d_vOA9QIHNXAa6V7DBeokLLpT2StVW5bjBOA.m3u8"
+            if is_dub else
+            "https://fielddewice-31.trail29.top/m/AeqxIUu7M8m38YU__LyelHX8KQQH46IrAuoPcxord_g9333dUP7KWF4XrW2eRskRHVS5JoJj93gPDodBzZuwcXUibciMbtDXonFhRrZb1qHK3CiG6zNn5BmGUsC4JBDVZDjb4ab0PSwh-NmtRZB3DfFMouwmYtLgbeG-DRaK3N361W-xrEak0nm16Het8FY-fw_P8BzvAcOKRqFTsjoZW4aG09hjxVMhFYTcrbkCwBaf-JukPE8EFtqsRRCZeXf3cECTTX4qzj9jhjMLwR-AI1dGFbDv_pO1a1IdaB47yxTyUGk1SRkU6FX17m9syo4EwMC0c_mtUmrDYw.m3u8"
+        )
+        return {
+            "url": fallback_url,
+            "origin": "https://ultracloud.cc",
+            "referer": "https://ultracloud.cc/",
+            "provider": "icarus-fallback",
+            "server": "icarus-1",
+            "track": "dub" if is_dub else "sub"
+        }
 
-    # Fallback to Dragon Ball verified stream if all else fails
-    fallback_url = (
-        "https://fielddewice-31.trail29.top/m/ASBoHpTyH_HbHf1LpHCUWXZQ3NxDMFrGpi3cn8UMpHLxd2TW8nrT_jE_yWnSflFed1nr-Hv-wERqQclSHMZlN_Sj-nHE1ziZ23UupVFLjlIAcfmithVDi6hiUZXo-sLadDj90kQOda_LQAPOke5et4DOPla_O-w4joTGpkAHoChWdO3cp-TmbHfLpeaaurQoVBEcw7vQb9L3TcSdQNu0nzWpc-ZIPB1dXleliaRBMKXLQAvzQAokJ2Y9ZVyqATGFGFSy8wIy-ruVO4Z3D_dQcQw3n6IOHJY13ziXZvBfp6d_vOA9QIHNXAa6V7DBeokLLpT2StVW5bjBOA.m3u8"
-        if is_dub else
-        "https://fielddewice-31.trail29.top/m/AeqxIUu7M8m38YU__LyelHX8KQQH46IrAuoPcxord_g9333dUP7KWF4XrW2eRskRHVS5JoJj93gPDodBzZuwcXUibciMbtDXonFhRrZb1qHK3CiG6zNn5BmGUsC4JBDVZDjb4ab0PSwh-NmtRZB3DfFMouwmYtLgbeG-DRaK3N361W-xrEak0nm16Het8FY-fw_P8BzvAcOKRqFTsjoZW4aG09hjxVMhFYTcrbkCwBaf-JukPE8EFtqsRRCZeXf3cECTTX4qzj9jhjMLwR-AI1dGFbDv_pO1a1IdaB47yxTyUGk1SRkU6FX17m9syo4EwMC0c_mtUmrDYw.m3u8"
-    )
-    return {
-        "url": fallback_url,
-        "origin": "https://ultracloud.cc",
-        "referer": "https://ultracloud.cc/",
-        "provider": "icarus-fallback",
-        "server": "icarus-1",
-        "track": "dub" if is_dub else "sub"
-    }
+    # 2. Universal Anime Stream Resolution via AoneRoom CDN
+    if _api_executor:
+        details = get_anime_details(anilist_id)
+        title = details.get("title", "")
+        match = find_aoneroom_anime(title, is_dub=is_dub)
+        if match:
+            sid = match.get("subjectId")
+            try:
+                p = _api_executor('/wefeed-tv-bff/subject/play-info/v2', f'subjectId={sid}&se=1&ep={ep}')
+                streams = p.get('data', {}).get('streams', [])
+                if not streams and ep != 1:
+                    p = _api_executor('/wefeed-tv-bff/subject/play-info/v2', f'subjectId={sid}&se=1&ep=1')
+                    streams = p.get('data', {}).get('streams', [])
+                if streams:
+                    st = streams[0]
+                    res = {
+                        "url": st.get("url"),
+                        "cookie": st.get("signCookie", ""),
+                        "format": "DASH" if ".mpd" in st.get("url", "") else "HLS",
+                        "resolutions": st.get("resolutions", "1080p,720p,480p"),
+                        "provider": "aoneroom-native",
+                        "server": "cdn-1",
+                        "track": "dub" if is_dub else "sub"
+                    }
+                    _play_stream_cache[cache_key] = (now, res)
+                    return res
+            except Exception as e:
+                print(f"[AnimeEngine] Error resolving AoneRoom play stream for {title} (SID {sid}): {e}")
+
+    # No stream found for this anime: Return None (NEVER Dragon Ball for unrelated anime!)
+    return None

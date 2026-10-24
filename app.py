@@ -125,6 +125,7 @@ def srt_to_vtt(srt_text):
 # ANILILI / MIRURO ANIME STREAMING & METADATA ENGINE INTEGRATION
 # ==============================================================================
 import anime_engine
+anime_engine.set_api_executor(execute_api)
 
 DRAGONBALL_IDS = {"dragonball", "223", "dragonball_dub", "dragonball_sub", "rqxAbYshiv3CtbJ4cetuZ-yKIe2Cyjqr"}
 
@@ -542,7 +543,7 @@ def api_play_info(subject_id):
     se = request.args.get("se", "")
     ep = request.args.get("ep", "")
     if is_anime_subject(subject_id):
-        is_dub = not str(subject_id).endswith("_sub")
+        is_dub = str(subject_id).endswith("_dub")
         ep_val = 1
         try:
             ep_val = int(ep) if ep else 1
@@ -550,13 +551,15 @@ def api_play_info(subject_id):
             ep_val = 1
         aid = parse_anime_id(subject_id)
         st_info = anime_engine.resolve_anime_stream(aid, ep=ep_val, is_dub=is_dub)
+        if not st_info or not st_info.get("url"):
+            return jsonify({"code": 404, "message": "No streams found for this anime"}), 404
         return jsonify({
             "code": 0,
             "url": st_info["url"],
-            "cookie": "",
-            "duration": 1450,
-            "resolutions": "1080p,720p,480p",
-            "codec": "h264"
+            "cookie": st_info.get("cookie", ""),
+            "duration": st_info.get("duration", 1450),
+            "resolutions": st_info.get("resolutions", "1080p,720p,480p"),
+            "codec": st_info.get("codec", "h264")
         })
     try:
         data = get_cached_play_info(subject_id, se, ep)
@@ -592,16 +595,16 @@ def api_dubs(subject_id):
         dubs = []
         if has_dub:
             dubs.append({
-                "subjectId": f"{base_id}_dub" if base_id != "dragonball" else "dragonball",
-                "lanName": "English Dub",
-                "lanCode": "en",
+                "subjectId": f"{base_id}_sub",
+                "lanName": "Japanese (Original)",
+                "lanCode": "ja",
                 "original": True,
                 "type": 0
             })
             dubs.append({
-                "subjectId": f"{base_id}_sub",
-                "lanName": "Japanese (Original)",
-                "lanCode": "ja",
+                "subjectId": f"{base_id}_dub" if base_id != "dragonball" else "dragonball",
+                "lanName": "English Dub",
+                "lanCode": "en",
                 "original": False,
                 "type": 0
             })
@@ -728,7 +731,7 @@ def api_stream_mp4(subject_id):
     
     try:
         if is_anime_subject(subject_id):
-            is_dub = not str(subject_id).endswith("_sub")
+            is_dub = str(subject_id).endswith("_dub")
             ep_val = 1
             try:
                 ep_val = int(ep) if ep else 1
@@ -736,11 +739,18 @@ def api_stream_mp4(subject_id):
                 ep_val = 1
             aid = parse_anime_id(subject_id)
             st_info = anime_engine.resolve_anime_stream(aid, ep=ep_val, is_dub=is_dub)
+            if not st_info or not st_info.get("url"):
+                return "Stream not found", 404
             url = st_info["url"]
-            origin = st_info.get("origin", "https://ultracloud.cc")
-            referer = st_info.get("referer", "https://ultracloud.cc/")
-            res_list = ["1080p", "720p", "480p"]
-            headers_flag = f"Origin: {origin}\r\nReferer: {referer}\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\n"
+            is_dash = ".mpd" in url
+            cookie = st_info.get("cookie", "")
+            if is_dash:
+                headers_flag = f"Cookie: {cookie}\r\nUser-Agent: okhttp/4.12.0\r\n"
+            else:
+                origin = st_info.get("origin", "https://ultracloud.cc")
+                referer = st_info.get("referer", "https://ultracloud.cc/")
+                headers_flag = f"Origin: {origin}\r\nReferer: {referer}\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36\r\n"
+            res_list = [r.strip() for r in str(st_info.get("resolutions", "1080p,720p,480p")).split(",") if r.strip()]
         else:
             data = get_cached_play_info(subject_id, se, ep)
             streams = data.get("data", {}).get("streams", [])
@@ -750,18 +760,19 @@ def api_stream_mp4(subject_id):
             stream = streams[0]
             url = stream.get("url")
             cookie = stream.get("signCookie")
+            is_dash = ".mpd" in url
             
             # Determine available resolutions
             res_list = [r.strip() for r in str(stream.get("resolutions", "")).split(",") if r.strip()]
             headers_flag = f"Cookie: {cookie}\r\nUser-Agent: okhttp/4.12.0\r\n"
         
         # For anime HLS streams, allocate sufficient analyzeduration & probesize so audio stream is detected with full codec parameters
-        probe_val = "1500000" if is_anime_subject(subject_id) else "100000"
+        probe_val = "1500000" if (is_anime_subject(subject_id) and not is_dash) else "100000"
         cmd = [
             "ffmpeg",
             "-headers", headers_flag,
         ]
-        if is_anime_subject(subject_id):
+        if is_anime_subject(subject_id) and not is_dash:
             cmd += get_ffmpeg_hls_flags()
         cmd += [
             "-multiple_requests", "1",
@@ -786,8 +797,8 @@ def api_stream_mp4(subject_id):
         if seek_sec > 0:
             cmd += ["-ss", "0"]
         
-        if is_anime_subject(subject_id):
-            # Explicitly map video 0 and audio 0 with bitstream filter for pristine, audible sound
+        if is_anime_subject(subject_id) and not is_dash:
+            # Explicitly map video 0 and audio 0 with bitstream filter for pristine, audible sound (HLS only)
             cmd += [
                 "-map", "0:v:0",
                 "-map", "0:a:0?",
