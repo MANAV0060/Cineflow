@@ -2239,6 +2239,11 @@
       let streamUrl = source.url;
       if (source.worker_key) {
         streamUrl = apiUrl(`/api/livetv/stream?key=${encodeURIComponent(source.worker_key)}`);
+      } else if (streamUrl.startsWith('/api/')) {
+        streamUrl = apiUrl(streamUrl);
+      } else if (streamUrl.startsWith('http://') && window.location.protocol === 'https:') {
+        // Automatically wrap insecure HTTP streams through our secure backend proxy to prevent Mixed Content blocking
+        streamUrl = apiUrl(`/api/livetv/stream?url=${encodeURIComponent(streamUrl)}`);
       }
 
       currentLiveStreamUrl = streamUrl;
@@ -2263,27 +2268,25 @@
           currentLiveSourceIndex = nextIndex;
           setTimeout(() => {
             mountLiveStream(channel, nextIndex);
-          }, 400);
+          }, 800);
         } else {
           setPlayerLoading(false);
-          showFailoverToast(`All ${channel.sources.length} servers for ${channel.name} are offline.`, 'error');
+          showFailoverToast(`All ${channel.sources.length} servers for ${channel.name} are currently offline.`, 'error');
         }
       };
 
-      video.onerror = () => {
-        if (currentLiveChannel && !failoverHandled) {
-          triggerFailover("Video element error");
-        }
-      };
+      // Ensure no premature video.onerror triggers during MSE initialization
+      video.onerror = null;
 
       if (window.Hls && Hls.isSupported()) {
         const hls = new Hls({
           enableWorker: true,
           lowLatencyMode: true,
           liveSyncDurationCount: 3,
-          liveMaxLatencyDurationCount: 6,
-          fragLoadingTimeOut: 12000,
-          manifestLoadingTimeOut: 10000
+          liveMaxLatencyDurationCount: 8,
+          fragLoadingTimeOut: 15000,
+          manifestLoadingTimeOut: 12000,
+          levelLoadingTimeOut: 12000
         });
         window.currentHlsInstance = hls;
 
@@ -2300,17 +2303,23 @@
           updatePlayIcons(true);
         });
 
+        let networkRetries = 0;
         hls.on(Hls.Events.ERROR, (event, data) => {
           if (data.fatal) {
             switch (data.type) {
               case Hls.ErrorTypes.NETWORK_ERROR:
-                console.error("HLS fatal network error encountered:", data);
-                hls.destroy();
-                window.currentHlsInstance = null;
-                triggerFailover(`Network Error (${data.details})`);
+                console.warn("[LiveTV] Fatal network error encountered, attempting reload...", data);
+                if (networkRetries < 2) {
+                  networkRetries++;
+                  hls.startLoad();
+                } else {
+                  hls.destroy();
+                  window.currentHlsInstance = null;
+                  triggerFailover(`Network Error (${data.details})`);
+                }
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
-                console.warn("HLS media error, attempting recovery:", data);
+                console.warn("[LiveTV] Fatal media error, attempting recovery...", data);
                 hls.recoverMediaError();
                 break;
               default:

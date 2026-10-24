@@ -934,7 +934,11 @@ def api_livetv_channels():
 
 @app.route("/api/livetv/stream")
 def api_livetv_stream():
-    """Resolves dynamic Akamai tokens for Sony Network and proxies live HLS playlists."""
+    """
+    Universal Live TV HLS & CORS Proxy.
+    Resolves dynamic tokens (Sony Network), rewrites M3U8 master/child playlists
+    to route all segments through HTTPS, and streams TS chunks with CORS: *.
+    """
     key = request.args.get("key", "").strip()
     raw_url = request.args.get("url", "").strip()
     
@@ -942,25 +946,64 @@ def api_livetv_stream():
     if key:
         target_url = livetv_engine.resolve_stream_url(key)
     elif raw_url:
-        target_url = raw_url
+        target_url = urllib.parse.unquote(raw_url)
         
     if not target_url:
         return jsonify({"code": 400, "error": "Missing stream key or url"}), 400
         
     try:
         req = urllib.request.Request(target_url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "Accept": "*/*",
+            "Connection": "keep-alive"
         })
-        with urllib.request.urlopen(req, context=ctx, timeout=8) as resp:
-            content = resp.read()
-            mimetype = resp.headers.get("Content-Type", "application/vnd.apple.mpegurl")
+        with urllib.request.urlopen(req, context=ctx, timeout=10) as resp:
+            content_type = resp.headers.get("Content-Type", "").lower()
+            data = resp.read()
             
-        res = Response(content, mimetype=mimetype)
-        res.headers["Access-Control-Allow-Origin"] = "*"
-        res.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        return res
+        # Check if response is an M3U8 playlist
+        is_m3u8 = (
+            target_url.endswith(".m3u8") or 
+            "mpegurl" in content_type or 
+            data.startswith(b"#EXTM3U")
+        )
+        
+        if is_m3u8:
+            text = data.decode("utf-8", errors="ignore")
+            rewritten_lines = []
+            for line in text.splitlines():
+                sline = line.strip()
+                if not sline:
+                    rewritten_lines.append(line)
+                elif sline.startswith("#"):
+                    # Check for URI inside #EXT-X-KEY or #EXT-X-MEDIA
+                    if 'URI="' in sline:
+                        import re
+                        def replace_uri(m):
+                            original_uri = m.group(1)
+                            abs_uri = urllib.parse.urljoin(target_url, original_uri)
+                            return f'URI="/api/livetv/stream?url={urllib.parse.quote(abs_uri)}"'
+                        sline = re.sub(r'URI="([^"]+)"', replace_uri, sline)
+                    rewritten_lines.append(sline)
+                else:
+                    # Segment or child playlist URL
+                    abs_url = urllib.parse.urljoin(target_url, sline)
+                    rewritten_lines.append(f"/api/livetv/stream?url={urllib.parse.quote(abs_url)}")
+                    
+            res = Response("\n".join(rewritten_lines), mimetype="application/vnd.apple.mpegurl")
+            res.headers["Access-Control-Allow-Origin"] = "*"
+            res.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            return res
+        else:
+            # Binary media segment (.ts chunk or audio)
+            mimetype = content_type or "video/MP2T"
+            res = Response(data, mimetype=mimetype)
+            res.headers["Access-Control-Allow-Origin"] = "*"
+            res.headers["Cache-Control"] = "public, max-age=10"
+            return res
+            
     except Exception as e:
-        return jsonify({"code": 502, "error": f"Failed fetching live stream: {str(e)}", "target": target_url}), 502
+        return jsonify({"code": 502, "error": f"Failed fetching stream: {str(e)}", "target": target_url}), 502
 
 if __name__ == "__main__":
     os.makedirs("static", exist_ok=True)

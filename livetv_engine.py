@@ -225,8 +225,8 @@ CANONICAL_CHANNELS = [
         "logo": "https://sonypicturesnetworks.com/images/logos/SET-LOGO-HD.png",
         "description": "Sony SET featuring Kaun Banega Crorepati, Indian Idol, The Kapil Sharma Show, CID.",
         "sources": [
-            {"id": "set-s1", "name": "Server 1 — Sony SLIV 1080p HD Token", "url": "/api/livetv/stream?key=set_hd", "quality": "1080p", "isCORS": True},
-            {"id": "set-s2", "name": "Server 2 — Sony Direct SD", "url": "/api/livetv/stream?key=set_sd", "quality": "576p", "isCORS": True}
+            {"id": "set-s1", "name": "Server 1 — Cloud Stream 1080p HD", "url": "https://sonyliv.joker-verse.workers.dev/master.m3u8?id=1000009247&uid=8004188626&pass=61498d15", "quality": "1080p", "isCORS": True},
+            {"id": "set-s2", "name": "Server 2 — Sony SLIV Token HD", "url": "/api/livetv/stream?key=set_hd", "quality": "1080p", "isCORS": True}
         ]
     },
     {
@@ -238,8 +238,8 @@ CANONICAL_CHANNELS = [
         "logo": "https://sonypicturesnetworks.com/images/logos/SONY%20SAB%20HD_WHITE.png",
         "description": "Light-hearted comedy and family dramas including Taarak Mehta Ka Ooltah Chashmah.",
         "sources": [
-            {"id": "sab-s1", "name": "Server 1 — Sony SLIV 1080p HD Token", "url": "/api/livetv/stream?key=sab_hd", "quality": "1080p", "isCORS": True},
-            {"id": "sab-s2", "name": "Server 2 — Sony Direct SD", "url": "/api/livetv/stream?key=sab_sd", "quality": "576p", "isCORS": True}
+            {"id": "sab-s1", "name": "Server 1 — Cloud Stream 1080p HD", "url": "https://sonyliv.joker-verse.workers.dev/master.m3u8?id=1000009248&uid=8004188626&pass=61498d15", "quality": "1080p", "isCORS": True},
+            {"id": "sab-s2", "name": "Server 2 — Sony SLIV Token HD", "url": "/api/livetv/stream?key=sab_hd", "quality": "1080p", "isCORS": True}
         ]
     },
     {
@@ -332,8 +332,8 @@ CANONICAL_CHANNELS = [
         "description": "India's most watched 24x7 Hindi news channel with breaking news coverage.",
         "sources": [
             {"id": "at-s1", "name": "Server 1 — Official InToday 1080p HD", "url": "https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8", "quality": "1080p", "isCORS": True},
-            {"id": "at-s2", "name": "Server 2 — VGCDN Master Live", "url": "https://aajtaklive.vgcdn.net/v1/master/611d79b11b77e2f571934fd80ca1413453772ac7/aajtakhdlive/live.m3u8", "quality": "720p", "isCORS": True},
-            {"id": "at-s3", "name": "Server 3 — Akamai Live CDN", "url": "https://aajtakhdlive-amd.akamaized.net/hls/live/2014415/aajtakhd/aajtakhdlive/live_180p/chunks.m3u8", "quality": "720p", "isCORS": True}
+            {"id": "at-s2", "name": "Server 2 — InToday SD Master", "url": "https://feeds.intoday.in/aajtak/api/aajtak/master.m3u8", "quality": "720p", "isCORS": True},
+            {"id": "at-s3", "name": "Server 3 — Broadcast Live", "url": "http://103.151.60.162:2122/play/a015/index.m3u8?hls", "quality": "576p", "isCORS": True}
         ]
     },
     {
@@ -570,8 +570,8 @@ CANONICAL_CHANNELS = [
         "logo": "https://sonypicturesnetworks.com/images/logos/Sony_Sports_Ten1_HD.png",
         "description": "UEFA Champions League, WWE, Australian Open, and premium live sports.",
         "sources": [
-            {"id": "ten1-s1", "name": "Server 1 — Sony SLIV 1080p HD", "url": "/api/livetv/stream?key=ten1_hd", "quality": "1080p", "isCORS": True},
-            {"id": "ten1-s2", "name": "Server 2 — Sony Sports Ten 5 (Six HD)", "url": "/api/livetv/stream?key=ten5_hd", "quality": "1080p", "isCORS": True}
+            {"id": "ten1-s1", "name": "Server 1 — Cloud Stream 1080p HD", "url": "https://sonyliv.joker-verse.workers.dev/master.m3u8?id=1000009252&uid=8004188626&pass=61498d15", "quality": "1080p", "isCORS": True},
+            {"id": "ten1-s2", "name": "Server 2 — Sony SLIV Token HD", "url": "/api/livetv/stream?key=ten1_hd", "quality": "1080p", "isCORS": True}
         ]
     }
 ]
