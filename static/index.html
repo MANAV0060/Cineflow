@@ -2486,6 +2486,10 @@
       }, 4000);
     }
 
+    function showToast(message, type = 'warning') {
+      showFailoverToast(message, type);
+    }
+
     // Dismiss server dropdown when clicking outside
     document.addEventListener('click', (e) => {
       const triggerWrap = document.getElementById('wrapper-server-trigger');
@@ -4058,6 +4062,10 @@
       selectedEp = epNum;
       selectedSe = seNum || activeDrawerSeason || 1;
 
+      // Cleanly reset subtitle state for new episode
+      currentParsedCues = [];
+      hideSubtitleText();
+
       // Update active skip times for this episode
       const epList = seriesEpisodesBySeason[selectedSe] || [];
       const currentEpObj = epList.find(e => e.epNumber === epNum);
@@ -4980,6 +4988,12 @@
         checkSkipIntroOutro(absoluteCurrent);
       });
 
+      // Synchronize subtitles immediately when seek completes
+      video.addEventListener('seeked', () => {
+        const absoluteCurrent = currentOffsetSeconds + (video.currentTime || 0);
+        renderActiveSubtitle(absoluteCurrent);
+      });
+
       // Accurate Buffered Progress Bar
       video.addEventListener('progress', () => {
         if (!video.buffered || video.buffered.length === 0 || !currentTotalSeconds) return;
@@ -5270,13 +5284,35 @@
         const subRes = await fetch(apiUrl(`/api/subtitles/${rootSubjectId}?se=${selectedSe}&ep=${selectedEp}`));
         const subData = await subRes.json();
         currentCaptions = subData.captions || [];
+
+        // Expose embedded textTracks if present on the video element
+        const video = document.getElementById('videoElement');
+        if (video && video.textTracks && video.textTracks.length > 0) {
+          for (let i = 0; i < video.textTracks.length; i++) {
+            const track = video.textTracks[i];
+            if (track.kind === 'subtitles' || track.kind === 'captions') {
+              const langCode = (track.language || track.label || `embedded-${i}`).toLowerCase();
+              if (!currentCaptions.some(c => (c.language || c.languageCode || '').toLowerCase() === langCode)) {
+                currentCaptions.push({
+                  id: `embedded-${i}`,
+                  language: langCode,
+                  languageCode: langCode,
+                  lanName: track.label || LANG_NAME_MAP[langCode] || `Embedded (${langCode.toUpperCase()})`,
+                  isEmbedded: true,
+                  trackIndex: i
+                });
+              }
+            }
+          }
+        }
+
         populateSubtitlesList(currentCaptions, rootSubjectId);
 
         // If user already had a subtitle language selected, load it for this episode if available
         if (activeSubtitleLang && activeSubtitleLang !== 'off') {
-          const hasLang = currentCaptions.some(c => (c.language || '').toLowerCase() === activeSubtitleLang.toLowerCase() || (c.languageCode || '').toLowerCase() === activeSubtitleLang.toLowerCase());
-          if (hasLang) {
-            loadVttTrack(rootSubjectId, activeSubtitleLang);
+          const matchCap = currentCaptions.find(c => (c.language || c.languageCode || '').toLowerCase() === activeSubtitleLang.toLowerCase());
+          if (matchCap) {
+            loadVttTrack(rootSubjectId, activeSubtitleLang, matchCap);
           } else {
             hideSubtitleText();
           }
@@ -5347,7 +5383,7 @@
       }
 
       captions.forEach(c => {
-        const code = (c.language || 'en').toLowerCase();
+        const code = (c.language || c.languageCode || 'en').toLowerCase();
         const displayName = c.lanName || LANG_NAME_MAP[code] || code.toUpperCase();
         const isActive = (activeSubtitleLang.toLowerCase() === code);
 
@@ -5355,7 +5391,7 @@
         btn.className = `w-full text-left px-3 py-2 rounded-lg ${isActive ? 'bg-primary-container text-white font-bold ring-1 ring-white/20' : 'hover:bg-white/10 text-white/70 hover:text-white'} flex items-center justify-between text-xs cursor-pointer transition-colors`;
         btn.innerHTML = `<span>${escapeHtml(displayName)}</span>${isActive ? '<span class="material-symbols-outlined text-sm text-tertiary">check</span>' : ''}`;
         btn.onclick = () => {
-          loadVttTrack(rootSubjectId, code);
+          loadVttTrack(rootSubjectId, code, c);
           populateSubtitlesList(captions, rootSubjectId);
         };
         subListContainer.appendChild(btn);
@@ -5584,7 +5620,7 @@
       }
     }
 
-    // WebVTT Parser
+    // WebVTT & SRT Universal Parser
     function parseVTT(vttRaw) {
       const cues = [];
       if (!vttRaw) return cues;
@@ -5606,10 +5642,12 @@
             let cueText = lines[i].trim();
             // Remove WebVTT timing tags like <00:00:00.000> and voice tags <v name>
             cueText = cueText.replace(/<(\d\d:[\d:.]+|<\/?v[^>]*>)/gi, '');
+            // Remove HTML styling tags (e.g. <i>, <b>, <font color="...">, </font>)
+            cueText = cueText.replace(/<\/?[a-z][^>]*>/gi, '');
             if (cueText) textParts.push(cueText);
             i++;
           }
-          if (textParts.length > 0 && !isNaN(start) && !isNaN(end)) {
+          if (textParts.length > 0 && !isNaN(start) && !isNaN(end) && end > start) {
             cues.push({ start, end, text: textParts.join('<br>') });
           }
         } else {
@@ -5621,13 +5659,14 @@
 
     function parseVttTimestamp(tStr) {
       if (!tStr) return 0;
-      const parts = tStr.split(':');
+      const clean = tStr.trim().replace(',', '.');
+      const parts = clean.split(':');
       if (parts.length === 3) {
-        return parseFloat(parts[0]) * 3600 + parseFloat(parts[1]) * 60 + parseFloat(parts[2].replace(',', '.'));
+        return parseFloat(parts[0]) * 3600 + parseFloat(parts[1]) * 60 + parseFloat(parts[2]);
       } else if (parts.length === 2) {
-        return parseFloat(parts[0]) * 60 + parseFloat(parts[1].replace(',', '.'));
+        return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
       }
-      return parseFloat(tStr.replace(',', '.')) || 0;
+      return parseFloat(clean) || 0;
     }
 
     function renderActiveSubtitle(currentTimeSec) {
@@ -5658,32 +5697,74 @@
       }
     }
 
-    async function loadVttTrack(subjectId, lang) {
+    async function loadVttTrack(subjectId, lang, captionObj) {
       if (!lang || lang === 'off') {
         removeSubtitles();
         return;
       }
 
       activeSubtitleLang = lang;
-      
+      const video = document.getElementById('videoElement');
+
+      // 1. If embedded track on video element
+      if (captionObj && captionObj.isEmbedded && video && video.textTracks) {
+        currentParsedCues = [];
+        for (let i = 0; i < video.textTracks.length; i++) {
+          if (i === captionObj.trackIndex) {
+            video.textTracks[i].mode = 'showing';
+          } else {
+            video.textTracks[i].mode = 'disabled';
+          }
+        }
+        return;
+      }
+
+      // If embedded tracks exist, hide them so custom high-contrast overlay renders
+      if (video && video.textTracks) {
+        for (let i = 0; i < video.textTracks.length; i++) {
+          video.textTracks[i].mode = 'disabled';
+        }
+      }
+
+      // 2. Resolve fetch URL (prioritize direct proxy if captionObj.url is provided)
+      let fetchUrl = '';
+      if (captionObj && captionObj.url) {
+        fetchUrl = apiUrl(`/api/subtitle-file?url=${encodeURIComponent(captionObj.url)}`);
+      } else {
+        fetchUrl = apiUrl(`/api/vtt/${subjectId}/${lang}.vtt?se=${selectedSe}&ep=${selectedEp}`);
+      }
+
       try {
-        const url = apiUrl(`/api/vtt/${subjectId}/${lang}.vtt?se=${selectedSe}&ep=${selectedEp}`);
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("VTT HTTP Error " + res.status);
+        let res = await fetch(fetchUrl);
+        // Fallback to /api/vtt with url param if direct proxy failed
+        if (!res.ok && captionObj && captionObj.url) {
+          fetchUrl = apiUrl(`/api/vtt/${subjectId}/${lang}.vtt?url=${encodeURIComponent(captionObj.url)}&se=${selectedSe}&ep=${selectedEp}`);
+          res = await fetch(fetchUrl);
+        }
+        // Fallback without direct url
+        if (!res.ok) {
+          fetchUrl = apiUrl(`/api/vtt/${subjectId}/${lang}.vtt?se=${selectedSe}&ep=${selectedEp}`);
+          res = await fetch(fetchUrl);
+        }
+
+        if (!res.ok) throw new Error("Subtitle HTTP Error " + res.status);
         const vttRaw = await res.text();
         currentParsedCues = parseVTT(vttRaw);
         
-        // Add hidden track for browser semantic accessibility without rendering native cues
-        const video = document.getElementById('videoElement');
+        if (!currentParsedCues || currentParsedCues.length === 0) {
+          throw new Error("No subtitle cues found in track");
+        }
+
+        // Add hidden track for browser semantic accessibility without double rendering
         if (video) {
           while (video.getElementsByTagName('track').length > 0) {
             video.removeChild(video.getElementsByTagName('track')[0]);
           }
           const track = document.createElement('track');
           track.kind = 'subtitles';
-          track.label = lang.toUpperCase();
+          track.label = (captionObj?.lanName || lang).toUpperCase();
           track.srclang = lang;
-          track.src = url;
+          track.src = fetchUrl;
           track.default = true;
           video.appendChild(track);
           if (video.textTracks && video.textTracks[0]) {
@@ -5695,9 +5776,10 @@
         const absoluteCurrent = currentOffsetSeconds + (video ? (video.currentTime || 0) : 0);
         renderActiveSubtitle(absoluteCurrent);
       } catch (err) {
-        console.warn("Failed to load VTT track:", err);
+        console.warn("Failed to load subtitle track:", err);
         currentParsedCues = [];
         hideSubtitleText();
+        showToast(`Subtitle track (${lang.toUpperCase()}) unavailable`);
       }
     }
 

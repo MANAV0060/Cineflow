@@ -108,15 +108,23 @@ def execute_api(path, query=""):
         "X-Client-Status": "0"
     }
     req = urllib.request.Request(full_url, headers=headers)
-    with urllib.request.urlopen(req, context=ctx, timeout=12) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    last_err = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, context=ctx, timeout=12) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except Exception as e:
+            last_err = e
+            time.sleep(0.2)
+    raise last_err
 
 def srt_to_vtt(srt_text):
     if not srt_text:
         return "WEBVTT\n\n"
-    if srt_text.strip().startswith("WEBVTT"):
-        return srt_text
-    lines = srt_text.lstrip("\ufeff").replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    clean = srt_text.lstrip("\ufeff").replace("\r\n", "\n").replace("\r", "\n")
+    if clean.strip().startswith("WEBVTT"):
+        return clean
+    lines = clean.split("\n")
     vtt = ["WEBVTT\n"]
     for line in lines:
         if "-->" in line:
@@ -454,41 +462,54 @@ def api_seasons(subject_id):
         return jsonify({"code": 500, "message": str(e)}), 500
 
 _anime_sub_cache = {}
+_vtt_file_cache = {}
+
+KNOWN_ANIME_SIDS = {
+    16498: ["7777395346602609920", "498748951932323152", "6223339262331832232", "1975770531236301600", "8411756968024720848"],  # Attack on Titan
+    101922: ["8598130933641921616", "219436714593502288", "4260168667809336920", "5829592540739160760", "2463166384050702464", "3619725132714887968"],  # Demon Slayer
+    223: ["490443602410232328", "5971941144341667848", "5616484647824673120"],  # Dragon Ball
+    113415: ["1426983370449472560", "1992020214120170824"],  # Jujutsu Kaisen
+    20: ["1975770531236301602", "56988683026712168"]  # Naruto
+}
 
 def get_anime_subtitles(aid, se="1", ep="1"):
     cache_key = f"{aid}_{se}_{ep}"
-    if cache_key in _anime_sub_cache:
+    if cache_key in _anime_sub_cache and _anime_sub_cache[cache_key]:
         return _anime_sub_cache[cache_key]
+
+    candidate_sids = []
+    if aid in KNOWN_ANIME_SIDS:
+        candidate_sids.extend(KNOWN_ANIME_SIDS[aid])
 
     details = anime_engine.get_anime_details(aid)
     title = details.get("title", "")
     match = anime_engine.find_aoneroom_anime(title)
-    if not match:
-        _anime_sub_cache[cache_key] = []
-        return []
+    if match and match.get("subjectId"):
+        base_sid = str(match.get("subjectId"))
+        if base_sid not in candidate_sids:
+            candidate_sids.append(base_sid)
 
-    base_sid = str(match.get("subjectId"))
-    candidate_sids = [base_sid]
-
-    # 1. Collect related SIDs from dub-info
-    try:
-        dub_data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={base_sid}")
-        for it in dub_data.get("data", {}).get("items", []):
-            sid_str = str(it.get("subjectId"))
-            if sid_str and sid_str not in candidate_sids:
-                candidate_sids.append(sid_str)
-    except Exception:
-        pass
+        # 1. Collect related SIDs from dub-info
+        try:
+            dub_data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={base_sid}")
+            for it in dub_data.get("data", {}).get("items", []):
+                sid_str = str(it.get("subjectId"))
+                if sid_str and sid_str not in candidate_sids:
+                    candidate_sids.append(sid_str)
+        except Exception:
+            pass
 
     # 2. Collect search results for anime title
-    try:
-        s_data = execute_api("/wefeed-tv-bff/search/result", f"keyword={urllib.parse.quote(title)}&page=1&perPage=6&subjectType=0")
-        for it in s_data.get("data", {}).get("items", []):
-            sid_str = str(it.get("subjectId"))
-            if sid_str and sid_str not in candidate_sids:
-                candidate_sids.append(sid_str)
-    except Exception:
-        pass
+    if title:
+        try:
+            clean_t = anime_engine.get_clean_titles(title)[0]
+            s_data = execute_api("/wefeed-tv-bff/search/result", f"keyword={urllib.parse.quote(clean_t)}&page=1&perPage=6&subjectType=0")
+            for it in s_data.get("data", {}).get("items", []):
+                sid_str = str(it.get("subjectId"))
+                if sid_str and sid_str not in candidate_sids:
+                    candidate_sids.append(sid_str)
+        except Exception:
+            pass
 
     # 3. Query resource for each candidate SID to find subtitles
     for sid in candidate_sids:
@@ -503,11 +524,12 @@ def get_anime_subtitles(aid, se="1", ep="1"):
                 if items and items[0].get("captions"):
                     captions = items[0].get("captions")
                     _anime_sub_cache[cache_key] = captions
+                    _subtitles_cache[cache_key] = captions
+                    _subtitles_cache[f"anime_{aid}_{se}_{ep}"] = captions
                     return captions
             except Exception:
                 continue
 
-    _anime_sub_cache[cache_key] = []
     return []
 
 _subtitles_cache = {}
@@ -517,7 +539,7 @@ def api_subtitles(subject_id):
     se = request.args.get("se", "1")
     ep = request.args.get("ep", "1")
     cache_key = f"{subject_id}_{se}_{ep}"
-    if cache_key in _subtitles_cache:
+    if cache_key in _subtitles_cache and _subtitles_cache[cache_key]:
         return jsonify({"code": 0, "captions": _subtitles_cache[cache_key]})
 
     captions = []
@@ -564,40 +586,78 @@ def api_subtitles(subject_id):
         _subtitles_cache[cache_key] = captions
     return jsonify({"code": 0, "captions": captions or []})
 
+@app.route("/api/subtitle-file")
+def api_subtitle_file():
+    sub_url = request.args.get("url", "").strip()
+    if not sub_url:
+        return "WEBVTT\n\n", 400
+
+    if sub_url in _vtt_file_cache:
+        return Response(_vtt_file_cache[sub_url], mimetype="text/vtt", headers={"Access-Control-Allow-Origin": "*"})
+
+    try:
+        req = urllib.request.Request(sub_url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) CineFlow/2.0"})
+        with urllib.request.urlopen(req, context=ctx, timeout=12) as r:
+            raw = r.read().decode("utf-8", errors="ignore")
+            vtt = srt_to_vtt(raw)
+            _vtt_file_cache[sub_url] = vtt
+            return Response(vtt, mimetype="text/vtt", headers={"Access-Control-Allow-Origin": "*"})
+    except Exception as e:
+        return f"WEBVTT\n\nNOTE Subtitle fetch error: {e}\n", 500, {"Content-Type": "text/vtt", "Access-Control-Allow-Origin": "*"}
+
 @app.route("/api/vtt/<subject_id>/<lang>.vtt")
 def api_vtt(subject_id, lang):
+    direct_url = request.args.get("url", "").strip()
+    if direct_url:
+        if direct_url in _vtt_file_cache:
+            return Response(_vtt_file_cache[direct_url], mimetype="text/vtt", headers={"Access-Control-Allow-Origin": "*"})
+        try:
+            req = urllib.request.Request(direct_url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) CineFlow/2.0"})
+            with urllib.request.urlopen(req, context=ctx, timeout=12) as r:
+                srt_content = r.read().decode("utf-8", errors="ignore")
+                vtt_content = srt_to_vtt(srt_content)
+                _vtt_file_cache[direct_url] = vtt_content
+                return Response(vtt_content, mimetype="text/vtt", headers={"Access-Control-Allow-Origin": "*"})
+        except Exception as e:
+            return f"WEBVTT\n\nNOTE direct url error: {e}\n", 500, {"Content-Type": "text/vtt", "Access-Control-Allow-Origin": "*"}
+
     se = request.args.get("se", "1")
     ep = request.args.get("ep", "1")
+    cache_key = f"{subject_id}_{se}_{ep}"
     
     captions = []
-    if is_anime_subject(subject_id):
+    if cache_key in _subtitles_cache and _subtitles_cache[cache_key]:
+        captions = _subtitles_cache[cache_key]
+    elif is_anime_subject(subject_id):
         aid = parse_anime_id(subject_id)
-        captions = get_anime_subtitles(aid, se=se, ep=ep)
-    else:
-        cache_key = f"{subject_id}_{se}_{ep}"
-        if cache_key in _subtitles_cache:
-            captions = _subtitles_cache[cache_key]
+        anime_key = f"{aid}_{se}_{ep}"
+        if anime_key in _anime_sub_cache and _anime_sub_cache[anime_key]:
+            captions = _anime_sub_cache[anime_key]
+        elif f"anime_{aid}_{se}_{ep}" in _subtitles_cache:
+            captions = _subtitles_cache[f"anime_{aid}_{se}_{ep}"]
         else:
-            queries = []
-            if se and ep:
-                queries.append(f"page=1&perPage=5&subjectId={subject_id}&se={se}&epFrom={ep}&epTo={ep}")
-            queries.append(f"page=1&perPage=5&subjectId={subject_id}")
-            
-            for query in queries:
-                try:
-                    data = execute_api("/wefeed-tv-bff/subject/resource", query)
-                    items = data.get("data", {}).get("items", [])
-                    if items:
-                        for it in items:
-                            caps = it.get("captions", [])
-                            if caps:
-                                captions = caps
-                                break
-                    if captions:
-                        break
-                except Exception:
-                    continue
-                    
+            captions = get_anime_subtitles(aid, se=se, ep=ep)
+    else:
+        queries = []
+        if se and ep:
+            queries.append(f"page=1&perPage=5&subjectId={subject_id}&se={se}&epFrom={ep}&epTo={ep}")
+        queries.append(f"page=1&perPage=5&subjectId={subject_id}")
+        
+        for query in queries:
+            try:
+                data = execute_api("/wefeed-tv-bff/subject/resource", query)
+                items = data.get("data", {}).get("items", [])
+                if items:
+                    for it in items:
+                        caps = it.get("captions", [])
+                        if caps:
+                            captions = caps
+                            break
+                if captions:
+                    break
+            except Exception:
+                continue
+                
         if not captions:
             try:
                 dub_data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={subject_id}")
@@ -619,16 +679,20 @@ def api_vtt(subject_id, lang):
             target = next((c for c in captions if (c.get("language") or "").lower() == "en"), captions[0])
             
         if not target:
-            return "WEBVTT\n\n", 404
+            return "WEBVTT\n\n", 404, {"Content-Type": "text/vtt", "Access-Control-Allow-Origin": "*"}
             
         url = target.get("url")
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
-        with urllib.request.urlopen(req, context=ctx, timeout=10) as r:
+        if url in _vtt_file_cache:
+            return Response(_vtt_file_cache[url], mimetype="text/vtt", headers={"Access-Control-Allow-Origin": "*"})
+
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) CineFlow/2.0"})
+        with urllib.request.urlopen(req, context=ctx, timeout=12) as r:
             srt_content = r.read().decode("utf-8", errors="ignore")
             vtt_content = srt_to_vtt(srt_content)
-            return Response(vtt_content, mimetype="text/vtt")
+            _vtt_file_cache[url] = vtt_content
+            return Response(vtt_content, mimetype="text/vtt", headers={"Access-Control-Allow-Origin": "*"})
     except Exception as e:
-        return f"WEBVTT\n\nNOTE error: {e}\n", 500
+        return f"WEBVTT\n\nNOTE error: {e}\n", 500, {"Content-Type": "text/vtt", "Access-Control-Allow-Origin": "*"}
 
 _stream_cache = {}
 

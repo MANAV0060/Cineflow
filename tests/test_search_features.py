@@ -15,6 +15,7 @@ def test_search(query):
         print(f"Recommendations ({len(recs)}):", [r.get("title") for r in recs[:3]])
         print()
 
-test_search("Avatar")
-test_search("Spiderman")
-test_search("non_existent_query_xyz")
+if __name__ == '__main__':
+    test_search("Avatar")
+    test_search("Spiderman")
+    test_search("non_existent_query_xyz")
