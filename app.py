@@ -519,7 +519,7 @@ def get_cached_play_info(subject_id, se="", ep=""):
     now = time.time()
     if cache_key in _stream_cache:
         cached_time, cached_data = _stream_cache[cache_key]
-        if now - cached_time < 3600:  # Cache for 1 hour
+        if now - cached_time < 1800:  # Cache for 30 minutes to prevent expired CloudFront signed cookies
             return cached_data
 
     query = f"subjectId={subject_id}"
@@ -528,6 +528,15 @@ def get_cached_play_info(subject_id, se="", ep=""):
 
     data = execute_api("/wefeed-tv-bff/subject/play-info/v2", query)
     streams = data.get("data", {}).get("streams", [])
+
+    # Defensive recovery: if se/ep was passed (e.g. state leak from a TV series to a movie)
+    # and no streams were found, retry query without se/ep
+    if not streams and (se or ep):
+        fallback_data = execute_api("/wefeed-tv-bff/subject/play-info/v2", f"subjectId={subject_id}")
+        if fallback_data.get("data", {}).get("streams"):
+            data = fallback_data
+            streams = data.get("data", {}).get("streams", [])
+
     if not streams and not se and not ep:
         fallback_data = execute_api("/wefeed-tv-bff/subject/play-info/v2", f"subjectId={subject_id}&se=1&ep=1")
         if fallback_data.get("data", {}).get("streams"):
@@ -685,6 +694,7 @@ def api_dubs(subject_id):
 import threading
 
 _active_stream_processes = {}
+_client_stream_processes = {}
 _stream_proc_lock = threading.Lock()
 _ffmpeg_hls_flags = None
 
@@ -715,6 +725,46 @@ def terminate_previous_stream(subject_id):
             except Exception:
                 pass
 
+def terminate_client_stream(client_id):
+    """Terminates any existing ffmpeg remuxing process associated with this client/session."""
+    if not client_id:
+        return
+    with _stream_proc_lock:
+        old_proc = _client_stream_processes.pop(client_id, None)
+        if old_proc:
+            try:
+                old_proc.kill()
+                old_proc.wait(timeout=0.1)
+            except Exception:
+                pass
+
+@app.route("/api/stream/stop", methods=["GET", "POST"])
+def api_stream_stop():
+    """Immediately stops and terminates any running ffmpeg stream process for a given client or subject."""
+    client_id = request.args.get("client_id") or request.form.get("client_id")
+    subject_id = request.args.get("subject_id") or request.form.get("subject_id")
+    terminated = 0
+    with _stream_proc_lock:
+        if client_id and client_id in _client_stream_processes:
+            p = _client_stream_processes.pop(client_id, None)
+            if p:
+                try:
+                    p.kill()
+                    p.wait(timeout=0.1)
+                    terminated += 1
+                except Exception:
+                    pass
+        if subject_id and subject_id in _active_stream_processes:
+            p = _active_stream_processes.pop(subject_id, None)
+            if p:
+                try:
+                    p.kill()
+                    p.wait(timeout=0.1)
+                    terminated += 1
+                except Exception:
+                    pass
+    return jsonify({"status": "ok", "terminated": terminated})
+
 @app.route("/api/stream/<subject_id>/video.mp4")
 def api_stream_mp4(subject_id):
     """
@@ -722,13 +772,16 @@ def api_stream_mp4(subject_id):
     Remuxes CloudFront DASH stream into fragmented MP4 using optimized ffmpeg pipeline.
     Eliminates zombie processes, accelerates initial segment delivery, and enables smooth seeking.
     """
+    client_id = request.args.get("client_id", "")
     se = request.args.get("se", "")
     ep = request.args.get("ep", "")
     start_time = request.args.get("ss", request.args.get("start", "0"))
     requested_res = request.args.get("res", "")
     adelay = request.args.get("adelay", "0")
     
-    # Kill any previous ffmpeg process for this subject before starting a new seek
+    # Kill any previous ffmpeg process for this client and subject before starting a new stream
+    if client_id:
+        terminate_client_stream(client_id)
     terminate_previous_stream(subject_id)
     
     try:
@@ -863,6 +916,8 @@ def api_stream_mp4(subject_id):
         
         with _stream_proc_lock:
             _active_stream_processes[subject_id] = proc
+            if client_id:
+                _client_stream_processes[client_id] = proc
         
         def generate():
             try:
@@ -871,6 +926,8 @@ def api_stream_mp4(subject_id):
                 burst = bytearray()
                 burst_target = 768 * 1024  # ~6 seconds of 1080p video buffer
                 while len(burst) < burst_target:
+                    if proc.poll() is not None:
+                        break
                     chunk = proc.stdout.read(128 * 1024)
                     if not chunk:
                         break
@@ -881,12 +938,16 @@ def api_stream_mp4(subject_id):
                 
                 # Steady-state high-throughput stream pump
                 while True:
+                    if proc.poll() is not None:
+                        break
                     chunk = proc.stdout.read(128 * 1024)
                     if not chunk:
                         break
                     yield chunk
             finally:
                 with _stream_proc_lock:
+                    if client_id and _client_stream_processes.get(client_id) == proc:
+                        _client_stream_processes.pop(client_id, None)
                     if _active_stream_processes.get(subject_id) == proc:
                         _active_stream_processes.pop(subject_id, None)
                 try:
