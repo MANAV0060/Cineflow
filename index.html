@@ -3644,7 +3644,9 @@
       const wrap = document.getElementById('detail-dub-badges');
       wrap.innerHTML = '';
 
-      if (dubs.length > 0) {
+      const hasAlternativeDubs = dubs && dubs.some(d => !d.original);
+
+      if (dubs && dubs.length > 0) {
         dubs.forEach(d => {
           const isHindi = (d.lanCode === 'hi') || (d.lanName && d.lanName.toLowerCase().includes('hindi'));
           const isSelected = activePlaybackSubjectId === d.subjectId || (!activeDubItem && d.original);
@@ -3665,8 +3667,18 @@
           };
           wrap.appendChild(badge);
         });
+
+        if (!hasAlternativeDubs) {
+          const noDubBadge = document.createElement('span');
+          noDubBadge.className = "px-2.5 py-1 rounded-full text-xs font-mono bg-white/5 text-white/50 border border-white/10";
+          noDubBadge.textContent = "Dubbed version not available";
+          wrap.appendChild(noDubBadge);
+        }
       } else {
-        wrap.innerHTML = `<span class="px-2.5 py-1 rounded-full text-xs font-mono bg-white/10 text-white/60">Original Audio (Atmos)</span>`;
+        wrap.innerHTML = `
+          <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-white/10 text-white/70">Original Audio</span>
+          <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-white/5 text-white/50 border border-white/10">Dubbed version not available</span>
+        `;
       }
     }
 
@@ -4492,7 +4504,10 @@
         selectedSe = 1;
         selectedEp = 1;
         currentEpisodeSkipTimes = [];
+        removeSubtitles();
       }
+
+      hideSubtitleText();
 
       const targetSubjectId = activePlaybackSubjectId || actualRootId;
       const title = selectedSubject.title || selectedSubject.subjectName || "Movie";
@@ -5181,6 +5196,7 @@
       } catch (e) {}
 
       if (currentDubs.length > 0) {
+        const hasAlternativeDubs = currentDubs.some(d => !d.original);
         currentDubs.forEach(dub => {
           const isCurrentActive = (activePlaybackSubjectId === dub.subjectId) || (!activeDubItem && dub.original);
           const isHindi = (dub.lanCode === 'hi') || (dub.lanName && dub.lanName.toLowerCase().includes('hindi'));
@@ -5200,11 +5216,23 @@
           };
           dubListContainer.appendChild(btn);
         });
+
+        if (!hasAlternativeDubs) {
+          const notice = document.createElement('div');
+          notice.className = 'text-[11px] text-white/40 italic px-3 py-2 border-t border-white/5 mt-1';
+          notice.textContent = 'Dubbed version not available';
+          dubListContainer.appendChild(notice);
+        }
       } else {
         const origBtn = document.createElement('button');
         origBtn.className = "w-full text-left px-3 py-2.5 rounded-lg bg-white/20 text-white font-bold border border-white/30 flex items-center justify-between text-xs cursor-pointer";
-        origBtn.innerHTML = `<span>Original Audio [Atmos]</span><span class="material-symbols-outlined text-sm text-tertiary">check</span>`;
+        origBtn.innerHTML = `<span>Original Audio</span><span class="material-symbols-outlined text-sm text-tertiary">check</span>`;
         dubListContainer.appendChild(origBtn);
+
+        const notice = document.createElement('div');
+        notice.className = 'text-[11px] text-white/40 italic px-3 py-2 border-t border-white/5 mt-1';
+        notice.textContent = 'Dubbed version not available';
+        dubListContainer.appendChild(notice);
       }
 
       // 2. Subtitles List
@@ -5213,6 +5241,16 @@
         const subData = await subRes.json();
         currentCaptions = subData.captions || [];
         populateSubtitlesList(currentCaptions, rootSubjectId);
+
+        // If user already had a subtitle language selected, load it for this episode if available
+        if (activeSubtitleLang && activeSubtitleLang !== 'off') {
+          const hasLang = currentCaptions.some(c => (c.language || '').toLowerCase() === activeSubtitleLang.toLowerCase() || (c.languageCode || '').toLowerCase() === activeSubtitleLang.toLowerCase());
+          if (hasLang) {
+            loadVttTrack(rootSubjectId, activeSubtitleLang);
+          } else {
+            hideSubtitleText();
+          }
+        }
       } catch (e) {
         populateSubtitlesList([], rootSubjectId);
       }
@@ -5232,6 +5270,7 @@
       'pt': 'Portuguese',
       'ptbr': 'Portuguese (Brazil)',
       'id': 'Indonesian',
+      'in_id': 'Indonesian',
       'fil': 'Filipino',
       'th': 'Thai',
       'vi': 'Vietnamese',
@@ -5243,7 +5282,13 @@
       'ru': 'Russian',
       'ta': 'Tamil',
       'te': 'Telugu',
-      'mr': 'Marathi'
+      'mr': 'Marathi',
+      'ha': 'Hausa',
+      'pa': 'Punjabi',
+      'sw': 'Swahili',
+      'ur': 'Urdu',
+      'tr': 'Turkish',
+      'ms': 'Malay'
     };
 
     function populateSubtitlesList(captions, rootSubjectId) {
@@ -5265,8 +5310,8 @@
       // 2. Caption Tracks
       if (!captions || captions.length === 0) {
         const emptyP = document.createElement('p');
-        emptyP.className = 'text-[11px] text-white/40 italic px-2 py-1';
-        emptyP.textContent = 'No subtitles available';
+        emptyP.className = 'text-[11px] text-white/40 italic px-3 py-2';
+        emptyP.textContent = 'Subtitles not available';
         subListContainer.appendChild(emptyP);
         return;
       }

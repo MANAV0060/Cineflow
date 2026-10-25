@@ -112,7 +112,11 @@ def execute_api(path, query=""):
         return json.loads(resp.read().decode("utf-8"))
 
 def srt_to_vtt(srt_text):
-    lines = srt_text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    if not srt_text:
+        return "WEBVTT\n\n"
+    if srt_text.strip().startswith("WEBVTT"):
+        return srt_text
+    lines = srt_text.lstrip("\ufeff").replace("\r\n", "\n").replace("\r", "\n").split("\n")
     vtt = ["WEBVTT\n"]
     for line in lines:
         if "-->" in line:
@@ -449,63 +453,177 @@ def api_seasons(subject_id):
     except Exception as e:
         return jsonify({"code": 500, "message": str(e)}), 500
 
+_anime_sub_cache = {}
+
+def get_anime_subtitles(aid, se="1", ep="1"):
+    cache_key = f"{aid}_{se}_{ep}"
+    if cache_key in _anime_sub_cache:
+        return _anime_sub_cache[cache_key]
+
+    details = anime_engine.get_anime_details(aid)
+    title = details.get("title", "")
+    match = anime_engine.find_aoneroom_anime(title)
+    if not match:
+        _anime_sub_cache[cache_key] = []
+        return []
+
+    base_sid = str(match.get("subjectId"))
+    candidate_sids = [base_sid]
+
+    # 1. Collect related SIDs from dub-info
+    try:
+        dub_data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={base_sid}")
+        for it in dub_data.get("data", {}).get("items", []):
+            sid_str = str(it.get("subjectId"))
+            if sid_str and sid_str not in candidate_sids:
+                candidate_sids.append(sid_str)
+    except Exception:
+        pass
+
+    # 2. Collect search results for anime title
+    try:
+        s_data = execute_api("/wefeed-tv-bff/search/result", f"keyword={urllib.parse.quote(title)}&page=1&perPage=6&subjectType=0")
+        for it in s_data.get("data", {}).get("items", []):
+            sid_str = str(it.get("subjectId"))
+            if sid_str and sid_str not in candidate_sids:
+                candidate_sids.append(sid_str)
+    except Exception:
+        pass
+
+    # 3. Query resource for each candidate SID to find subtitles
+    for sid in candidate_sids:
+        queries = []
+        if se and ep:
+            queries.append(f"page=1&perPage=5&subjectId={sid}&se={se}&epFrom={ep}&epTo={ep}")
+        queries.append(f"page=1&perPage=5&subjectId={sid}")
+        for q in queries:
+            try:
+                res = execute_api("/wefeed-tv-bff/subject/resource", q)
+                items = res.get("data", {}).get("items", [])
+                if items and items[0].get("captions"):
+                    captions = items[0].get("captions")
+                    _anime_sub_cache[cache_key] = captions
+                    return captions
+            except Exception:
+                continue
+
+    _anime_sub_cache[cache_key] = []
+    return []
+
+_subtitles_cache = {}
+
 @app.route("/api/subtitles/<subject_id>")
 def api_subtitles(subject_id):
+    se = request.args.get("se", "1")
+    ep = request.args.get("ep", "1")
+    cache_key = f"{subject_id}_{se}_{ep}"
+    if cache_key in _subtitles_cache:
+        return jsonify({"code": 0, "captions": _subtitles_cache[cache_key]})
+
+    captions = []
     if is_anime_subject(subject_id):
-        return jsonify({"code": 0, "captions": []})
-    se = request.args.get("se", "")
-    ep = request.args.get("ep", "")
-    queries = []
-    if se and ep:
-        queries.append(f"page=1&perPage=5&subjectId={subject_id}&se={se}&epFrom={ep}&epTo={ep}")
-    queries.append(f"page=1&perPage=5&subjectId={subject_id}")
-    
-    for query in queries:
-        try:
-            data = execute_api("/wefeed-tv-bff/subject/resource", query)
-            items = data.get("data", {}).get("items", [])
-            if items:
-                captions = items[0].get("captions", [])
+        aid = parse_anime_id(subject_id)
+        captions = get_anime_subtitles(aid, se=se, ep=ep)
+    else:
+        queries = []
+        if se and ep:
+            queries.append(f"page=1&perPage=5&subjectId={subject_id}&se={se}&epFrom={ep}&epTo={ep}")
+        queries.append(f"page=1&perPage=5&subjectId={subject_id}")
+        
+        for query in queries:
+            try:
+                data = execute_api("/wefeed-tv-bff/subject/resource", query)
+                items = data.get("data", {}).get("items", [])
+                if items:
+                    for it in items:
+                        caps = it.get("captions", [])
+                        if caps:
+                            captions = caps
+                            break
                 if captions:
-                    return jsonify({"code": 0, "captions": captions})
-        except Exception:
-            continue
-            
-    return jsonify({"code": 0, "captions": []})
+                    break
+            except Exception:
+                continue
+                
+        # If this is an anime dub SID or related SID without its own captions, look in related SIDs
+        if not captions:
+            try:
+                dub_data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={subject_id}")
+                for it in dub_data.get("data", {}).get("items", []):
+                    rel_sid = str(it.get("subjectId"))
+                    if rel_sid != str(subject_id):
+                        res = execute_api("/wefeed-tv-bff/subject/resource", f"page=1&perPage=5&subjectId={rel_sid}&se={se}&epFrom={ep}&epTo={ep}")
+                        r_items = res.get("data", {}).get("items", [])
+                        if r_items and r_items[0].get("captions"):
+                            captions = r_items[0].get("captions")
+                            break
+            except Exception:
+                pass
+
+    if captions:
+        _subtitles_cache[cache_key] = captions
+    return jsonify({"code": 0, "captions": captions or []})
 
 @app.route("/api/vtt/<subject_id>/<lang>.vtt")
 def api_vtt(subject_id, lang):
-    se = request.args.get("se", "")
-    ep = request.args.get("ep", "")
-    queries = []
-    if se and ep:
-        queries.append(f"page=1&perPage=5&subjectId={subject_id}&se={se}&epFrom={ep}&epTo={ep}")
-    queries.append(f"page=1&perPage=5&subjectId={subject_id}")
+    se = request.args.get("se", "1")
+    ep = request.args.get("ep", "1")
     
     captions = []
-    for query in queries:
-        try:
-            data = execute_api("/wefeed-tv-bff/subject/resource", query)
-            items = data.get("data", {}).get("items", [])
-            if items:
-                caps = items[0].get("captions", [])
-                if caps:
-                    captions = caps
-                    break
-        except Exception:
-            continue
+    if is_anime_subject(subject_id):
+        aid = parse_anime_id(subject_id)
+        captions = get_anime_subtitles(aid, se=se, ep=ep)
+    else:
+        cache_key = f"{subject_id}_{se}_{ep}"
+        if cache_key in _subtitles_cache:
+            captions = _subtitles_cache[cache_key]
+        else:
+            queries = []
+            if se and ep:
+                queries.append(f"page=1&perPage=5&subjectId={subject_id}&se={se}&epFrom={ep}&epTo={ep}")
+            queries.append(f"page=1&perPage=5&subjectId={subject_id}")
+            
+            for query in queries:
+                try:
+                    data = execute_api("/wefeed-tv-bff/subject/resource", query)
+                    items = data.get("data", {}).get("items", [])
+                    if items:
+                        for it in items:
+                            caps = it.get("captions", [])
+                            if caps:
+                                captions = caps
+                                break
+                    if captions:
+                        break
+                except Exception:
+                    continue
+                    
+        if not captions:
+            try:
+                dub_data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={subject_id}")
+                for it in dub_data.get("data", {}).get("items", []):
+                    rel_sid = str(it.get("subjectId"))
+                    if rel_sid != str(subject_id):
+                        res = execute_api("/wefeed-tv-bff/subject/resource", f"page=1&perPage=5&subjectId={rel_sid}&se={se}&epFrom={ep}&epTo={ep}")
+                        r_items = res.get("data", {}).get("items", [])
+                        if r_items and r_items[0].get("captions"):
+                            captions = r_items[0].get("captions")
+                            break
+            except Exception:
+                pass
             
     try:
-        target = next((c for c in captions if c.get("language") == lang), None)
+        lang_lower = str(lang).lower()
+        target = next((c for c in captions if (c.get("language") or "").lower() == lang_lower or (c.get("languageCode") or "").lower() == lang_lower), None)
         if not target and captions:
-            target = captions[0]
+            target = next((c for c in captions if (c.get("language") or "").lower() == "en"), captions[0])
             
         if not target:
             return "WEBVTT\n\n", 404
             
         url = target.get("url")
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, context=ctx, timeout=8) as r:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+        with urllib.request.urlopen(req, context=ctx, timeout=10) as r:
             srt_content = r.read().decode("utf-8", errors="ignore")
             vtt_content = srt_to_vtt(srt_content)
             return Response(vtt_content, mimetype="text/vtt")
@@ -589,45 +707,136 @@ def api_play_info(subject_id):
     except Exception as e:
         return jsonify({"code": 500, "message": str(e)}), 500
 
+def get_anime_dubs(aid):
+    # Special case: Dragon Ball
+    if str(aid) in DRAGONBALL_IDS or aid == 223:
+        return [
+            {"subjectId": "5971941144341667848", "lanName": "Japanese (Original Audio)", "lanCode": "ja", "original": True, "type": 0},
+            {"subjectId": "5616484647824673120", "lanName": "English Dub", "lanCode": "en", "original": False, "type": 0},
+            {"subjectId": "2590127567235599160", "lanName": "Hindi Dub", "lanCode": "hi", "original": False, "type": 0},
+            {"subjectId": "5515082806428323704", "lanName": "Portuguese Dub", "lanCode": "pt", "original": False, "type": 0}
+        ]
+
+    details = anime_engine.get_anime_details(aid)
+    title = details.get("title", "")
+    match = anime_engine.find_aoneroom_anime(title)
+    if not match:
+        return [{
+            "subjectId": f"anime_{aid}",
+            "lanName": "Japanese (Original Audio)",
+            "lanCode": "ja",
+            "original": True,
+            "type": 0
+        }]
+
+    base_sid = str(match.get("subjectId"))
+    try:
+        data = execute_api("/wefeed-tv-bff/subject/dub-info", f"subjectId={base_sid}")
+        items = data.get("data", {}).get("items", [])
+    except Exception:
+        items = []
+
+    dubs = []
+    seen_sids = set()
+    orig_item = None
+
+    for it in items:
+        # Exclude pure subtitle tracks (type == 1)
+        if it.get("type") == 1 or "sub" in (it.get("lanName") or "").lower():
+            continue
+        sid_str = str(it.get("subjectId"))
+        if not sid_str or sid_str in seen_sids:
+            continue
+        seen_sids.add(sid_str)
+
+        is_orig = it.get("original") is True or it.get("lanCode") == "ja"
+        code = (it.get("lanCode") or ("ja" if is_orig else "en")).lower()
+        raw_name = it.get("lanName") or ""
+
+        if is_orig or code == "ja":
+            label = "Japanese (Original Audio)"
+            orig_item = {
+                "subjectId": sid_str,
+                "lanName": label,
+                "lanCode": "ja",
+                "original": True,
+                "type": 0
+            }
+        else:
+            if code == "en" or "english" in raw_name.lower():
+                label = "English Dub"
+                code = "en"
+            elif code == "hi" or "hindi" in raw_name.lower():
+                label = "Hindi Dub"
+                code = "hi"
+            elif code in ["es", "esla"] or "esla" in raw_name.lower() or "spanish" in raw_name.lower():
+                label = "Spanish Dub"
+                code = "es"
+            elif code in ["pt", "ptbr"] or "ptbr" in raw_name.lower() or "portuguese" in raw_name.lower():
+                label = "Portuguese Dub"
+                code = "pt"
+            elif code == "de" or "german" in raw_name.lower():
+                label = "German Dub"
+            elif code == "fr" or "french" in raw_name.lower():
+                label = "French Dub"
+            elif code == "it" or "italian" in raw_name.lower():
+                label = "Italian Dub"
+            elif code == "ru" or "russian" in raw_name.lower():
+                label = "Russian Dub"
+            elif code == "ar" or "arabic" in raw_name.lower():
+                label = "Arabic Dub"
+            else:
+                label = f"{raw_name.strip()} Dub" if "dub" not in raw_name.lower() else raw_name.strip()
+
+            dubs.append({
+                "subjectId": sid_str,
+                "lanName": label,
+                "lanCode": code,
+                "original": False,
+                "type": 0
+            })
+
+    if not orig_item:
+        orig_item = {
+            "subjectId": base_sid,
+            "lanName": "Japanese (Original Audio)",
+            "lanCode": "ja",
+            "original": True,
+            "type": 0
+        }
+    dubs.insert(0, orig_item)
+
+    # Check if Hindi dub is missing from dub-info but exists via title search
+    has_hindi = any(d.get("lanCode") == "hi" for d in dubs)
+    if not has_hindi:
+        try:
+            clean_title = anime_engine.get_clean_titles(title)[0]
+            s_res = execute_api("/wefeed-tv-bff/search/result", f"keyword={urllib.parse.quote(clean_title + ' hindi')}&page=1&perPage=5&subjectType=0")
+            s_items = s_res.get("data", {}).get("items", [])
+            for fit in s_items:
+                ftitle = fit.get("title", "")
+                fcorner = fit.get("corner", "")
+                if ("hindi" in ftitle.lower() or str(fcorner).lower() == "hindi") and fit.get("hasResource"):
+                    h_sid = str(fit.get("subjectId"))
+                    if h_sid not in seen_sids:
+                        dubs.append({
+                            "subjectId": h_sid,
+                            "lanName": "Hindi Dub",
+                            "lanCode": "hi",
+                            "original": False,
+                            "type": 0
+                        })
+                        break
+        except Exception:
+            pass
+
+    return dubs
+
 @app.route("/api/dubs/<subject_id>")
 def api_dubs(subject_id):
     if is_anime_subject(subject_id):
         aid = parse_anime_id(subject_id)
-        base_id = f"anime_{aid}" if not str(subject_id).startswith("dragonball") else "dragonball"
-        
-        has_dub = False
-        if str(aid) in DRAGONBALL_IDS or aid == 223 or "dragonball" in str(subject_id).lower():
-            has_dub = True
-        elif anime_engine._dub_set:
-            has_dub = aid in anime_engine._dub_set
-        else:
-            has_dub = True
-
-        dubs = []
-        if has_dub:
-            dubs.append({
-                "subjectId": f"{base_id}_sub",
-                "lanName": "Japanese (Original)",
-                "lanCode": "ja",
-                "original": True,
-                "type": 0
-            })
-            dubs.append({
-                "subjectId": f"{base_id}_dub" if base_id != "dragonball" else "dragonball",
-                "lanName": "English Dub",
-                "lanCode": "en",
-                "original": False,
-                "type": 0
-            })
-        else:
-            dubs.append({
-                "subjectId": f"{base_id}_sub",
-                "lanName": "Japanese (Original Audio)",
-                "lanCode": "ja",
-                "original": True,
-                "type": 0
-            })
-            
+        dubs = get_anime_dubs(aid)
         return jsonify({
             "code": 0,
             "dubs": dubs

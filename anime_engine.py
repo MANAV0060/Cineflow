@@ -550,16 +550,61 @@ def find_aoneroom_anime(title: str, is_dub: bool = False) -> Optional[dict]:
     if cache_key in _anime_aoneroom_cache:
         return _anime_aoneroom_cache[cache_key]
 
-    candidates = get_clean_titles(title)
-    search_queries = []
     if is_dub:
-        for c in candidates:
-            search_queries.append(f"{c} English")
-    for c in candidates:
-        search_queries.append(c)
+        # 1. First locate canonical base anime
+        base = find_aoneroom_anime(title, is_dub=False)
+        if base and base.get("subjectId"):
+            base_sid = str(base.get("subjectId"))
+            try:
+                dub_data = _api_executor('/wefeed-tv-bff/subject/dub-info', f'subjectId={base_sid}')
+                items = dub_data.get('data', {}).get('items', [])
+                en_match = next((
+                    it for it in items 
+                    if (it.get('lanCode') == 'en' or 'english' in (it.get('lanName') or '').lower())
+                    and it.get('type') == 0
+                ), None)
+                if en_match and en_match.get('subjectId'):
+                    res_item = {
+                        "subjectId": str(en_match.get("subjectId")),
+                        "subjectType": base.get("subjectType", 2),
+                        "title": f"{base.get('title', title)} [English]",
+                        "hasResource": True,
+                        "is_dub": True,
+                        "lanCode": "en",
+                        "lanName": "English Dub"
+                    }
+                    _anime_aoneroom_cache[cache_key] = res_item
+                    return res_item
+            except Exception as e:
+                print(f"[AnimeEngine] Error resolving dub-info for {title} (SID {base_sid}): {e}")
 
+        # 2. Fallback to searching explicit English title queries ONLY
+        candidates = get_clean_titles(title)
+        for c in candidates:
+            q = f"{c} English"
+            try:
+                res = _api_executor('/wefeed-tv-bff/search/result', f'keyword={urllib.parse.quote(q)}&page=1&perPage=5&subjectType=0')
+                items = res.get('data', {}).get('items', [])
+                for it in items:
+                    if not it.get('hasResource'):
+                        continue
+                    it_title = it.get('title', '')
+                    it_corner = it.get('corner', '')
+                    if 'english' in it_title.lower() or str(it_corner).lower() == 'english':
+                        _anime_aoneroom_cache[cache_key] = it
+                        return it
+            except Exception as e:
+                print(f"[AnimeEngine] Error searching AoneRoom for {q}: {e}")
+                continue
+
+        # Explicitly do NOT return Japanese stream when English dub was requested!
+        _anime_aoneroom_cache[cache_key] = None
+        return None
+
+    # Base (Original) resolution
+    candidates = get_clean_titles(title)
     seen = set()
-    for q in search_queries:
+    for q in candidates:
         if q.lower() in seen:
             continue
         seen.add(q.lower())
