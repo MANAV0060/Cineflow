@@ -1186,7 +1186,7 @@
       <canvas id="video-freeze-canvas" class="hidden absolute inset-0 w-full h-full object-contain pointer-events-none z-10 transition-opacity duration-200"></canvas>
       
       <!-- Smart Video Surface Gesture / Click Area -->
-      <div id="video-click-surface" class="absolute inset-0 z-10 cursor-pointer select-none"></div>
+      <div id="video-click-surface" class="absolute inset-0 z-10 cursor-pointer select-none touch-manipulation" style="touch-action: manipulation;"></div>
 
       <!-- Double-Tap Seek Ripples (Left -10s, Right +10s with Glowing Arc & Dynamic Duration) -->
       <div id="double-tap-left" class="pointer-events-none absolute left-0 top-0 bottom-0 w-[42%] flex items-center justify-start pl-6 sm:pl-10 z-25 opacity-0 transition-opacity duration-200">
@@ -4774,7 +4774,7 @@
       if (spinner) spinner.classList.toggle('hidden', !loading);
       const centerControls = document.getElementById('center-hud-controls');
       if (centerControls) {
-        if (loading) {
+        if (loading && !isSeekingOperation) {
           centerControls.classList.add('opacity-0', 'pointer-events-none');
         } else if (isHudVisible) {
           centerControls.classList.remove('opacity-0', 'pointer-events-none');
@@ -5173,8 +5173,10 @@
       }, 120);
     }
 
-    function skipSeconds(delta) {
-      showPulse(delta > 0 ? 'forward_10' : 'replay_10');
+    function skipSeconds(delta, suppressPulse = false) {
+      if (!suppressPulse) {
+        showPulse(delta > 0 ? 'forward_10' : 'replay_10');
+      }
       const video = document.getElementById('videoElement');
       // If a virtual seek was already pending (e.g. user clicked +10s multiple times),
       // accumulate the new offset on top of the virtual target for instant, responsive feedback!
@@ -6005,15 +6007,21 @@
 
       let lastTapTime = 0;
       let lastTapSide = null;
+      let lastTapX = 0;
+      let lastTapY = 0;
       let accumulatedSeconds = 0;
       let accumulationResetTimer = null;
       let singleTapTimer = null;
+      let isSeekingActive = false;
       let lastHandledTouchTime = 0;
 
       // Touch position tracking to reject drags/scrolls
       let touchStartX = 0;
       let touchStartY = 0;
       let touchMoved = false;
+
+      const DOUBLE_TAP_WINDOW = 300; // Synchronized with single-tap timeout
+      const MAX_DOUBLE_TAP_DIST = 65; // Proximity threshold (px) to reject opposite taps
 
       function showDoubleTapFeedback(side, seconds) {
         const el = document.getElementById(side === 'left' ? 'double-tap-left' : 'double-tap-right');
@@ -6031,6 +6039,9 @@
 
         const badge = el.querySelector('.double-tap-badge');
         if (badge) {
+          badge.classList.remove('scale-100');
+          badge.classList.add('scale-90');
+          void badge.offsetWidth; // Force CSS reflow for repeated pops
           badge.classList.remove('scale-90');
           badge.classList.add('scale-100');
         }
@@ -6046,7 +6057,54 @@
         }, 550);
       }
 
-      function handleTapGesture(relX, width) {
+      function executeSingleTap() {
+        singleTapTimer = null;
+        lastTapSide = null;
+        lastTapTime = 0;
+
+        // 1. Dismiss open overlays first
+        const subModal = document.getElementById('modal-subtitles');
+        const setModal = document.getElementById('modal-settings');
+        const epModal = document.getElementById('modal-episodes-drawer');
+        const epBackdrop = document.getElementById('modal-episodes-backdrop');
+        const resPopover = document.getElementById('popover-resolution');
+        const srvPopover = document.getElementById('popover-server');
+
+        let dismissed = false;
+        if (subModal && !subModal.classList.contains('translate-x-full')) {
+          subModal.classList.add('translate-x-full');
+          dismissed = true;
+        }
+        if (setModal && !setModal.classList.contains('translate-x-full')) {
+          setModal.classList.add('translate-x-full');
+          dismissed = true;
+        }
+        if (epModal && !epModal.classList.contains('translate-x-full')) {
+          epModal.classList.add('translate-x-full');
+          if (epBackdrop) epBackdrop.classList.add('hidden');
+          dismissed = true;
+        }
+        if (resPopover && !resPopover.classList.contains('hidden')) {
+          resPopover.classList.add('hidden');
+          dismissed = true;
+        }
+        if (srvPopover && !srvPopover.classList.contains('hidden')) {
+          srvPopover.classList.add('hidden');
+          dismissed = true;
+        }
+
+        if (dismissed) return;
+
+        // 2. Toggle HUD visibility cleanly
+        if (isHudVisible) {
+          setHudVisibility(false);
+        } else {
+          setHudVisibility(true);
+          resetHudTimeout();
+        }
+      }
+
+      function handleTapGesture(relX, width, clientX, clientY) {
         const now = Date.now();
         const isLive = !!currentLiveChannel;
 
@@ -6061,139 +6119,133 @@
         // On Live TV streams, seeking is disabled (center double-tap toggles fullscreen, single tap toggles HUD)
         if (isLive) {
           const diff = now - lastTapTime;
-          lastTapTime = now;
-          if (diff < 320) {
+          const dist = Math.hypot((clientX || 0) - lastTapX, (clientY || 0) - lastTapY);
+          if (lastTapSide === 'center' && diff < DOUBLE_TAP_WINDOW && dist < MAX_DOUBLE_TAP_DIST) {
             if (singleTapTimer) {
               clearTimeout(singleTapTimer);
               singleTapTimer = null;
             }
+            lastTapSide = null;
+            lastTapTime = 0;
             toggleFullscreen();
           } else {
+            lastTapSide = 'center';
+            lastTapTime = now;
+            lastTapX = clientX || 0;
+            lastTapY = clientY || 0;
             if (singleTapTimer) clearTimeout(singleTapTimer);
-            singleTapTimer = setTimeout(() => {
-              if (isHudVisible) setHudVisibility(false);
-              else { setHudVisibility(true); resetHudTimeout(); }
-            }, 260);
+            singleTapTimer = setTimeout(executeSingleTap, DOUBLE_TAP_WINDOW);
+          }
+          return;
+        }
+
+        // Center Zone Tap: Double tap toggles fullscreen, single tap toggles HUD
+        if (side === 'center') {
+          if (isSeekingActive) {
+            clearTimeout(accumulationResetTimer);
+            isSeekingActive = false;
+            accumulatedSeconds = 0;
+          }
+
+          const diff = now - lastTapTime;
+          const dist = Math.hypot((clientX || 0) - lastTapX, (clientY || 0) - lastTapY);
+          const isCenterDoubleTap = (lastTapSide === 'center') && (diff < DOUBLE_TAP_WINDOW) && (dist < MAX_DOUBLE_TAP_DIST);
+
+          if (isCenterDoubleTap) {
+            if (singleTapTimer) {
+              clearTimeout(singleTapTimer);
+              singleTapTimer = null;
+            }
+            lastTapSide = null;
+            lastTapTime = 0;
+            toggleFullscreen();
+          } else {
+            lastTapSide = 'center';
+            lastTapTime = now;
+            lastTapX = clientX || 0;
+            lastTapY = clientY || 0;
+            if (singleTapTimer) clearTimeout(singleTapTimer);
+            singleTapTimer = setTimeout(executeSingleTap, DOUBLE_TAP_WINDOW);
           }
           return;
         }
 
         // VOD / Series / Anime: Left or Right Double-Tap Seeking
-        if (side === 'left' || side === 'right') {
-          const diff = now - lastTapTime;
-          // Check if this tap continues or initiates a double-tap sequence on the same side
-          const isDoubleTap = (lastTapSide === side) && (diff < 420);
+        // Fast path: Repeated multi-tap accumulation on the same side (+10s, +20s, +30s...)
+        if (isSeekingActive && lastTapSide === side) {
+          accumulatedSeconds += 10;
+          lastTapTime = now;
+          lastTapX = clientX || 0;
+          lastTapY = clientY || 0;
 
-          if (isDoubleTap) {
-            // Cancel pending single tap toggle
-            if (singleTapTimer) {
-              clearTimeout(singleTapTimer);
-              singleTapTimer = null;
-            }
-
-            // Accumulate seek duration: 10s, 20s, 30s...
-            accumulatedSeconds += 10;
-            lastTapTime = now;
-
-            clearTimeout(accumulationResetTimer);
-            accumulationResetTimer = setTimeout(() => {
-              accumulatedSeconds = 0;
-              lastTapSide = null;
-            }, 650);
-
-            // Execute skip
-            skipSeconds(side === 'left' ? -10 : 10);
-            showDoubleTapFeedback(side, accumulatedSeconds);
-          } else {
-            // First tap on this side - start candidate timer
-            lastTapTime = now;
-            lastTapSide = side;
+          clearTimeout(accumulationResetTimer);
+          accumulationResetTimer = setTimeout(() => {
+            isSeekingActive = false;
             accumulatedSeconds = 0;
+            lastTapSide = null;
+            lastTapTime = 0;
+          }, 650);
 
-            if (singleTapTimer) clearTimeout(singleTapTimer);
-            singleTapTimer = setTimeout(() => {
-              // Not a double-tap: reset side and perform single-tap actions
-              lastTapSide = null;
-              accumulatedSeconds = 0;
+          // Execute skip with center pulse suppressed
+          skipSeconds(side === 'left' ? -10 : 10, true);
+          showDoubleTapFeedback(side, accumulatedSeconds);
 
-              // 1. Dismiss open overlays first
-              const subModal = document.getElementById('modal-subtitles');
-              const setModal = document.getElementById('modal-settings');
-              const epModal = document.getElementById('modal-episodes-drawer');
-              const epBackdrop = document.getElementById('modal-episodes-backdrop');
-              const resPopover = document.getElementById('popover-resolution');
-              const srvPopover = document.getElementById('popover-server');
+          // If controls are already visible, maintain visibility and refresh auto-hide
+          if (isHudVisible) {
+            resetHudTimeout();
+          }
+          return;
+        }
 
-              let dismissed = false;
-              if (subModal && !subModal.classList.contains('translate-x-full')) {
-                subModal.classList.add('translate-x-full');
-                dismissed = true;
-              }
-              if (setModal && !setModal.classList.contains('translate-x-full')) {
-                setModal.classList.add('translate-x-full');
-                dismissed = true;
-              }
-              if (epModal && !epModal.classList.contains('translate-x-full')) {
-                epModal.classList.add('translate-x-full');
-                if (epBackdrop) epBackdrop.classList.add('hidden');
-                dismissed = true;
-              }
-              if (resPopover && !resPopover.classList.contains('hidden')) {
-                resPopover.classList.add('hidden');
-                dismissed = true;
-              }
-              if (srvPopover && !srvPopover.classList.contains('hidden')) {
-                srvPopover.classList.add('hidden');
-                dismissed = true;
-              }
+        // Initial double-tap detection
+        const diff = now - lastTapTime;
+        const dist = Math.hypot((clientX || 0) - lastTapX, (clientY || 0) - lastTapY);
+        const isDoubleTap = (lastTapSide === side) && (diff < DOUBLE_TAP_WINDOW) && (dist < MAX_DOUBLE_TAP_DIST);
 
-              if (dismissed) return;
+        if (isDoubleTap) {
+          // Cancel pending single tap toggle immediately so HUD never flickers
+          if (singleTapTimer) {
+            clearTimeout(singleTapTimer);
+            singleTapTimer = null;
+          }
 
-              // 2. Toggle HUD visibility cleanly
-              if (isHudVisible) {
-                setHudVisibility(false);
-              } else {
-                setHudVisibility(true);
-                resetHudTimeout();
-              }
-            }, 270);
+          isSeekingActive = true;
+          accumulatedSeconds = 10;
+          lastTapTime = now;
+          lastTapX = clientX || 0;
+          lastTapY = clientY || 0;
+
+          clearTimeout(accumulationResetTimer);
+          accumulationResetTimer = setTimeout(() => {
+            isSeekingActive = false;
+            accumulatedSeconds = 0;
+            lastTapSide = null;
+            lastTapTime = 0;
+          }, 650);
+
+          // Execute skip with center pulse suppressed
+          skipSeconds(side === 'left' ? -10 : 10, true);
+          showDoubleTapFeedback(side, accumulatedSeconds);
+
+          // If controls are already visible, maintain visibility and refresh auto-hide
+          if (isHudVisible) {
+            resetHudTimeout();
           }
         } else {
-          // Center Zone Tap
-          const diff = now - lastTapTime;
-          lastTapTime = now;
-          lastTapSide = 'center';
-          accumulatedSeconds = 0;
-
-          if (diff < 320) {
-            // Double-tap in center toggles fullscreen
-            if (singleTapTimer) {
-              clearTimeout(singleTapTimer);
-              singleTapTimer = null;
-            }
-            toggleFullscreen();
-          } else {
-            if (singleTapTimer) clearTimeout(singleTapTimer);
-            singleTapTimer = setTimeout(() => {
-              // Dismiss open modals
-              const subModal = document.getElementById('modal-subtitles');
-              const setModal = document.getElementById('modal-settings');
-              const epModal = document.getElementById('modal-episodes-drawer');
-              const epBackdrop = document.getElementById('modal-episodes-backdrop');
-              let dismissed = false;
-              if (subModal && !subModal.classList.contains('translate-x-full')) { subModal.classList.add('translate-x-full'); dismissed = true; }
-              if (setModal && !setModal.classList.contains('translate-x-full')) { setModal.classList.add('translate-x-full'); dismissed = true; }
-              if (epModal && !epModal.classList.contains('translate-x-full')) { epModal.classList.add('translate-x-full'); if (epBackdrop) epBackdrop.classList.add('hidden'); dismissed = true; }
-              if (dismissed) return;
-
-              if (isHudVisible) {
-                setHudVisibility(false);
-              } else {
-                setHudVisibility(true);
-                resetHudTimeout();
-              }
-            }, 270);
+          // First tap on this side - start candidate timer
+          if (isSeekingActive) {
+            clearTimeout(accumulationResetTimer);
+            isSeekingActive = false;
+            accumulatedSeconds = 0;
           }
+
+          lastTapTime = now;
+          lastTapSide = side;
+          lastTapX = clientX || 0;
+          lastTapY = clientY || 0;
+
+          if (singleTapTimer) clearTimeout(singleTapTimer);
+          singleTapTimer = setTimeout(executeSingleTap, DOUBLE_TAP_WINDOW);
         }
       }
 
@@ -6223,7 +6275,7 @@
         const rect = surface.getBoundingClientRect();
         const relX = touch.clientX - rect.left;
         lastHandledTouchTime = Date.now();
-        handleTapGesture(relX, rect.width);
+        handleTapGesture(relX, rect.width, touch.clientX, touch.clientY);
       });
 
       surface.addEventListener('touchcancel', () => {
@@ -6233,10 +6285,10 @@
       // 2. Click Event (Desktop mouse clicks and pointer fallback)
       surface.addEventListener('click', (e) => {
         // Prevent duplicate execution if touchend just handled it
-        if (Date.now() - lastHandledTouchTime < 450) return;
+        if (Date.now() - lastHandledTouchTime < 500) return;
         const rect = surface.getBoundingClientRect();
         const relX = e.clientX - rect.left;
-        handleTapGesture(relX, rect.width);
+        handleTapGesture(relX, rect.width, e.clientX, e.clientY);
       });
     }
 
