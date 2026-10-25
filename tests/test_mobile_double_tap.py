@@ -84,16 +84,28 @@ class TestMobileDoubleTapSeeking(unittest.TestCase):
         self.assertIn('Date.now() - lastHandledTouchTime < 600', self.html)
         self.assertIn('if (e.cancelable) e.preventDefault();', self.html)
 
-    def test_11_native_video_seeking_without_stream_reloading(self):
-        """Verify seeking directly modifies video.currentTime without stream restart or mountStream calls."""
-        # skipSeconds directly modifies video.currentTime
-        self.assertIn('video.currentTime = target;', self.html)
-        self.assertIn('target = Math.max(0, cur + delta);', self.html)
-        self.assertIn('target = dur ? Math.min(dur, cur + delta) : (cur + delta);', self.html)
-        # smartSeek does not call mountStream
+    def test_11_dual_seek_engine_and_stream_synchronization(self):
+        """Verify dual seeking mechanism: local buffer seek when in-memory, debounced mountStream when unbuffered."""
+        # 1. Local buffer check function exists
+        self.assertIn('function isTimeBufferedLocally(targetAbsoluteSec)', self.html)
+        self.assertIn('const relTarget = targetAbsoluteSec - currentOffsetSeconds;', self.html)
+        
+        # 2. Local buffer seek modifies video.currentTime directly without network reload
+        self.assertIn('video.currentTime = Math.max(0, relTarget);', self.html)
+
+        # 3. Out-of-buffer seek debounces and calls mountStream
         smart_seek_body = re.search(r'function smartSeek\(targetSec\) \{([\s\S]*?)\n    \}', self.html)
         self.assertIsNotNone(smart_seek_body)
-        self.assertNotIn('mountStream', smart_seek_body.group(1), "smartSeek must not call mountStream to reload stream")
+        self.assertIn('mountStream(boundedTarget)', smart_seek_body.group(1))
+        self.assertIn('seekDebounceTimer', smart_seek_body.group(1))
+
+        # 4. Immediate scrubber and timeline visual update at 60 FPS
+        self.assertIn('updateScrubberVisualsBySeconds(boundedTarget);', self.html)
+        self.assertIn('renderActiveSubtitle(boundedTarget);', self.html)
+
+        # 5. Virtual seek accumulation on top of active playback or pending target
+        self.assertIn('const base = (lastVirtualSeekTime !== null && isFinite(lastVirtualSeekTime))', self.html)
+        self.assertIn('Math.max(0, Math.min(total, base + delta));', self.html)
 
     def test_12_playback_state_preservation(self):
         """Verify video continues playing if already playing, and preserves paused state."""

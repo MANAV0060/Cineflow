@@ -4720,7 +4720,7 @@
         unfreezeFrame();
         isSeekingOperation = false;
         pendingSeekTarget = null;
-        lastVirtualSeekTime = null;
+        if (!isSeekingActive) lastVirtualSeekTime = null;
       };
 
       const onTimeUpdateCheck = () => {
@@ -4930,6 +4930,7 @@
     let pendingSeekTarget = null;
     let lastVirtualSeekTime = null;
     let virtualSeekResetTimer = null;
+    let seekDebounceTimer = null;
 
     function updateScrubberVisualsBySeconds(targetSec) {
       if (!currentTotalSeconds) return;
@@ -4973,13 +4974,15 @@
 
       video.addEventListener('timeupdate', () => {
         // Prevent progress jumps or timeline flickering while scrubbing or seeking
-        if (isScrubbing || isSeekingOperation) return;
+        if (isScrubbing || isSeekingOperation || isSeekingActive) return;
 
-        const absoluteCurrent = currentOffsetSeconds + video.currentTime;
-        const total = Math.max(absoluteCurrent, currentTotalSeconds);
+        const absoluteCurrent = (lastVirtualSeekTime !== null && isFinite(lastVirtualSeekTime))
+          ? lastVirtualSeekTime
+          : (currentOffsetSeconds + (video.currentTime || 0));
+        const total = Math.max(absoluteCurrent, currentTotalSeconds || 0);
         document.getElementById('timeCurrent').textContent = formatTime(absoluteCurrent);
 
-        const pct = Math.min(100, (absoluteCurrent / total) * 100);
+        const pct = total > 0 ? Math.min(100, (absoluteCurrent / total) * 100) : 0;
         document.getElementById('scrub-played-bar').style.width = pct + '%';
         document.getElementById('scrub-pin').style.left = pct + '%';
 
@@ -5118,26 +5121,79 @@
       });
     }
 
+    function isTimeBufferedLocally(targetAbsoluteSec) {
+      const video = document.getElementById('videoElement');
+      if (!video || !video.buffered || video.buffered.length === 0) return false;
+      const relTarget = targetAbsoluteSec - currentOffsetSeconds;
+      if (relTarget < 0) return false;
+
+      for (let i = 0; i < video.buffered.length; i++) {
+        const start = video.buffered.start(i);
+        const end = video.buffered.end(i);
+        if (relTarget >= start && relTarget <= Math.max(start, end - 0.5)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     function smartSeek(targetSec) {
-      const boundedTarget = Math.max(0, Math.min(currentTotalSeconds || 999999, targetSec));
+      const total = (typeof currentTotalSeconds === 'number' && isFinite(currentTotalSeconds) && currentTotalSeconds > 0)
+        ? currentTotalSeconds
+        : 999999;
+      const boundedTarget = Math.max(0, Math.min(total, targetSec));
 
       // Lock timeline and update visuals immediately at 60 FPS
       updateScrubberVisualsBySeconds(boundedTarget);
       renderActiveSubtitle(boundedTarget);
 
       const video = document.getElementById('videoElement');
-      if (video) {
+      if (!video) return;
+
+      // 1. If target is already decoded in-memory, seek locally without reload
+      if (isTimeBufferedLocally(boundedTarget)) {
+        clearTimeout(seekDebounceTimer);
+        isSeekingOperation = true;
+        pendingSeekTarget = boundedTarget;
+        lastVirtualSeekTime = boundedTarget;
+
         const wasPlaying = !video.paused && !video.ended;
-        try {
-          const relTarget = boundedTarget - currentOffsetSeconds;
-          video.currentTime = Math.max(0, relTarget);
-          if (wasPlaying && video.paused) {
-            video.play().catch(() => {});
-          }
-        } catch (e) {
-          console.warn('Seek error:', e);
+        const relTarget = boundedTarget - currentOffsetSeconds;
+        video.currentTime = Math.max(0, relTarget);
+
+        if (wasPlaying && video.paused) {
+          video.play().catch(() => {});
         }
+
+        const onLocalSeeked = () => {
+          video.removeEventListener('seeked', onLocalSeeked);
+          setTimeout(() => {
+            isSeekingOperation = false;
+            pendingSeekTarget = null;
+            if (!isSeekingActive) lastVirtualSeekTime = null;
+            setPlayerLoading(false);
+            unfreezeFrame();
+          }, 80);
+        };
+        video.addEventListener('seeked', onLocalSeeked);
+        return;
       }
+
+      // 2. Unbuffered Seek: Debounce mountStream so rapid multi-taps and scrubber drags accumulate cleanly
+      isSeekingOperation = true;
+      pendingSeekTarget = boundedTarget;
+      lastVirtualSeekTime = boundedTarget;
+
+      clearTimeout(seekDebounceTimer);
+      seekDebounceTimer = setTimeout(() => {
+        freezeCurrentFrame();
+        setPlayerLoading(true);
+        mountStream(boundedTarget);
+      }, 160);
+    }
+
+    function seekPlayerToSeconds(sec) {
+      smartSeek(sec);
     }
 
     function skipSeconds(delta, suppressPulse = false) {
@@ -5148,30 +5204,27 @@
       if (!video) return;
 
       try {
-        const cur = (typeof video.currentTime === 'number' && !isNaN(video.currentTime)) ? video.currentTime : 0;
-        const dur = (typeof video.duration === 'number' && isFinite(video.duration) && video.duration > 0)
-          ? video.duration
-          : ((typeof currentTotalSeconds === 'number' && isFinite(currentTotalSeconds) && currentTotalSeconds > 0) ? currentTotalSeconds : null);
+        // Read current playback time immediately before applying each seek.
+        // If a multi-tap accumulation is in flight, base the seek on the accumulated virtual target!
+        const base = (lastVirtualSeekTime !== null && isFinite(lastVirtualSeekTime))
+          ? lastVirtualSeekTime
+          : (currentOffsetSeconds + (video.currentTime || 0));
 
-        let target;
-        if (delta < 0) {
-          target = Math.max(0, cur + delta);
-        } else {
-          target = dur ? Math.min(dur, cur + delta) : (cur + delta);
-        }
+        const total = (typeof currentTotalSeconds === 'number' && isFinite(currentTotalSeconds) && currentTotalSeconds > 0)
+          ? currentTotalSeconds
+          : 999999;
 
-        const wasPlaying = !video.paused && !video.ended;
-        video.currentTime = target;
+        const newTarget = Math.max(0, Math.min(total, base + delta));
+        lastVirtualSeekTime = newTarget;
 
-        // Ensure playback continues smoothly if it was already playing
-        if (wasPlaying && video.paused) {
-          video.play().catch(() => {});
-        }
+        clearTimeout(virtualSeekResetTimer);
+        virtualSeekResetTimer = setTimeout(() => {
+          if (!isSeekingActive) {
+            lastVirtualSeekTime = null;
+          }
+        }, 1200);
 
-        // Update timeline scrubber and subtitle cues immediately
-        const absoluteTime = currentOffsetSeconds + target;
-        updateScrubberVisualsBySeconds(absoluteTime);
-        renderActiveSubtitle(absoluteTime);
+        smartSeek(newTarget);
       } catch (err) {
         console.warn('Seek error:', err);
       }
@@ -6165,6 +6218,7 @@
             accumulatedSeconds = 0;
             lastTapSide = null;
             lastTapTime = 0;
+            lastVirtualSeekTime = null;
           }, 650);
 
           // Execute skip with center pulse suppressed
@@ -6202,6 +6256,7 @@
             accumulatedSeconds = 0;
             lastTapSide = null;
             lastTapTime = 0;
+            lastVirtualSeekTime = null;
           }, 650);
 
           // Execute skip with center pulse suppressed
@@ -6218,6 +6273,7 @@
             clearTimeout(accumulationResetTimer);
             isSeekingActive = false;
             accumulatedSeconds = 0;
+            lastVirtualSeekTime = null;
           }
 
           lastTapTime = now;
