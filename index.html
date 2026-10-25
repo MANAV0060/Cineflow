@@ -4925,6 +4925,8 @@
 
     // Seeking & Timeline Synchronization State
     let isSeekingOperation = false;
+    let isSeekingActive = false;
+    let lastHandledTouchTime = 0;
     let pendingSeekTarget = null;
     let lastVirtualSeekTime = null;
     let virtualSeekResetTimer = null;
@@ -5049,6 +5051,8 @@
           clearTimeout(waitingDebounceTimer);
           waitingDebounceTimer = null;
         }
+        if (isSeekingOperation || isSeekingActive) return;
+
         isPlaying = false;
         updatePlayIcons(false);
         clearTimeout(hudHideTimer);
@@ -5114,22 +5118,6 @@
       });
     }
 
-    function isTimeBufferedLocally(targetSec) {
-      const video = document.getElementById('videoElement');
-      if (!video || !video.buffered || video.buffered.length === 0) return false;
-      const relTarget = targetSec - currentOffsetSeconds;
-      if (relTarget < 0) return false;
-
-      for (let i = 0; i < video.buffered.length; i++) {
-        const start = video.buffered.start(i);
-        const end = video.buffered.end(i);
-        if (relTarget >= start && relTarget <= Math.max(start, end - 0.4)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
     function smartSeek(targetSec) {
       const boundedTarget = Math.max(0, Math.min(currentTotalSeconds || 999999, targetSec));
 
@@ -5137,40 +5125,19 @@
       updateScrubberVisualsBySeconds(boundedTarget);
       renderActiveSubtitle(boundedTarget);
 
-      // Check if target falls within currently decoded in-memory buffer
-      if (isTimeBufferedLocally(boundedTarget)) {
-        clearTimeout(seekDebounceTimer);
-        const video = document.getElementById('videoElement');
-        if (video) {
-          isSeekingOperation = true;
-          pendingSeekTarget = boundedTarget;
-          video.currentTime = boundedTarget - currentOffsetSeconds;
-
-          const onLocalSeeked = () => {
-            video.removeEventListener('seeked', onLocalSeeked);
-            setTimeout(() => {
-              isSeekingOperation = false;
-              pendingSeekTarget = null;
-              lastVirtualSeekTime = null;
-              setPlayerLoading(false);
-              unfreezeFrame();
-            }, 60);
-          };
-          video.addEventListener('seeked', onLocalSeeked);
+      const video = document.getElementById('videoElement');
+      if (video) {
+        const wasPlaying = !video.paused && !video.ended;
+        try {
+          const relTarget = boundedTarget - currentOffsetSeconds;
+          video.currentTime = Math.max(0, relTarget);
+          if (wasPlaying && video.paused) {
+            video.play().catch(() => {});
+          }
+        } catch (e) {
+          console.warn('Seek error:', e);
         }
-        return;
       }
-
-      // Unbuffered Seek -> Batch rapid seeks with 120ms debounce
-      isSeekingOperation = true;
-      pendingSeekTarget = boundedTarget;
-
-      clearTimeout(seekDebounceTimer);
-      seekDebounceTimer = setTimeout(() => {
-        freezeCurrentFrame();
-        setPlayerLoading(true);
-        mountStream(boundedTarget);
-      }, 120);
     }
 
     function skipSeconds(delta, suppressPulse = false) {
@@ -5178,21 +5145,36 @@
         showPulse(delta > 0 ? 'forward_10' : 'replay_10');
       }
       const video = document.getElementById('videoElement');
-      // If a virtual seek was already pending (e.g. user clicked +10s multiple times),
-      // accumulate the new offset on top of the virtual target for instant, responsive feedback!
-      const base = (lastVirtualSeekTime !== null)
-        ? lastVirtualSeekTime
-        : (currentOffsetSeconds + (video ? (video.currentTime || 0) : 0));
+      if (!video) return;
 
-      const newTarget = Math.max(0, Math.min(currentTotalSeconds || 999999, base + delta));
-      lastVirtualSeekTime = newTarget;
+      try {
+        const cur = (typeof video.currentTime === 'number' && !isNaN(video.currentTime)) ? video.currentTime : 0;
+        const dur = (typeof video.duration === 'number' && isFinite(video.duration) && video.duration > 0)
+          ? video.duration
+          : ((typeof currentTotalSeconds === 'number' && isFinite(currentTotalSeconds) && currentTotalSeconds > 0) ? currentTotalSeconds : null);
 
-      clearTimeout(virtualSeekResetTimer);
-      virtualSeekResetTimer = setTimeout(() => {
-        lastVirtualSeekTime = null;
-      }, 1000);
+        let target;
+        if (delta < 0) {
+          target = Math.max(0, cur + delta);
+        } else {
+          target = dur ? Math.min(dur, cur + delta) : (cur + delta);
+        }
 
-      smartSeek(newTarget);
+        const wasPlaying = !video.paused && !video.ended;
+        video.currentTime = target;
+
+        // Ensure playback continues smoothly if it was already playing
+        if (wasPlaying && video.paused) {
+          video.play().catch(() => {});
+        }
+
+        // Update timeline scrubber and subtitle cues immediately
+        const absoluteTime = currentOffsetSeconds + target;
+        updateScrubberVisualsBySeconds(absoluteTime);
+        renderActiveSubtitle(absoluteTime);
+      } catch (err) {
+        console.warn('Seek error:', err);
+      }
     }
 
     // -------------------------------------------------------------
@@ -6012,8 +5994,7 @@
       let accumulatedSeconds = 0;
       let accumulationResetTimer = null;
       let singleTapTimer = null;
-      let isSeekingActive = false;
-      let lastHandledTouchTime = 0;
+      isSeekingActive = false;
 
       // Touch position tracking to reject drags/scrolls
       let touchStartX = 0;
@@ -6271,6 +6252,7 @@
       surface.addEventListener('touchend', (e) => {
         if (touchMoved) return; // Swiped or dragged
         if (!e.changedTouches || e.changedTouches.length === 0) return;
+        if (e.cancelable) e.preventDefault();
         const touch = e.changedTouches[0];
         const rect = surface.getBoundingClientRect();
         const relX = touch.clientX - rect.left;
@@ -6285,7 +6267,7 @@
       // 2. Click Event (Desktop mouse clicks and pointer fallback)
       surface.addEventListener('click', (e) => {
         // Prevent duplicate execution if touchend just handled it
-        if (Date.now() - lastHandledTouchTime < 500) return;
+        if (Date.now() - lastHandledTouchTime < 600) return;
         const rect = surface.getBoundingClientRect();
         const relX = e.clientX - rect.left;
         handleTapGesture(relX, rect.width, e.clientX, e.clientY);
@@ -6334,7 +6316,14 @@
       }
     }
 
-    window.addEventListener('mousemove', () => {
+    let lastMouseX = -1;
+    let lastMouseY = -1;
+    window.addEventListener('mousemove', (e) => {
+      if (Date.now() - lastHandledTouchTime < 1000) return;
+      if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
+      if (e.clientX === lastMouseX && e.clientY === lastMouseY) return;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
       if (currentView === 'player') resetHudTimeout();
     });
 
