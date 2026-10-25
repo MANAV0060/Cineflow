@@ -256,6 +256,13 @@
           <span class="material-symbols-outlined text-2xl sm:text-3xl text-[#f5c518]">movie</span>
           <span>Cineflow</span>
         </a>
+
+        <!-- Mobile Quick-Access Live TV Button -->
+        <button onclick="showLiveTvSection()" id="btn-mobile-livetv" class="md:hidden flex items-center space-x-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-red-600/30 to-red-700/20 hover:from-red-600/50 hover:to-red-700/40 border border-red-500/40 text-white text-xs font-semibold active:scale-95 transition-all shadow-md shrink-0 cursor-pointer" title="Watch Live TV">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          <span class="material-symbols-outlined text-sm text-red-400">live_tv</span>
+          <span class="tracking-wide">Live TV</span>
+        </button>
       </div>
 
       <!-- Main Navigation Links (Desktop md+) -->
@@ -1181,17 +1188,25 @@
       <!-- Smart Video Surface Gesture / Click Area -->
       <div id="video-click-surface" class="absolute inset-0 z-10 cursor-pointer select-none"></div>
 
-      <!-- Double-Tap Seek Ripples (Left -10s, Right +10s) -->
-      <div id="double-tap-left" class="pointer-events-none absolute left-0 top-0 bottom-0 w-1/3 flex items-center justify-center z-25 opacity-0 transition-all duration-300">
-        <div class="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-75 transition-transform">
-          <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#00dbe9]">replay_10</span>
-          <span class="text-[11px] font-bold tracking-wider mt-0.5 text-white/90">-10s</span>
+      <!-- Double-Tap Seek Ripples (Left -10s, Right +10s with Glowing Arc & Dynamic Duration) -->
+      <div id="double-tap-left" class="pointer-events-none absolute left-0 top-0 bottom-0 w-[42%] flex items-center justify-start pl-6 sm:pl-10 z-25 opacity-0 transition-opacity duration-200">
+        <div class="absolute inset-0 bg-gradient-to-r from-white/15 via-[#00dbe9]/10 to-transparent rounded-r-full pointer-events-none scale-x-90 origin-left transition-transform duration-200"></div>
+        <div class="double-tap-badge relative z-10 flex flex-col items-center justify-center px-4 py-3 rounded-2xl bg-black/75 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
+          <div class="flex items-center space-x-1 text-[#00dbe9]">
+            <span class="material-symbols-outlined text-2xl sm:text-3xl animate-pulse">fast_rewind</span>
+            <span class="material-symbols-outlined text-2xl sm:text-3xl">replay_10</span>
+          </div>
+          <span id="double-tap-left-label" class="text-xs sm:text-sm font-bold tracking-wide mt-1 text-white font-mono whitespace-nowrap">-10 seconds</span>
         </div>
       </div>
-      <div id="double-tap-right" class="pointer-events-none absolute right-0 top-0 bottom-0 w-1/3 flex items-center justify-center z-25 opacity-0 transition-all duration-300">
-        <div class="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-75 transition-transform">
-          <span class="material-symbols-outlined text-3xl sm:text-4xl text-[#00dbe9]">forward_10</span>
-          <span class="text-[11px] font-bold tracking-wider mt-0.5 text-white/90">+10s</span>
+      <div id="double-tap-right" class="pointer-events-none absolute right-0 top-0 bottom-0 w-[42%] flex items-center justify-end pr-6 sm:pr-10 z-25 opacity-0 transition-opacity duration-200">
+        <div class="absolute inset-0 bg-gradient-to-l from-white/15 via-[#00dbe9]/10 to-transparent rounded-l-full pointer-events-none scale-x-90 origin-right transition-transform duration-200"></div>
+        <div class="double-tap-badge relative z-10 flex flex-col items-center justify-center px-4 py-3 rounded-2xl bg-black/75 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
+          <div class="flex items-center space-x-1 text-[#00dbe9]">
+            <span class="material-symbols-outlined text-2xl sm:text-3xl">forward_10</span>
+            <span class="material-symbols-outlined text-2xl sm:text-3xl animate-pulse">fast_forward</span>
+          </div>
+          <span id="double-tap-right-label" class="text-xs sm:text-sm font-bold tracking-wide mt-1 text-white font-mono whitespace-nowrap">+10 seconds</span>
         </div>
       </div>
     </div>
@@ -1242,10 +1257,10 @@
         </div>
 
         <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
-          <!-- In-Player Hamburger Menu Trigger for Episode & Season Navigation -->
-          <button id="btn-player-hamburger" onclick="toggleEpisodesDrawer()" class="flex items-center space-x-1 sm:space-x-2 px-2.5 sm:px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/15 text-xs font-medium text-white transition-all cursor-pointer shadow-lg hover:border-white/30 hover:scale-105 active:scale-95" title="Episodes & Seasons">
-            <span class="material-symbols-outlined text-base">menu</span>
-            <span class="hidden sm:inline font-semibold">Episodes</span>
+          <!-- In-Player Episode & Season Navigation Trigger -->
+          <button id="btn-player-hamburger" onclick="toggleEpisodesDrawer()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 backdrop-blur-xl border border-white/15 text-xs font-medium text-white transition-all cursor-pointer shadow-lg hover:border-white/30" title="Episodes & Seasons">
+            <span class="material-symbols-outlined text-base text-[#00dbe9]">video_library</span>
+            <span class="font-semibold text-xs">Episodes</span>
           </button>
 
           <!-- In-Player Live TV Server Selector Trigger & Popover -->
@@ -1289,9 +1304,9 @@
         </div>
       </header>
 
-      <!-- CENTER HUD AMBIENT PLAYBACK CONTROLS -->
-      <div id="center-hud-controls" class="flex items-center justify-center my-auto w-full py-6 sm:py-8 pointer-events-auto transition-opacity duration-200">
-        <div class="flex items-center space-x-6 sm:space-x-8 md:space-x-12">
+      <!-- CENTER HUD AMBIENT PLAYBACK CONTROLS (Outer wrapper pointer-events-none so side taps reach click surface) -->
+      <div id="center-hud-controls" class="flex items-center justify-center my-auto w-full py-6 sm:py-8 pointer-events-none transition-opacity duration-200">
+        <div class="flex items-center space-x-6 sm:space-x-8 md:space-x-12 pointer-events-auto">
           <!-- Rewind 10s -->
           <button onclick="skipSeconds(-10)" class="group flex flex-col items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white transition-all duration-200 hover:scale-105 active:scale-95 border border-white/10 shadow-lg cursor-pointer" title="Rewind 10s">
             <span class="material-symbols-outlined text-xl sm:text-2xl group-hover:-rotate-12 transition-transform">replay_10</span>
@@ -1371,25 +1386,25 @@
           <div class="flex items-center space-x-1 sm:space-x-2 shrink-0">
             <button id="btn-speed-badge" onclick="cycleSpeed()" class="hidden sm:inline-flex px-2 sm:px-2.5 py-1 rounded-lg hover:bg-white/10 text-white/80 hover:text-white text-xs font-semibold font-mono transition-colors cursor-pointer" title="Playback Speed">1.0x</button>
             
-            <button onclick="toggleAudioModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Audio & Subtitles">
+            <button onclick="toggleAudioModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white/10 active:scale-95 text-white/80 hover:text-white transition-colors cursor-pointer" title="Audio & Subtitles">
               <span class="material-symbols-outlined text-lg sm:text-xl">closed_caption</span>
             </button>
 
             <!-- Episodes Drawer Trigger (for TV series) -->
-            <button id="btn-episodes-drawer" onclick="toggleEpisodesDrawer()" class="hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors relative cursor-pointer" title="Episodes">
+            <button id="btn-episodes-drawer" onclick="toggleEpisodesDrawer()" class="hidden flex w-9 h-9 sm:w-10 sm:h-10 rounded-full items-center justify-center hover:bg-white/10 active:scale-95 text-white/80 hover:text-white transition-colors relative cursor-pointer" title="Episodes">
               <span class="material-symbols-outlined text-lg sm:text-xl">video_library</span>
-              <span class="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span>
+              <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-secondary rounded-full"></span>
             </button>
 
-            <button onclick="togglePip()" class="hidden sm:flex w-8 h-8 sm:w-9 sm:h-9 rounded-full items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Picture in Picture">
+            <button onclick="togglePip()" class="hidden sm:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full items-center justify-center hover:bg-white/10 active:scale-95 text-white/80 hover:text-white transition-colors cursor-pointer" title="Picture in Picture">
               <span class="material-symbols-outlined text-lg sm:text-xl">picture_in_picture_alt</span>
             </button>
 
-            <button onclick="toggleSettingsModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer" title="Settings">
+            <button onclick="toggleSettingsModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white/10 active:scale-95 text-white/80 hover:text-white transition-colors cursor-pointer" title="Settings">
               <span class="material-symbols-outlined text-lg sm:text-xl transition-transform hover:rotate-45">settings</span>
             </button>
 
-            <button onclick="toggleFullscreen()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white transition-colors cursor-pointer" title="Fullscreen">
+            <button onclick="toggleFullscreen()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white/10 active:scale-95 text-white transition-colors cursor-pointer" title="Fullscreen">
               <span id="icon-fullscreen" class="material-symbols-outlined text-xl sm:text-2xl text-[#f5c518]">fullscreen</span>
             </button>
           </div>
@@ -1549,6 +1564,18 @@
             <span class="material-symbols-outlined text-sm text-white/50">arrow_forward</span>
           </button>
 
+          <!-- Switch to Live TV Quick Action -->
+          <button onclick="toggleSettingsModal(); exitPlayer(); showLiveTvSection();" class="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-red-600/20 to-red-800/10 hover:from-red-600/30 hover:to-red-800/20 border border-red-500/30 text-white/90 transition-all cursor-pointer">
+            <div class="flex items-center space-x-2.5">
+              <span class="material-symbols-outlined text-red-400 text-lg">live_tv</span>
+              <span class="text-xs font-semibold text-white">Switch to Live TV</span>
+            </div>
+            <span class="flex items-center space-x-1 text-[10px] text-red-400 font-mono font-semibold uppercase">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+              <span>Channels</span>
+            </span>
+          </button>
+
           <!-- Playback Speed Grid -->
           <div>
             <label class="text-[11px] font-bold uppercase tracking-wider text-white/50 block mb-2">Playback Speed</label>
@@ -1580,62 +1607,63 @@
   </div>
 
   <!-- GLOBAL EPISODES & SEASONS SLIDE-OVER DRAWER (Accessible from both Detail View and Video Player) -->
-  <div id="modal-episodes-drawer" class="fixed inset-y-0 right-0 w-full max-w-full sm:max-w-md md:max-w-lg bg-[#0e0f14]/95 backdrop-blur-2xl z-[70] transform translate-x-full transition-transform duration-300 ease-in-out p-4 sm:p-6 flex flex-col justify-between shadow-2xl border-l border-white/10 overflow-y-auto max-h-[100dvh]">
+  <div id="modal-episodes-backdrop" onclick="toggleEpisodesDrawer()" class="hidden fixed inset-0 bg-black/65 backdrop-blur-xs z-[65] transition-opacity duration-300 pointer-events-auto"></div>
+  <div id="modal-episodes-drawer" class="fixed inset-y-0 right-0 w-full sm:w-[420px] md:w-[480px] max-w-full bg-[#0e0f14]/95 backdrop-blur-2xl z-[70] transform translate-x-full transition-transform duration-300 ease-in-out p-3.5 sm:p-5 flex flex-col justify-between shadow-2xl border-l border-white/10 max-h-[100dvh] overflow-hidden pointer-events-auto">
     <div class="flex flex-col h-full overflow-hidden">
       <!-- Drawer Header -->
-      <div class="flex items-center justify-between pb-3.5 border-b border-white/10 shrink-0">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
         <div>
           <div class="flex items-center space-x-2">
             <span class="material-symbols-outlined text-tertiary text-xl">video_library</span>
-            <h2 class="font-headline text-lg sm:text-xl text-white font-bold tracking-tight">Episodes & Seasons</h2>
+            <h2 class="font-headline text-base sm:text-lg text-white font-bold tracking-tight">Episodes & Seasons</h2>
           </div>
-          <p id="drawer-series-title" class="text-xs text-white/60 mt-0.5">Series</p>
+          <p id="drawer-series-title" class="text-xs text-white/60 mt-0.5 truncate max-w-[260px]">Series</p>
         </div>
-        <button onclick="toggleEpisodesDrawer()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer" title="Close Drawer">
+        <button onclick="toggleEpisodesDrawer()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 active:scale-95 text-white/70 hover:text-white transition-colors cursor-pointer" title="Close Drawer">
           <span class="material-symbols-outlined text-lg">close</span>
         </button>
       </div>
 
       <!-- Season Selector Tabs/Pills -->
-      <div class="mt-3.5 shrink-0">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-white/50">Select Season</span>
+      <div class="mt-2.5 sm:mt-3 shrink-0">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-white/50">Select Season</span>
           <span id="drawer-season-count-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-white/70">1 Season</span>
         </div>
-        <div id="drawer-seasons-container" class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+        <div id="drawer-seasons-container" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-thin">
           <!-- Dynamically populated season pills -->
         </div>
       </div>
 
       <!-- Episode Search Bar -->
-      <div class="relative mt-3 shrink-0">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/40 text-lg">search</span>
-        <input id="drawer-search-input" type="text" placeholder="Search episode name or number..." 
+      <div class="relative mt-2 sm:mt-2.5 shrink-0">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/40 text-base">search</span>
+        <input id="drawer-search-input" type="text" placeholder="Search episode..." 
                oninput="handleDrawerSearch(this.value)"
-               class="w-full bg-white/5 hover:bg-white/10 focus:bg-white/10 border border-white/10 focus:border-tertiary rounded-xl pl-9 pr-8 py-2 text-xs text-white placeholder-white/40 outline-none transition-colors" />
+               class="w-full bg-white/5 hover:bg-white/10 focus:bg-white/10 border border-white/10 focus:border-tertiary rounded-xl pl-9 pr-8 py-1.5 sm:py-2 text-xs text-white placeholder-white/40 outline-none transition-colors" />
         <button id="drawer-search-clear" onclick="clearDrawerSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-xs cursor-pointer">
           <span class="material-symbols-outlined text-sm">cancel</span>
         </button>
       </div>
 
       <!-- Episode Counter & Status Indicator -->
-      <div class="flex items-center justify-between text-[11px] font-mono text-white/50 mt-2 px-1 shrink-0">
+      <div class="flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-white/50 mt-1.5 sm:mt-2 px-1 shrink-0">
         <span id="drawer-episodes-count">Loading episodes...</span>
-        <span class="text-[10px] text-tertiary/80 uppercase tracking-wider font-semibold">Tap to switch</span>
+        <span class="text-[10px] text-tertiary uppercase tracking-wider font-semibold">Tap to switch</span>
       </div>
 
       <!-- Scrollable Episodes List -->
-      <div id="drawer-episodes-list" class="overflow-y-auto space-y-2.5 mt-2 pr-1 flex-1">
+      <div id="drawer-episodes-list" class="overflow-y-auto space-y-2 mt-2 pr-1 flex-1 min-h-0">
         <!-- Dynamically populated episode cards -->
       </div>
 
       <!-- Bottom Footer Info -->
-      <div class="mt-3 pt-3 border-t border-white/10 shrink-0 flex items-center justify-between text-xs text-white/60">
+      <div class="mt-2.5 pt-2 border-t border-white/10 shrink-0 flex items-center justify-between text-xs text-white/60">
         <div class="flex items-center space-x-2">
           <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
-          <span class="text-[11px] text-white/70">Instant Playback Switch</span>
+          <span class="text-[10px] sm:text-[11px] text-white/70">Instant Playback Switch</span>
         </div>
-        <span id="drawer-season-summary" class="text-[11px] font-mono text-white/50">Season 1</span>
+        <span id="drawer-season-summary" class="text-[10px] sm:text-[11px] font-mono text-white/50">Season 1</span>
       </div>
     </div>
   </div>
@@ -2032,11 +2060,13 @@
       if (sLive) sLive.classList.add('hidden');
       document.getElementById('screen-detail').classList.add('hidden');
       document.getElementById('screen-player').classList.remove('hidden');
+      ensureEpisodesDrawerParent();
       updateSubtitlePosition();
       resetHudTimeout();
     }
 
     function exitPlayer() {
+      closeEpisodesDrawer();
       removeSubtitles();
       pausePlayer();
       if (currentLiveChannel) {
@@ -5697,14 +5727,47 @@
       modal.classList.toggle('translate-x-full');
     }
 
-    function toggleEpisodesDrawer() {
+    function ensureEpisodesDrawerParent() {
       const drawer = document.getElementById('modal-episodes-drawer');
+      const backdrop = document.getElementById('modal-episodes-backdrop');
+      const player = document.getElementById('screen-player');
+      if (!drawer || !player) return;
+
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+      const isPlayerActive = (currentView === 'player') || !player.classList.contains('hidden') || isFs;
+      const targetParent = isPlayerActive ? player : document.body;
+
+      if (drawer.parentElement !== targetParent) {
+        targetParent.appendChild(drawer);
+      }
+      if (backdrop && backdrop.parentElement !== targetParent) {
+        targetParent.appendChild(backdrop);
+      }
+    }
+
+    function toggleEpisodesDrawer() {
+      ensureEpisodesDrawerParent();
+      const drawer = document.getElementById('modal-episodes-drawer');
+      const backdrop = document.getElementById('modal-episodes-backdrop');
       if (!drawer) return;
-      drawer.classList.toggle('translate-x-full');
-      if (!drawer.classList.contains('translate-x-full')) {
+
+      const isOpening = drawer.classList.contains('translate-x-full');
+      if (isOpening) {
+        drawer.classList.remove('translate-x-full');
+        if (backdrop) backdrop.classList.remove('hidden');
         renderDrawerSeasons();
         renderDrawerEpisodes();
+      } else {
+        drawer.classList.add('translate-x-full');
+        if (backdrop) backdrop.classList.add('hidden');
       }
+    }
+
+    function closeEpisodesDrawer() {
+      const drawer = document.getElementById('modal-episodes-drawer');
+      const backdrop = document.getElementById('modal-episodes-backdrop');
+      if (drawer) drawer.classList.add('translate-x-full');
+      if (backdrop) backdrop.classList.add('hidden');
     }
 
     function setPlaybackSpeed(speed) {
@@ -5825,6 +5888,7 @@
       if (!isFs) {
         unlockOrientation();
       }
+      ensureEpisodesDrawerParent();
       setTimeout(updateSubtitlePosition, 150);
     }
 
@@ -5858,93 +5922,239 @@
       if (!surface) return;
 
       let lastTapTime = 0;
-      let tapTimeout = null;
+      let lastTapSide = null;
+      let accumulatedSeconds = 0;
+      let accumulationResetTimer = null;
+      let singleTapTimer = null;
+      let lastHandledTouchTime = 0;
 
-      function flashRipple(side) {
+      // Touch position tracking to reject drags/scrolls
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchMoved = false;
+
+      function showDoubleTapFeedback(side, seconds) {
         const el = document.getElementById(side === 'left' ? 'double-tap-left' : 'double-tap-right');
+        const label = document.getElementById(side === 'left' ? 'double-tap-left-label' : 'double-tap-right-label');
         if (!el) return;
+
+        const sign = side === 'left' ? '-' : '+';
+        if (label) {
+          label.textContent = `${sign}${seconds} seconds`;
+        }
+
+        // Show feedback overlay with scale pop
         el.classList.remove('opacity-0');
         el.classList.add('opacity-100');
-        const child = el.firstElementChild;
-        if (child) {
-          child.classList.remove('scale-75');
-          child.classList.add('scale-100');
+
+        const badge = el.querySelector('.double-tap-badge');
+        if (badge) {
+          badge.classList.remove('scale-90');
+          badge.classList.add('scale-100');
         }
-        setTimeout(() => {
+
+        clearTimeout(el._fadeTimer);
+        el._fadeTimer = setTimeout(() => {
           el.classList.remove('opacity-100');
           el.classList.add('opacity-0');
-          if (child) {
-            child.classList.remove('scale-100');
-            child.classList.add('scale-75');
+          if (badge) {
+            badge.classList.remove('scale-100');
+            badge.classList.add('scale-90');
           }
-        }, 450);
+        }, 550);
       }
 
-      surface.addEventListener('click', (e) => {
-        const rect = surface.getBoundingClientRect();
-        const relX = e.clientX - rect.left;
-        const width = rect.width;
+      function handleTapGesture(relX, width) {
         const now = Date.now();
-        const diff = now - lastTapTime;
-        lastTapTime = now;
+        const isLive = !!currentLiveChannel;
 
-        if (diff < 320) {
-          // Double-tap detected
-          if (tapTimeout) {
-            clearTimeout(tapTimeout);
-            tapTimeout = null;
-          }
+        // Screen Zones: Left 40%, Right 40%, Center 20%
+        let side = 'center';
+        if (relX < width * 0.40) {
+          side = 'left';
+        } else if (relX > width * 0.60) {
+          side = 'right';
+        }
 
-          if (relX < width * 0.36) {
-            // Left 36% -> Skip back 10s
-            skipSeconds(-10);
-            flashRipple('left');
-          } else if (relX > width * 0.64) {
-            // Right 36% -> Skip forward 10s
-            skipSeconds(10);
-            flashRipple('right');
-          } else {
-            // Center 28% -> Toggle Fullscreen
+        // On Live TV streams, seeking is disabled (center double-tap toggles fullscreen, single tap toggles HUD)
+        if (isLive) {
+          const diff = now - lastTapTime;
+          lastTapTime = now;
+          if (diff < 320) {
+            if (singleTapTimer) {
+              clearTimeout(singleTapTimer);
+              singleTapTimer = null;
+            }
             toggleFullscreen();
+          } else {
+            if (singleTapTimer) clearTimeout(singleTapTimer);
+            singleTapTimer = setTimeout(() => {
+              if (isHudVisible) setHudVisibility(false);
+              else { setHudVisibility(true); resetHudTimeout(); }
+            }, 260);
+          }
+          return;
+        }
+
+        // VOD / Series / Anime: Left or Right Double-Tap Seeking
+        if (side === 'left' || side === 'right') {
+          const diff = now - lastTapTime;
+          // Check if this tap continues or initiates a double-tap sequence on the same side
+          const isDoubleTap = (lastTapSide === side) && (diff < 420);
+
+          if (isDoubleTap) {
+            // Cancel pending single tap toggle
+            if (singleTapTimer) {
+              clearTimeout(singleTapTimer);
+              singleTapTimer = null;
+            }
+
+            // Accumulate seek duration: 10s, 20s, 30s...
+            accumulatedSeconds += 10;
+            lastTapTime = now;
+
+            clearTimeout(accumulationResetTimer);
+            accumulationResetTimer = setTimeout(() => {
+              accumulatedSeconds = 0;
+              lastTapSide = null;
+            }, 650);
+
+            // Execute skip
+            skipSeconds(side === 'left' ? -10 : 10);
+            showDoubleTapFeedback(side, accumulatedSeconds);
+          } else {
+            // First tap on this side - start candidate timer
+            lastTapTime = now;
+            lastTapSide = side;
+            accumulatedSeconds = 0;
+
+            if (singleTapTimer) clearTimeout(singleTapTimer);
+            singleTapTimer = setTimeout(() => {
+              // Not a double-tap: reset side and perform single-tap actions
+              lastTapSide = null;
+              accumulatedSeconds = 0;
+
+              // 1. Dismiss open overlays first
+              const subModal = document.getElementById('modal-subtitles');
+              const setModal = document.getElementById('modal-settings');
+              const epModal = document.getElementById('modal-episodes-drawer');
+              const epBackdrop = document.getElementById('modal-episodes-backdrop');
+              const resPopover = document.getElementById('popover-resolution');
+              const srvPopover = document.getElementById('popover-server');
+
+              let dismissed = false;
+              if (subModal && !subModal.classList.contains('translate-x-full')) {
+                subModal.classList.add('translate-x-full');
+                dismissed = true;
+              }
+              if (setModal && !setModal.classList.contains('translate-x-full')) {
+                setModal.classList.add('translate-x-full');
+                dismissed = true;
+              }
+              if (epModal && !epModal.classList.contains('translate-x-full')) {
+                epModal.classList.add('translate-x-full');
+                if (epBackdrop) epBackdrop.classList.add('hidden');
+                dismissed = true;
+              }
+              if (resPopover && !resPopover.classList.contains('hidden')) {
+                resPopover.classList.add('hidden');
+                dismissed = true;
+              }
+              if (srvPopover && !srvPopover.classList.contains('hidden')) {
+                srvPopover.classList.add('hidden');
+                dismissed = true;
+              }
+
+              if (dismissed) return;
+
+              // 2. Toggle HUD visibility cleanly
+              if (isHudVisible) {
+                setHudVisibility(false);
+              } else {
+                setHudVisibility(true);
+                resetHudTimeout();
+              }
+            }, 270);
           }
         } else {
-          // Single tap candidate (wait to ensure it's not the first tap of a double-tap)
-          tapTimeout = setTimeout(() => {
-            // Dismiss open modals or popovers first
-            const subModal = document.getElementById('modal-subtitles');
-            const setModal = document.getElementById('modal-settings');
-            const epModal = document.getElementById('modal-episodes-drawer');
-            const resPopover = document.getElementById('popover-resolution');
+          // Center Zone Tap
+          const diff = now - lastTapTime;
+          lastTapTime = now;
+          lastTapSide = 'center';
+          accumulatedSeconds = 0;
 
-            let dismissed = false;
-            if (subModal && !subModal.classList.contains('translate-x-full')) {
-              subModal.classList.add('translate-x-full');
-              dismissed = true;
+          if (diff < 320) {
+            // Double-tap in center toggles fullscreen
+            if (singleTapTimer) {
+              clearTimeout(singleTapTimer);
+              singleTapTimer = null;
             }
-            if (setModal && !setModal.classList.contains('translate-x-full')) {
-              setModal.classList.add('translate-x-full');
-              dismissed = true;
-            }
-            if (epModal && !epModal.classList.contains('translate-x-full')) {
-              epModal.classList.add('translate-x-full');
-              dismissed = true;
-            }
-            if (resPopover && !resPopover.classList.contains('hidden')) {
-              resPopover.classList.add('hidden');
-              dismissed = true;
-            }
+            toggleFullscreen();
+          } else {
+            if (singleTapTimer) clearTimeout(singleTapTimer);
+            singleTapTimer = setTimeout(() => {
+              // Dismiss open modals
+              const subModal = document.getElementById('modal-subtitles');
+              const setModal = document.getElementById('modal-settings');
+              const epModal = document.getElementById('modal-episodes-drawer');
+              const epBackdrop = document.getElementById('modal-episodes-backdrop');
+              let dismissed = false;
+              if (subModal && !subModal.classList.contains('translate-x-full')) { subModal.classList.add('translate-x-full'); dismissed = true; }
+              if (setModal && !setModal.classList.contains('translate-x-full')) { setModal.classList.add('translate-x-full'); dismissed = true; }
+              if (epModal && !epModal.classList.contains('translate-x-full')) { epModal.classList.add('translate-x-full'); if (epBackdrop) epBackdrop.classList.add('hidden'); dismissed = true; }
+              if (dismissed) return;
 
-            if (dismissed) return;
-
-            // Toggle HUD visibility cleanly
-            if (isHudVisible) {
-              setHudVisibility(false);
-            } else {
-              setHudVisibility(true);
-              resetHudTimeout();
-            }
-          }, 270);
+              if (isHudVisible) {
+                setHudVisibility(false);
+              } else {
+                setHudVisibility(true);
+                resetHudTimeout();
+              }
+            }, 270);
+          }
         }
+      }
+
+      // 1. Mobile Touch Events (Chrome, Safari, Android, iOS)
+      surface.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length !== 1) return;
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchMoved = false;
+      }, { passive: true });
+
+      surface.addEventListener('touchmove', (e) => {
+        if (!e.touches || e.touches.length !== 1) return;
+        const touch = e.touches[0];
+        const dx = Math.abs(touch.clientX - touchStartX);
+        const dy = Math.abs(touch.clientY - touchStartY);
+        if (dx > 12 || dy > 12) {
+          touchMoved = true;
+        }
+      }, { passive: true });
+
+      surface.addEventListener('touchend', (e) => {
+        if (touchMoved) return; // Swiped or dragged
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
+        const touch = e.changedTouches[0];
+        const rect = surface.getBoundingClientRect();
+        const relX = touch.clientX - rect.left;
+        lastHandledTouchTime = Date.now();
+        handleTapGesture(relX, rect.width);
+      });
+
+      surface.addEventListener('touchcancel', () => {
+        touchMoved = true;
+      }, { passive: true });
+
+      // 2. Click Event (Desktop mouse clicks and pointer fallback)
+      surface.addEventListener('click', (e) => {
+        // Prevent duplicate execution if touchend just handled it
+        if (Date.now() - lastHandledTouchTime < 450) return;
+        const rect = surface.getBoundingClientRect();
+        const relX = e.clientX - rect.left;
+        handleTapGesture(relX, rect.width);
       });
     }
 
@@ -6014,7 +6224,7 @@
           closeMobileNav();
           document.getElementById('modal-subtitles').classList.add('translate-x-full');
           document.getElementById('modal-settings').classList.add('translate-x-full');
-          document.getElementById('modal-episodes-drawer').classList.add('translate-x-full');
+          closeEpisodesDrawer();
           document.getElementById('popover-resolution').classList.add('hidden');
           return;
         }
