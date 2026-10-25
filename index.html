@@ -4457,6 +4457,11 @@
 
         const resStr = info.resolutions || "1080p,720p,480p";
         currentResolutions = resStr.split(',').map(s => s.trim()).filter(Boolean);
+        if (!currentResolutions.includes(activeResolution)) {
+          activeResolution = currentResolutions[0] || '1080p';
+        }
+        const activeResLabel = document.getElementById('active-res-label');
+        if (activeResLabel) activeResLabel.textContent = activeResolution.toUpperCase();
         populateResolutionsMenu(currentResolutions);
       } catch (e) {
         currentTotalSeconds = 5400;
@@ -4837,15 +4842,28 @@
         document.getElementById('scrub-buffered-bar').style.width = bufPct + '%';
       });
 
-      // Buffer & Playback State Handlers
+      // Buffer & Playback State Handlers with Debounced Loading Spinner to prevent UI thrashing
+      let waitingDebounceTimer = null;
       video.addEventListener('waiting', () => {
-        setPlayerLoading(true);
+        if (!waitingDebounceTimer) {
+          waitingDebounceTimer = setTimeout(() => {
+            setPlayerLoading(true);
+          }, 350);
+        }
       });
       video.addEventListener('canplay', () => {
+        if (waitingDebounceTimer) {
+          clearTimeout(waitingDebounceTimer);
+          waitingDebounceTimer = null;
+        }
         setPlayerLoading(false);
         unfreezeFrame();
       });
       video.addEventListener('playing', () => {
+        if (waitingDebounceTimer) {
+          clearTimeout(waitingDebounceTimer);
+          waitingDebounceTimer = null;
+        }
         setPlayerLoading(false);
         unfreezeFrame();
         isPlaying = true;
@@ -4853,11 +4871,37 @@
         resetHudTimeout();
       });
       video.addEventListener('pause', () => {
+        if (waitingDebounceTimer) {
+          clearTimeout(waitingDebounceTimer);
+          waitingDebounceTimer = null;
+        }
         isPlaying = false;
         updatePlayIcons(false);
         clearTimeout(hudHideTimer);
         setHudVisibility(true);
       });
+
+      // Automatic recovery if buffer stalls indefinitely (>8s stuck during active playback)
+      let lastPlaybackTime = 0;
+      let stallCounter = 0;
+      setInterval(() => {
+        if (currentView !== 'player' || !video.src || video.paused || isSeekingOperation || isScrubbing) {
+          stallCounter = 0;
+          return;
+        }
+        if (video.currentTime === lastPlaybackTime && isPlaying) {
+          stallCounter++;
+          if (stallCounter >= 8) {
+            console.warn("Continuous playback stall detected (8s), auto-recovering stream...");
+            stallCounter = 0;
+            const resumePos = currentOffsetSeconds + (video.currentTime || 0);
+            mountStream(resumePos);
+          }
+        } else {
+          stallCounter = 0;
+          lastPlaybackTime = video.currentTime;
+        }
+      }, 1000);
 
       // Stream Error Auto-Recovery Mechanism with attempt limits
       let streamRecoveryAttempts = 0;
@@ -5139,6 +5183,11 @@
         const info = await infoRes.json();
         const resStr = info.resolutions || "1080p,720p,480p";
         currentResolutions = resStr.split(',').map(s => s.trim()).filter(Boolean);
+        if (!currentResolutions.includes(activeResolution)) {
+          activeResolution = currentResolutions[0] || '1080p';
+        }
+        const activeResLabel = document.getElementById('active-res-label');
+        if (activeResLabel) activeResLabel.textContent = activeResolution.toUpperCase();
         populateResolutionsMenu(currentResolutions);
       } catch (e) {}
 
