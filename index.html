@@ -179,6 +179,29 @@
       pointer-events: none;
     }
 
+    /* Mobile Player Double-Tap Pop-Out Animation */
+    @keyframes doubleTapPopOut {
+      0% {
+        transform: scale(0.75);
+        opacity: 0.6;
+      }
+      40% {
+        transform: scale(1.18);
+        opacity: 1;
+      }
+      70% {
+        transform: scale(0.96);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    .animate-double-tap-pop {
+      animation: doubleTapPopOut 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
     /* Screen Transitions */
     .screen-view {
       transition: opacity 0.25s ease-in-out;
@@ -1142,14 +1165,14 @@
       <!-- Smart Video Surface Gesture / Click Area -->
       <div id="video-click-surface" class="absolute inset-0 z-10 cursor-pointer select-none touch-manipulation" style="touch-action: manipulation;"></div>
 
-      <!-- Double-Tap Seek Ripples (Left -2s, Right +2s YouTube-Style Glass Circles) -->
+      <!-- Double-Tap Seek Ripples (Left -10s, Right +10s YouTube-Style Glass Circles) -->
       <div id="double-tap-left" class="pointer-events-none absolute left-[12%] sm:left-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
         <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
           <div class="flex items-center space-x-0.5 text-white">
             <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_rewind</span>
             <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">replay</span>
           </div>
-          <span id="double-tap-left-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">-2 seconds</span>
+          <span id="double-tap-left-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">-10s</span>
         </div>
       </div>
       <div id="double-tap-right" class="pointer-events-none absolute right-[12%] sm:right-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
@@ -1158,7 +1181,7 @@
             <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">forward_media</span>
             <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_forward</span>
           </div>
-          <span id="double-tap-right-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">+2 seconds</span>
+          <span id="double-tap-right-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">+10s</span>
         </div>
       </div>
     </div>
@@ -6147,20 +6170,35 @@
 
         const sign = side === 'left' ? '-' : '+';
         if (label) {
-          label.textContent = `${sign}${seconds} seconds`;
+          label.textContent = `${sign}${seconds}s`;
         }
 
-        // Show feedback overlay with scale pop
+        // Show feedback overlay with smooth scale pop-out
         el.classList.remove('opacity-0');
         el.classList.add('opacity-100');
 
         const badge = el.querySelector('.double-tap-badge');
         if (badge) {
+          badge.classList.remove('animate-double-tap-pop');
           badge.classList.remove('scale-100');
           badge.classList.add('scale-90');
           void badge.offsetWidth; // Force CSS reflow for repeated pops
           badge.classList.remove('scale-90');
           badge.classList.add('scale-100');
+          badge.classList.add('animate-double-tap-pop');
+
+          if (typeof badge.animate === 'function') {
+            badge.animate([
+              { transform: 'scale(0.75)', opacity: 0.6 },
+              { transform: 'scale(1.18)', opacity: 1, offset: 0.4 },
+              { transform: 'scale(0.96)', offset: 0.72 },
+              { transform: 'scale(1.0)', opacity: 1 }
+            ], {
+              duration: 320,
+              easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+              fill: 'forwards'
+            });
+          }
         }
 
         clearTimeout(el._fadeTimer);
@@ -6168,10 +6206,11 @@
           el.classList.remove('opacity-100');
           el.classList.add('opacity-0');
           if (badge) {
+            badge.classList.remove('animate-double-tap-pop');
             badge.classList.remove('scale-100');
             badge.classList.add('scale-90');
           }
-        }, 550);
+        }, 650);
       }
 
       function executeSingleTap() {
@@ -6248,12 +6287,12 @@
           return;
         }
 
-        const DOUBLE_TAP_SEEK_SECONDS = 2; // Every double-tap gesture skips 2 seconds
+        const DOUBLE_TAP_SEEK_SECONDS = 10; // Every double-tap gesture skips 10 seconds
 
-        // Screen Zones: Left half (seek -2s) vs Right half (seek +2s)
+        // Screen Zones: Left half (seek -10s) vs Right half (seek +10s)
         const side = (relX < width * 0.50) ? 'left' : 'right';
 
-        // Fast path: Repeated multi-tap accumulation on the same side (+2s, +4s, +6s...)
+        // Fast path: Repeated multi-tap accumulation on the same side (+10s, +20s, +30s...)
         if (isSeekingActive && lastTapSide === side) {
           accumulatedSeconds += DOUBLE_TAP_SEEK_SECONDS;
           lastTapTime = now;
