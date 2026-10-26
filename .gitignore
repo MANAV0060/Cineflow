@@ -24,3 +24,9 @@ scratch/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Android Gradle build artifacts
+**/.gradle/**
+**/build/**
+android-tv/local.properties
+

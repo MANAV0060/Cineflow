@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cineflow TV</string>
+    <string name="browse_title">Cineflow</string>
+    
+    <!-- Navigation Rows -->
+    <string name="category_featured">🌟 Featured Spotlight</string>
+    <string name="category_continue">⏱️ Continue Watching</string>
+    <string name="category_movies">🎬 Trending Movies</string>
+    <string name="category_series">📺 Popular TV Series</string>
+    <string name="category_anime">⚡ Anime Universe</string>
+    <string name="category_livetv">🔴 Live TV Channels (24/7)</string>
+    <string name="category_settings">⚙️ Settings &amp; Updates</string>
+    
+    <!-- Details Actions -->
+    <string name="action_play">Play Now</string>
+    <string name="action_resume">Resume Playback</string>
+    <string name="action_episodes">Episodes</string>
+    <string name="action_watchlist">Add to Watchlist</string>
+    <string name="action_check_update">Check for Updates</string>
+    
+    <!-- Update Strings -->
+    <string name="update_available_title">New Update Available</string>
+    <string name="update_now">Update Now</string>
+    <string name="update_later">Later</string>
+    <string name="downloading_update">Downloading Cineflow TV Update…</string>
+    <string name="installing_update">Installing update…</string>
+    <string name="app_up_to_date">Cineflow TV is up to date.</string>
+</resources>

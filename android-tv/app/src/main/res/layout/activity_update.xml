@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="600dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/card_focus_border"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <!-- Title with Gold Accent -->
+    <TextView
+        android:id="@+id/update_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cineflow TV Update Available"
+        android:textColor="@color/brand_gold"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Version Subtitle -->
+    <TextView
+        android:id="@+id/update_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Version 1.0.1 (Build 1002)"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp" />
+
+    <!-- Changelog Container -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="What's New in this Release:"
+        android:textColor="@color/text_primary"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/update_changelog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:lineSpacingExtra="4dp"
+        android:text="• Native Android TV experience\n• Reliable D-pad and remote control navigation\n• High performance ExoPlayer video engine\n• Seamless in-app updates without losing data"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp" />
+
+    <!-- Download Progress (Initially GONE) -->
+    <LinearLayout
+        android:id="@+id/update_progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/update_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="@color/brand_gold" />
+
+        <TextView
+            android:id="@+id/update_progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:text="Downloading update… 0%"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Buttons Row -->
+    <LinearLayout
+        android:id="@+id/update_buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_update_later"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:background="@drawable/pill_button_focus"
+            android:focusable="true"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="Later"
+            android:textColor="@color/text_primary" />
+
+        <Button
+            android:id="@+id/btn_update_now"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/pill_button_focus"
+            android:focusable="true"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="Update Now"
+            android:textColor="#08080A"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

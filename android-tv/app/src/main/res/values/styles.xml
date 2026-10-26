@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Cineflow TV Theme -->
+    <style name="Theme.CineflowTV" parent="Theme.Leanback">
+        <item name="android:colorPrimary">@color/brand_gold</item>
+        <item name="android:colorAccent">@color/brand_gold</item>
+        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="defaultBrandColor">@color/surface_dark</item>
+        <item name="defaultSearchColor">@color/brand_gold</item>
+        <item name="defaultSearchBrightColor">@color/brand_gold</item>
+    </style>
+
+    <!-- Details Screen Theme -->
+    <style name="Theme.CineflowTV.Details" parent="Theme.Leanback.Details">
+        <item name="android:colorPrimary">@color/brand_gold</item>
+        <item name="android:colorAccent">@color/brand_gold</item>
+        <item name="android:windowBackground">@color/background_dark</item>
+    </style>
+
+    <!-- Fullscreen Video Player Theme -->
+    <style name="Theme.CineflowTV.Player" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">#000000</item>
+        <item name="android:keepScreenOn">true</item>
+    </style>
+
+    <!-- Update Dialog Theme -->
+    <style name="Theme.CineflowTV.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/surface_dark</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowElevation">16dp</item>
+    </style>
+
+    <!-- Focusable Card Style -->
+    <style name="CineflowCardFocus">
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:stateListAnimator">@animator/card_focus_animator</item>
+    </style>
+</resources>

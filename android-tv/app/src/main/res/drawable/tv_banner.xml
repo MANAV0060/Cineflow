@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp"
+    android:height="180dp"
+    android:viewportWidth="320"
+    android:viewportHeight="180">
+    <!-- Dark gradient backdrop -->
+    <path
+        android:fillColor="#121318"
+        android:pathData="M0,0h320v180h-320z" />
+    <!-- Film reel / cinema emblem in gold -->
+    <path
+        android:fillColor="#F5C518"
+        android:pathData="M90,60h40c4,0 7,3 7,7v46c0,4 -3,7 -7,7H90c-4,0 -7,-3 -7,-7V67c0,-4 3,-7 7,-7z" />
+    <path
+        android:fillColor="#121318"
+        android:pathData="M103,75l18,15 -18,15z" />
+    <!-- Accent Line -->
+    <path
+        android:fillColor="#F5C518"
+        android:pathData="M60,140h200v3h-200z" />
+</vector>

@@ -1365,6 +1365,58 @@ def api_livetv_stream():
     except Exception as e:
         return jsonify({"code": 502, "error": f"Failed fetching stream: {str(e)}", "target": target_url}), 502
 
+# ============================================================================
+# ANDROID TV IN-APP AUTO-UPDATE & DISTRIBUTION ENDPOINTS
+# ============================================================================
+
+TV_UPDATE_MANIFEST = {
+    "latest_version_code": 1001,
+    "latest_version_name": "1.0.0",
+    "release_date": "2026-10-26",
+    "apk_url": "/api/tv/download",
+    "changelog": [
+        "Native Android TV 10-foot user experience",
+        "Reliable D-pad and remote-control navigation with focus feedback",
+        "Hardware-accelerated Media3 ExoPlayer engine",
+        "Integrated Live TV channels with auto-failover",
+        "Anime universe with multi-track dubs and subtitles",
+        "Seamless in-app over-the-air update delivery preserving user settings"
+    ],
+    "mandatory": False,
+    "min_supported_version": 1000
+}
+
+@app.route("/api/tv/update")
+def api_tv_update():
+    """Return update metadata for Cineflow Android TV clients."""
+    client_version = request.args.get("current_version", 0, type=int)
+    response_data = dict(TV_UPDATE_MANIFEST)
+    response_data["client_version"] = client_version
+    response_data["has_update"] = response_data["latest_version_code"] > client_version
+    return jsonify(response_data)
+
+@app.route("/api/tv/download")
+def api_tv_download():
+    """Serve the latest signed release APK for Cineflow Android TV."""
+    apk_candidates = [
+        os.path.join(os.path.dirname(__file__), "android-tv", "app", "build", "outputs", "apk", "release", "app-release.apk"),
+        os.path.join(os.path.dirname(__file__), "android-tv", "app", "build", "outputs", "apk", "debug", "app-debug.apk"),
+        os.path.join(os.path.dirname(__file__), "static", "updates", "cineflow-tv-release.apk"),
+        os.path.join(os.path.dirname(__file__), "cineflow-tv-release.apk")
+    ]
+    for apk_path in apk_candidates:
+        if os.path.exists(apk_path):
+            dir_name = os.path.dirname(apk_path)
+            file_name = os.path.basename(apk_path)
+            return send_from_directory(
+                dir_name,
+                file_name,
+                mimetype="application/vnd.android.package-archive",
+                as_attachment=True,
+                download_name="cineflow-tv-release.apk"
+            )
+    return jsonify({"error": "Release APK not found. Please build the Android TV project first."}), 404
+
 if __name__ == "__main__":
     os.makedirs("static", exist_ok=True)
     port = int(os.environ.get("PORT", 5000))
@@ -1373,3 +1425,4 @@ if __name__ == "__main__":
     print(f"Serving at: http://localhost:{port}")
     print("=" * 60)
     app.run(host="0.0.0.0", port=port, debug=False)
+
