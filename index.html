@@ -1142,23 +1142,23 @@
       <!-- Smart Video Surface Gesture / Click Area -->
       <div id="video-click-surface" class="absolute inset-0 z-10 cursor-pointer select-none touch-manipulation" style="touch-action: manipulation;"></div>
 
-      <!-- Double-Tap Seek Ripples (Left -10s, Right +10s YouTube-Style Glass Circles) -->
+      <!-- Double-Tap Seek Ripples (Left -2s, Right +2s YouTube-Style Glass Circles) -->
       <div id="double-tap-left" class="pointer-events-none absolute left-[12%] sm:left-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
         <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
           <div class="flex items-center space-x-0.5 text-white">
             <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_rewind</span>
-            <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">replay_10</span>
+            <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">replay</span>
           </div>
-          <span id="double-tap-left-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">-10 seconds</span>
+          <span id="double-tap-left-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">-2 seconds</span>
         </div>
       </div>
       <div id="double-tap-right" class="pointer-events-none absolute right-[12%] sm:right-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
         <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
           <div class="flex items-center space-x-0.5 text-white">
-            <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">forward_10</span>
+            <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">forward_media</span>
             <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_forward</span>
           </div>
-          <span id="double-tap-right-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">+10 seconds</span>
+          <span id="double-tap-right-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">+2 seconds</span>
         </div>
       </div>
     </div>
@@ -6248,13 +6248,14 @@
           return;
         }
 
-        // Screen Zones: Left half (seek -10s) vs Right half (seek +10s)
+        const DOUBLE_TAP_SEEK_SECONDS = 2; // Every double-tap gesture skips 2 seconds
+
+        // Screen Zones: Left half (seek -2s) vs Right half (seek +2s)
         const side = (relX < width * 0.50) ? 'left' : 'right';
 
-        // VOD / Series / Anime: Left or Right Double-Tap Seeking
-        // Fast path: Repeated multi-tap accumulation on the same side (+10s, +20s, +30s...)
+        // Fast path: Repeated multi-tap accumulation on the same side (+2s, +4s, +6s...)
         if (isSeekingActive && lastTapSide === side) {
-          accumulatedSeconds += 10;
+          accumulatedSeconds += DOUBLE_TAP_SEEK_SECONDS;
           lastTapTime = now;
           lastTapX = clientX || 0;
           lastTapY = clientY || 0;
@@ -6269,7 +6270,7 @@
           }, 650);
 
           // Execute skip with center pulse suppressed
-          skipSeconds(side === 'left' ? -10 : 10, true);
+          skipSeconds(side === 'left' ? -DOUBLE_TAP_SEEK_SECONDS : DOUBLE_TAP_SEEK_SECONDS, true);
           showDoubleTapFeedback(side, accumulatedSeconds);
 
           // If controls are already visible, maintain visibility and refresh auto-hide
@@ -6292,7 +6293,7 @@
           }
 
           isSeekingActive = true;
-          accumulatedSeconds = 10;
+          accumulatedSeconds = DOUBLE_TAP_SEEK_SECONDS;
           lastTapTime = now;
           lastTapX = clientX || 0;
           lastTapY = clientY || 0;
@@ -6307,7 +6308,7 @@
           }, 650);
 
           // Execute skip with center pulse suppressed
-          skipSeconds(side === 'left' ? -10 : 10, true);
+          skipSeconds(side === 'left' ? -DOUBLE_TAP_SEEK_SECONDS : DOUBLE_TAP_SEEK_SECONDS, true);
           showDoubleTapFeedback(side, accumulatedSeconds);
 
           // If controls are already visible, maintain visibility and refresh auto-hide

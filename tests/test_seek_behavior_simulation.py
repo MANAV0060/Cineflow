@@ -105,5 +105,36 @@ class TestSeekBehaviorLogic(unittest.TestCase):
         self.assertIn('function seekPlayerToSeconds(sec)', self.html)
         self.assertIn('seekPlayerToSeconds(target);', self.html)
 
+    def test_05_continuous_2_second_double_tap_seeking(self):
+        """Simulate continuous 2-second double-tap seeking:
+        - Start at 10.0s.
+        - Double-tap left: skips 2s backward -> 8.0s.
+        - Double-tap right: skips 2s forward -> 10.0s.
+        - 3 repeated double-taps on right: accumulates 6s -> 16.0s.
+        """
+        current_offset = 10.0
+        video_current_time = 0.0
+        last_virtual_seek_time = None
+        duration = 7200.0
+
+        def get_current_time():
+            nonlocal last_virtual_seek_time, current_offset, video_current_time
+            if last_virtual_seek_time is not None:
+                return last_virtual_seek_time
+            return current_offset + video_current_time
+
+        def skip_seconds(delta):
+            nonlocal last_virtual_seek_time, duration
+            base = get_current_time()
+            target = max(0.0, min(duration, base + delta))
+            last_virtual_seek_time = target
+            return target
+
+        self.assertEqual(skip_seconds(-2), 8.0)
+        self.assertEqual(skip_seconds(2), 10.0)
+        self.assertEqual(skip_seconds(2), 12.0)
+        self.assertEqual(skip_seconds(2), 14.0)
+        self.assertEqual(skip_seconds(2), 16.0)
+
 if __name__ == '__main__':
     unittest.main()

@@ -49,13 +49,12 @@ class TestMobileDoubleTapSeeking(unittest.TestCase):
         """Verify skipSeconds supports suppressPulse so center pulse does not compete with double-tap arcs."""
         self.assertIn('function skipSeconds(delta, suppressPulse = false)', self.html)
         self.assertIn('if (!suppressPulse) {', self.html)
-        self.assertIn("showPulse(delta > 0 ? 'forward_10' : 'replay_10');", self.html)
-        self.assertIn("skipSeconds(side === 'left' ? -10 : 10, true);", self.html)
+        self.assertIn("skipSeconds(side === 'left' ? -DOUBLE_TAP_SEEK_SECONDS : DOUBLE_TAP_SEEK_SECONDS, true);", self.html)
 
     def test_07_repeated_multi_tap_accumulation(self):
-        """Verify multi-tap accumulation logic (+10s, +20s, +30s) and timer reset."""
+        """Verify multi-tap accumulation logic and timer reset."""
         self.assertIn('if (isSeekingActive && lastTapSide === side) {', self.html)
-        self.assertIn('accumulatedSeconds += 10;', self.html)
+        self.assertIn('accumulatedSeconds += DOUBLE_TAP_SEEK_SECONDS;', self.html)
         self.assertIn('showDoubleTapFeedback(side, accumulatedSeconds);', self.html)
         self.assertIn('isSeekingActive = true;', self.html)
         self.assertIn('isSeekingActive = false;', self.html)

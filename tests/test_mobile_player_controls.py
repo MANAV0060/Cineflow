@@ -58,12 +58,12 @@ class TestMobilePlayerControls(unittest.TestCase):
         # 1. Indicators with labels and chevrons
         self.assertIn('id="double-tap-left"', self.html)
         self.assertIn('id="double-tap-left-label"', self.html)
-        self.assertIn('-10 seconds', self.html)
+        self.assertIn('-2 seconds', self.html)
         self.assertIn('fast_rewind', self.html)
 
         self.assertIn('id="double-tap-right"', self.html)
         self.assertIn('id="double-tap-right-label"', self.html)
-        self.assertIn('+10 seconds', self.html)
+        self.assertIn('+2 seconds', self.html)
         self.assertIn('fast_forward', self.html)
 
         # 2. Touch event listeners in setupVideoGestures
@@ -77,7 +77,7 @@ class TestMobilePlayerControls(unittest.TestCase):
         self.assertIn('touchMoved = true', self.html)
 
         # 4. Repeated double-tap accumulation
-        self.assertIn('accumulatedSeconds += 10', self.html)
+        self.assertIn('accumulatedSeconds += DOUBLE_TAP_SEEK_SECONDS', self.html)
         self.assertIn('showDoubleTapFeedback(side, accumulatedSeconds)', self.html)
 
         # 5. Live stream protection (no seeking on Live TV)
