@@ -20,9 +20,10 @@ class TestMobilePlayerControls(unittest.TestCase):
         self.assertEqual(self.html, self.static_html, "index.html and static/index.html contents must be identical")
 
     def test_02_mobile_livetv_button_presence(self):
-        """Verify that mobile navigation header includes a prominent Live TV button."""
-        # 1. Header mobile button
-        self.assertIn('id="btn-mobile-livetv"', self.html)
+        """Verify that mobile navigation provides Live TV in drawer menu without navbar overlap."""
+        # 1. Drawer navigation has Live TV option
+        self.assertIn("mobileNavSelect('livetv')", self.html)
+        self.assertNotIn('id="btn-mobile-livetv"', self.html)
         self.assertIn('showLiveTvSection()', self.html)
         self.assertIn('live_tv', self.html)
         self.assertIn('animate-pulse', self.html)
