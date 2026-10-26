@@ -117,5 +117,12 @@ class TestMobileDoubleTapSeeking(unittest.TestCase):
         self.assertIn('Date.now() - lastHandledTouchTime < 1000', self.html)
         self.assertIn('e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents', self.html)
 
+    def test_14_seek_indicator_persistence_and_animation(self):
+        """Verify seek button/indicator remains visible for at least 1.2s during continuous double-taps."""
+        self.assertIn('const SEEK_ACCUMULATION_TIMEOUT = 1200;', self.html)
+        self.assertIn('isAlreadyVisible', self.html)
+        self.assertIn('badge._popAnim', self.html)
+        self.assertIn('SEEK_ACCUMULATION_TIMEOUT', self.html)
+
 if __name__ == '__main__':
     unittest.main()

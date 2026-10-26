@@ -5328,7 +5328,7 @@
           if (!isSeekingActive) {
             lastVirtualSeekTime = null;
           }
-        }, 1200);
+        }, 1600);
 
         smartSeek(newTarget);
       } catch (err) {
@@ -6163,15 +6163,26 @@
       const DOUBLE_TAP_WINDOW = 300; // Synchronized with single-tap timeout
       const MAX_DOUBLE_TAP_DIST = 65; // Proximity threshold (px) to reject opposite taps
 
+      const SEEK_ACCUMULATION_TIMEOUT = 1200; // Hold time for continuous double-tap seeking & UI visibility (1.2s)
+
       function showDoubleTapFeedback(side, seconds) {
         const el = document.getElementById(side === 'left' ? 'double-tap-left' : 'double-tap-right');
+        const otherEl = document.getElementById(side === 'left' ? 'double-tap-right' : 'double-tap-left');
         const label = document.getElementById(side === 'left' ? 'double-tap-left-label' : 'double-tap-right-label');
         if (!el) return;
+
+        if (otherEl) {
+          clearTimeout(otherEl._fadeTimer);
+          otherEl.classList.remove('opacity-100');
+          otherEl.classList.add('opacity-0');
+        }
 
         const sign = side === 'left' ? '-' : '+';
         if (label) {
           label.textContent = `${sign}${seconds}s`;
         }
+
+        const isAlreadyVisible = el.classList.contains('opacity-100');
 
         // Show feedback overlay with smooth scale pop-out
         el.classList.remove('opacity-0');
@@ -6188,12 +6199,23 @@
           badge.classList.add('animate-double-tap-pop');
 
           if (typeof badge.animate === 'function') {
-            badge.animate([
-              { transform: 'scale(0.75)', opacity: 0.6 },
-              { transform: 'scale(1.18)', opacity: 1, offset: 0.4 },
-              { transform: 'scale(0.96)', offset: 0.72 },
+            if (badge._popAnim) {
+              badge._popAnim.cancel();
+            }
+            // Continuous pop-out: when already visible, stay 100% solid opacity without dipping
+            const keyframes = isAlreadyVisible ? [
+              { transform: 'scale(1.0)', opacity: 1 },
+              { transform: 'scale(1.22)', opacity: 1, offset: 0.35 },
+              { transform: 'scale(0.96)', opacity: 1, offset: 0.7 },
               { transform: 'scale(1.0)', opacity: 1 }
-            ], {
+            ] : [
+              { transform: 'scale(0.85)', opacity: 0.85 },
+              { transform: 'scale(1.22)', opacity: 1, offset: 0.4 },
+              { transform: 'scale(0.96)', opacity: 1, offset: 0.7 },
+              { transform: 'scale(1.0)', opacity: 1 }
+            ];
+
+            badge._popAnim = badge.animate(keyframes, {
               duration: 320,
               easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
               fill: 'forwards'
@@ -6209,8 +6231,12 @@
             badge.classList.remove('animate-double-tap-pop');
             badge.classList.remove('scale-100');
             badge.classList.add('scale-90');
+            if (badge._popAnim) {
+              badge._popAnim.cancel();
+              badge._popAnim = null;
+            }
           }
-        }, 650);
+        }, SEEK_ACCUMULATION_TIMEOUT);
       }
 
       function executeSingleTap() {
@@ -6294,6 +6320,10 @@
 
         // Fast path: Repeated multi-tap accumulation on the same side (+10s, +20s, +30s...)
         if (isSeekingActive && lastTapSide === side) {
+          if (singleTapTimer) {
+            clearTimeout(singleTapTimer);
+            singleTapTimer = null;
+          }
           accumulatedSeconds += DOUBLE_TAP_SEEK_SECONDS;
           lastTapTime = now;
           lastTapX = clientX || 0;
@@ -6306,7 +6336,7 @@
             lastTapSide = null;
             lastTapTime = 0;
             lastVirtualSeekTime = null;
-          }, 650);
+          }, SEEK_ACCUMULATION_TIMEOUT);
 
           // Execute skip with center pulse suppressed
           skipSeconds(side === 'left' ? -DOUBLE_TAP_SEEK_SECONDS : DOUBLE_TAP_SEEK_SECONDS, true);
@@ -6344,7 +6374,7 @@
             lastTapSide = null;
             lastTapTime = 0;
             lastVirtualSeekTime = null;
-          }, 650);
+          }, SEEK_ACCUMULATION_TIMEOUT);
 
           // Execute skip with center pulse suppressed
           skipSeconds(side === 'left' ? -DOUBLE_TAP_SEEK_SECONDS : DOUBLE_TAP_SEEK_SECONDS, true);
