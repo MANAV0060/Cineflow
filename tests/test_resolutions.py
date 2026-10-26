@@ -1,3 +1,5 @@
+import sys, os
+sys.path.insert(0, os.path.dirname(__file__))
 import verify_playable_stream, urllib.request, re
 
 play_data = verify_playable_stream.execute_request('/wefeed-tv-bff/subject/play-info/v2', 'subjectId=8906247916759695608')

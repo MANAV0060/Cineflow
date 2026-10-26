@@ -1166,7 +1166,7 @@
       <div id="video-click-surface" class="absolute inset-0 z-10 cursor-pointer select-none touch-manipulation" style="touch-action: manipulation;"></div>
 
       <!-- Double-Tap Seek Ripples (Left -10s, Right +10s YouTube-Style Glass Circles) -->
-      <div id="double-tap-left" class="pointer-events-none absolute left-[12%] sm:left-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
+      <div id="double-tap-left" class="pointer-events-none absolute left-[12%] sm:left-[18%] top-1/2 -translate-y-1/2 z-40 opacity-0 transition-opacity duration-200">
         <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl">
           <div class="flex items-center space-x-0.5 text-white">
             <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_rewind</span>
@@ -1175,7 +1175,7 @@
           <span id="double-tap-left-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">-10s</span>
         </div>
       </div>
-      <div id="double-tap-right" class="pointer-events-none absolute right-[12%] sm:right-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
+      <div id="double-tap-right" class="pointer-events-none absolute right-[12%] sm:right-[18%] top-1/2 -translate-y-1/2 z-40 opacity-0 transition-opacity duration-200">
         <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl">
           <div class="flex items-center space-x-0.5 text-white">
             <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">forward_media</span>
@@ -4822,6 +4822,9 @@
         isSeekingOperation = false;
         pendingSeekTarget = null;
         if (!isSeekingActive) lastVirtualSeekTime = null;
+        if (isPlaying && video.paused) {
+          video.play().catch(() => {});
+        }
       };
 
       const onTimeUpdateCheck = () => {
@@ -4841,6 +4844,9 @@
         updatePlayIcons(true);
       }).catch((err) => {
         if (thisMountId !== activeMountCounter) return;
+        if (err && err.name === 'AbortError') {
+          return;
+        }
         if (err && err.name === 'NotAllowedError') {
           video.muted = true;
           video.play().then(() => {
@@ -5273,6 +5279,8 @@
 
         if (wasPlaying && video.paused) {
           video.play().catch(() => {});
+        } else if (wasPlaying) {
+          video.play().catch(() => {});
         }
 
         const onLocalSeeked = () => {
@@ -5283,6 +5291,9 @@
             if (!isSeekingActive) lastVirtualSeekTime = null;
             setPlayerLoading(false);
             unfreezeFrame();
+            if (wasPlaying && video.paused) {
+              video.play().catch(() => {});
+            }
           }, 80);
         };
         video.addEventListener('seeked', onLocalSeeked);
@@ -5299,7 +5310,7 @@
         freezeCurrentFrame();
         setPlayerLoading(true);
         mountStream(boundedTarget);
-      }, 160);
+      }, 550);
     }
 
     function seekPlayerToSeconds(sec) {
@@ -6196,6 +6207,7 @@
 
         if (otherEl) {
           clearTimeout(otherEl._fadeTimer);
+          otherEl._fadeTimer = null;
           otherEl.classList.remove('opacity-100');
           otherEl.classList.add('opacity-0');
         }
@@ -6206,6 +6218,9 @@
         }
 
         const isAlreadyVisible = el.classList.contains('opacity-100');
+
+        clearTimeout(el._fadeTimer);
+        el._fadeTimer = null;
 
         // Show feedback overlay with smooth scale pop-out
         el.classList.remove('opacity-0');
@@ -6236,7 +6251,6 @@
           });
         }
 
-        clearTimeout(el._fadeTimer);
         el._fadeTimer = setTimeout(() => {
           el.classList.remove('opacity-100');
           el.classList.add('opacity-0');
@@ -6244,6 +6258,7 @@
             badge._popAnim.cancel();
             badge._popAnim = null;
           }
+          el._fadeTimer = null;
         }, SEEK_ACCUMULATION_TIMEOUT);
       }
 
@@ -6360,7 +6375,7 @@
         // Initial double-tap detection
         const diff = now - lastTapTime;
         const dist = Math.hypot((clientX || 0) - lastTapX, (clientY || 0) - lastTapY);
-        const isDoubleTap = (lastTapSide === side) && (diff < DOUBLE_TAP_WINDOW) && (dist < MAX_DOUBLE_TAP_DIST);
+        const isDoubleTap = (lastTapSide === side) && (diff < DOUBLE_TAP_WINDOW || diff < 380) && (dist < MAX_DOUBLE_TAP_DIST || dist < 140);
 
         if (isDoubleTap) {
           // Cancel pending single tap toggle immediately so HUD never flickers
@@ -6399,6 +6414,13 @@
             isSeekingActive = false;
             accumulatedSeconds = 0;
             lastVirtualSeekTime = null;
+            const prevEl = document.getElementById(lastTapSide === 'left' ? 'double-tap-left' : 'double-tap-right');
+            if (prevEl) {
+              clearTimeout(prevEl._fadeTimer);
+              prevEl._fadeTimer = null;
+              prevEl.classList.remove('opacity-100');
+              prevEl.classList.add('opacity-0');
+            }
           }
 
           lastTapTime = now;
