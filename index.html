@@ -303,52 +303,6 @@
       </div>
     </header>
 
-    <!-- MOBILE NAVIGATION DRAWER (Responsive slide-down menu for mobile and tablet) -->
-    <div id="mobile-nav-drawer" class="hidden fixed inset-0 z-35 bg-black/85 backdrop-blur-xl transition-all duration-300 flex flex-col pt-16 px-5 pb-8 overflow-y-auto">
-      <div class="flex flex-col space-y-4 pt-4 border-t border-white/10 max-w-md mx-auto w-full">
-        <span class="text-[11px] font-bold uppercase tracking-widest text-[#f5c518] font-mono">Browse Cineflow</span>
-        <div class="grid grid-cols-2 gap-2.5 text-sm font-semibold">
-          <button onclick="mobileNavSelect('home')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/10 text-[#f5c518] hover:bg-white/15 transition text-left cursor-pointer">
-            <span class="material-symbols-outlined text-lg">home</span>
-            <span>Home</span>
-          </button>
-          <button onclick="mobileNavSelect('tv')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/5 text-white/90 hover:bg-white/15 transition text-left cursor-pointer">
-            <span class="material-symbols-outlined text-lg">tv</span>
-            <span>TV Shows</span>
-          </button>
-          <button onclick="mobileNavSelect('movie')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/5 text-white/90 hover:bg-white/15 transition text-left cursor-pointer">
-            <span class="material-symbols-outlined text-lg">movie</span>
-            <span>Movies</span>
-          </button>
-          <button onclick="mobileNavSelect('anime')" class="flex items-center space-x-2.5 p-3 rounded-xl bg-white/5 text-white/90 hover:bg-white/15 transition text-left cursor-pointer">
-            <span class="material-symbols-outlined text-lg">auto_awesome</span>
-            <span>Anime</span>
-          </button>
-          <button onclick="mobileNavSelect('livetv')" class="col-span-2 flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-red-600/30 to-amber-600/20 border border-red-500/30 text-white hover:from-red-600/40 transition text-left cursor-pointer shadow-lg">
-            <div class="flex items-center space-x-2.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
-              <span class="font-bold">Live TV Channels</span>
-            </div>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/30 text-red-300 font-bold uppercase">37 Channels</span>
-          </button>
-        </div>
-
-        <span class="text-[11px] font-bold uppercase tracking-widest text-white/40 font-mono pt-2">Popular Categories</span>
-        <div class="flex flex-wrap gap-2 text-xs">
-          <button onclick="mobileNavSelect('Action')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Action</button>
-          <button onclick="mobileNavSelect('Comedy')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Comedy</button>
-          <button onclick="mobileNavSelect('Adventure')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Adventure</button>
-          <button onclick="mobileNavSelect('Drama')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Drama</button>
-          <button onclick="mobileNavSelect('Sci-Fi')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Sci-Fi</button>
-        </div>
-
-        <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/50">
-          <span>Powered by CineFlow Engine</span>
-          <button onclick="toggleMobileNav()" class="text-[#f5c518] hover:underline font-semibold cursor-pointer">Close Menu</button>
-        </div>
-      </div>
-    </div>
-
     <!-- Search Results View (Toggled dynamically upon searching) -->
     <section id="search-results-section" class="hidden pt-20 sm:pt-28 pb-10 sm:pb-12 px-4 sm:px-6 md:px-14 min-h-[60vh]">
       <div class="flex items-center justify-between mb-4">
@@ -1188,37 +1142,38 @@
       <!-- Smart Video Surface Gesture / Click Area -->
       <div id="video-click-surface" class="absolute inset-0 z-10 cursor-pointer select-none touch-manipulation" style="touch-action: manipulation;"></div>
 
-      <!-- Double-Tap Seek Ripples (Left -10s, Right +10s with Glowing Arc & Dynamic Duration) -->
-      <div id="double-tap-left" class="pointer-events-none absolute left-0 top-0 bottom-0 w-[42%] flex items-center justify-start pl-6 sm:pl-10 z-25 opacity-0 transition-opacity duration-200">
-        <div class="absolute inset-0 bg-gradient-to-r from-white/15 via-[#00dbe9]/10 to-transparent rounded-r-full pointer-events-none scale-x-90 origin-left transition-transform duration-200"></div>
-        <div class="double-tap-badge relative z-10 flex flex-col items-center justify-center px-4 py-3 rounded-2xl bg-black/75 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
-          <div class="flex items-center space-x-1 text-[#00dbe9]">
-            <span class="material-symbols-outlined text-2xl sm:text-3xl animate-pulse">fast_rewind</span>
-            <span class="material-symbols-outlined text-2xl sm:text-3xl">replay_10</span>
+      <!-- Double-Tap Seek Ripples (Left -10s, Right +10s YouTube-Style Glass Circles) -->
+      <div id="double-tap-left" class="pointer-events-none absolute left-[12%] sm:left-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
+        <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
+          <div class="flex items-center space-x-0.5 text-white">
+            <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_rewind</span>
+            <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">replay_10</span>
           </div>
-          <span id="double-tap-left-label" class="text-xs sm:text-sm font-bold tracking-wide mt-1 text-white font-mono whitespace-nowrap">-10 seconds</span>
+          <span id="double-tap-left-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">-10 seconds</span>
         </div>
       </div>
-      <div id="double-tap-right" class="pointer-events-none absolute right-0 top-0 bottom-0 w-[42%] flex items-center justify-end pr-6 sm:pr-10 z-25 opacity-0 transition-opacity duration-200">
-        <div class="absolute inset-0 bg-gradient-to-l from-white/15 via-[#00dbe9]/10 to-transparent rounded-l-full pointer-events-none scale-x-90 origin-right transition-transform duration-200"></div>
-        <div class="double-tap-badge relative z-10 flex flex-col items-center justify-center px-4 py-3 rounded-2xl bg-black/75 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
-          <div class="flex items-center space-x-1 text-[#00dbe9]">
-            <span class="material-symbols-outlined text-2xl sm:text-3xl">forward_10</span>
-            <span class="material-symbols-outlined text-2xl sm:text-3xl animate-pulse">fast_forward</span>
+      <div id="double-tap-right" class="pointer-events-none absolute right-[12%] sm:right-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
+        <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
+          <div class="flex items-center space-x-0.5 text-white">
+            <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">forward_10</span>
+            <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_forward</span>
           </div>
-          <span id="double-tap-right-label" class="text-xs sm:text-sm font-bold tracking-wide mt-1 text-white font-mono whitespace-nowrap">+10 seconds</span>
+          <span id="double-tap-right-label" class="text-[10px] sm:text-xs font-bold tracking-tight text-white/90 font-mono -mt-0.5">+10 seconds</span>
         </div>
       </div>
     </div>
 
-    <!-- Buffering Spinner Indicator -->
-    <div id="player-loading-spinner" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none bg-black/50 backdrop-blur-sm">
-      <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-4 border-white/20 border-t-[#00dbe9] animate-spin"></div>
-      <p class="text-[10px] sm:text-xs font-mono tracking-widest text-white/90 mt-4 uppercase px-3 py-1 rounded-full bg-black/70 border border-white/10 shadow-lg">Buffering Stream...</p>
+    <!-- Buffering Spinner Indicator (Non-blocking, centered, no whole-screen foggy blur) -->
+    <div id="player-loading-spinner" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center pointer-events-none select-none">
+      <div id="buffering-spinner-ring" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-4 border-white/20 border-t-[#00dbe9] animate-spin transition-opacity duration-200"></div>
+      <div id="buffering-status-badge" class="flex items-center space-x-2 text-[10px] sm:text-xs font-mono tracking-widest text-white/90 mt-4 uppercase px-3.5 py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-white/15 shadow-2xl transition-all duration-200">
+        <span class="w-2 h-2 rounded-full bg-[#00dbe9] animate-ping"></span>
+        <span>Buffering Stream...</span>
+      </div>
     </div>
 
     <!-- Center Play/Pause Animated Pulse Indicator -->
-    <div id="centerPulse" class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none opacity-0 scale-75 transition-all duration-300">
+    <div id="centerPulse" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center pointer-events-none opacity-0 scale-75 transition-all duration-300">
       <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
         <span id="centerPulseIcon" class="material-symbols-outlined text-3xl sm:text-4xl">play_arrow</span>
       </div>
@@ -1235,10 +1190,10 @@
     </div>
 
     <!-- Player HUD Overlays Container -->
-    <div id="player-hud" class="relative z-30 flex flex-col justify-between w-full h-full p-3 sm:p-6 md:p-8 pointer-events-none transition-opacity duration-300">
+    <div id="player-hud" class="absolute inset-0 z-30 pointer-events-none transition-opacity duration-300">
       
-      <!-- TOP HUD HEADER -->
-      <header class="flex items-center justify-between w-full pointer-events-auto gap-2">
+      <!-- TOP HUD HEADER (Anchored to Top) -->
+      <header class="hud-interactive absolute top-0 left-0 right-0 p-3 sm:p-6 md:p-8 flex items-center justify-between w-full pointer-events-auto bg-gradient-to-b from-black/80 via-black/30 to-transparent gap-2">
         <div class="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
           <button onclick="exitPlayer()" class="group flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl shrink-0 transition-all text-white cursor-pointer" title="Back">
             <span class="material-symbols-outlined text-lg sm:text-xl transition-transform group-hover:-translate-x-0.5">arrow_back</span>
@@ -1304,9 +1259,9 @@
         </div>
       </header>
 
-      <!-- CENTER HUD AMBIENT PLAYBACK CONTROLS (Outer wrapper pointer-events-none so side taps reach click surface) -->
-      <div id="center-hud-controls" class="flex items-center justify-center my-auto w-full py-6 sm:py-8 pointer-events-none transition-opacity duration-200">
-        <div class="flex items-center space-x-6 sm:space-x-8 md:space-x-12 pointer-events-auto">
+      <!-- CENTER HUD AMBIENT PLAYBACK CONTROLS (Mathematically pinned to 50% X and 50% Y of video viewport) -->
+      <div id="center-hud-controls" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-200">
+        <div class="hud-interactive flex items-center space-x-6 sm:space-x-8 md:space-x-12 pointer-events-auto">
           <!-- Rewind 10s -->
           <button onclick="skipSeconds(-10)" class="group flex flex-col items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white transition-all duration-200 hover:scale-105 active:scale-95 border border-white/10 shadow-lg cursor-pointer" title="Rewind 10s">
             <span class="material-symbols-outlined text-xl sm:text-2xl group-hover:-rotate-12 transition-transform">replay_10</span>
@@ -1322,8 +1277,8 @@
         </div>
       </div>
 
-      <!-- BOTTOM TIMELINE SCRUBBER & DOCK CONTROL DECK -->
-      <div class="flex flex-col w-full space-y-2 sm:space-y-3 pointer-events-auto">
+      <!-- BOTTOM TIMELINE SCRUBBER & DOCK CONTROL DECK (Anchored to Bottom) -->
+      <div class="hud-interactive absolute bottom-0 left-0 right-0 p-3 sm:p-6 md:p-8 flex flex-col w-full space-y-2 sm:space-y-3 pointer-events-auto bg-gradient-to-t from-black/90 via-black/40 to-transparent">
         
         <!-- Dynamic Skip Intro / Skip Outro Floating Action Button -->
         <div class="flex justify-end w-full pointer-events-auto">
@@ -1668,6 +1623,122 @@
     </div>
   </div>
 
+  <!-- ========================================================================= -->
+  <!-- GLOBAL MOBILE NAVIGATION DRAWER (Universal High-Z Stacking Order z-[80])  -->
+  <!-- ========================================================================= -->
+  <div id="mobile-nav-drawer" onclick="if (event.target === this) closeMobileNav();" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-2xl transition-all duration-300 flex flex-col justify-start pt-6 sm:pt-10 px-4 sm:px-6 pb-8 overflow-y-auto">
+    <div class="flex flex-col space-y-5 max-w-md mx-auto w-full">
+      <!-- Drawer Header: Brand & Close Button -->
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <a href="#" onclick="mobileNavSelect('home'); return false;" class="flex items-center space-x-2 text-xl font-extrabold text-[#f5c518] tracking-tight hover:opacity-90 transition">
+          <span class="material-symbols-outlined text-2xl text-[#f5c518]">movie</span>
+          <span>Cineflow</span>
+        </a>
+        <button onclick="closeMobileNav()" class="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white transition cursor-pointer" aria-label="Close Navigation Menu">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <!-- Main Navigation 4 Core Sections (+ Home) -->
+      <div class="space-y-2">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-[#f5c518] font-mono block mb-1">Browse Cineflow</span>
+        
+        <div class="grid grid-cols-1 gap-2.5">
+          <!-- 1. Anime -->
+          <button onclick="mobileNavSelect('anime')" class="group flex items-center justify-between p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition active:scale-98 text-left cursor-pointer shadow-md">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">auto_awesome</span>
+              </div>
+              <div>
+                <div class="font-bold text-sm tracking-wide text-white group-hover:text-purple-300 transition-colors">Anime</div>
+                <div class="text-[11px] text-white/50">Simulcasts, dubs, movies & series</div>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-white/40 text-lg group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </button>
+
+          <!-- 2. Live TV (Restored and Prominent) -->
+          <button onclick="mobileNavSelect('livetv')" class="group flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-red-600/25 via-red-900/20 to-black/40 hover:from-red-600/35 border border-red-500/30 text-white transition active:scale-98 text-left cursor-pointer shadow-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-red-600/30 border border-red-500/40 flex items-center justify-center text-red-400 group-hover:scale-105 transition-transform relative">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse absolute top-1.5 right-1.5"></span>
+                <span class="material-symbols-outlined text-2xl">live_tv</span>
+              </div>
+              <div>
+                <div class="font-bold text-sm tracking-wide text-white flex items-center space-x-1.5">
+                  <span>Live TV</span>
+                  <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                </div>
+                <div class="text-[11px] text-red-300/70">37 Channels • Auto-Failover Streams</div>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-red-400 text-lg group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </button>
+
+          <!-- 3. Movies -->
+          <button onclick="mobileNavSelect('movie')" class="group flex items-center justify-between p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition active:scale-98 text-left cursor-pointer shadow-md">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">movie</span>
+              </div>
+              <div>
+                <div class="font-bold text-sm tracking-wide text-white group-hover:text-amber-300 transition-colors">Movies</div>
+                <div class="text-[11px] text-white/50">Blockbusters & cinematic releases</div>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-white/40 text-lg group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </button>
+
+          <!-- 4. Series -->
+          <button onclick="mobileNavSelect('tv')" class="group flex items-center justify-between p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition active:scale-98 text-left cursor-pointer shadow-md">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">tv</span>
+              </div>
+              <div>
+                <div class="font-bold text-sm tracking-wide text-white group-hover:text-blue-300 transition-colors">Series</div>
+                <div class="text-[11px] text-white/50">Binge-worthy shows & all seasons</div>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-white/40 text-lg group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </button>
+
+          <!-- Home Shortcut -->
+          <button onclick="mobileNavSelect('home')" class="group flex items-center justify-between p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition active:scale-98 text-left cursor-pointer shadow-md">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-brandYellow/20 border border-brandYellow/30 flex items-center justify-center text-[#f5c518] group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">home</span>
+              </div>
+              <div>
+                <div class="font-bold text-sm tracking-wide text-white group-hover:text-[#f5c518] transition-colors">Home</div>
+                <div class="text-[11px] text-white/50">Featured spotlights & trending</div>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-white/40 text-lg group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Popular Genres Quick Filter -->
+      <div class="space-y-2 pt-2">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-white/40 font-mono block">Popular Categories</span>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <button onclick="mobileNavSelect('Action')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Action</button>
+          <button onclick="mobileNavSelect('Comedy')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Comedy</button>
+          <button onclick="mobileNavSelect('Adventure')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Adventure</button>
+          <button onclick="mobileNavSelect('Drama')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Drama</button>
+          <button onclick="mobileNavSelect('Sci-Fi')" class="px-3.5 py-2 rounded-full bg-white/5 hover:bg-white/15 text-white/80 border border-white/10 transition cursor-pointer">Sci-Fi</button>
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/50">
+        <span>CineFlow • Ultra HD Streaming</span>
+        <button onclick="closeMobileNav()" class="text-[#f5c518] hover:underline font-semibold cursor-pointer">Close Menu</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ========================================================================= -->
   <!-- JAVASCRIPT APPLICATION CORE (State Engine, Dynamic APIs, Player Logic)    -->
@@ -1861,35 +1932,42 @@
 
     function toggleMobileNav() {
       const drawer = document.getElementById('mobile-nav-drawer');
-      const icon = document.getElementById('mobile-nav-icon');
+      const icons = document.querySelectorAll('#mobile-nav-icon');
       if (!drawer) return;
       const isHidden = drawer.classList.contains('hidden');
       if (isHidden) {
         drawer.classList.remove('hidden');
-        if (icon) icon.textContent = 'close';
+        icons.forEach(ic => ic.textContent = 'close');
       } else {
         drawer.classList.add('hidden');
-        if (icon) icon.textContent = 'menu';
+        icons.forEach(ic => ic.textContent = 'menu');
       }
     }
 
     function closeMobileNav() {
       const drawer = document.getElementById('mobile-nav-drawer');
-      const icon = document.getElementById('mobile-nav-icon');
+      const icons = document.querySelectorAll('#mobile-nav-icon');
       if (drawer && !drawer.classList.contains('hidden')) {
         drawer.classList.add('hidden');
-        if (icon) icon.textContent = 'menu';
+        icons.forEach(ic => ic.textContent = 'menu');
       }
     }
 
     function mobileNavSelect(category) {
       closeMobileNav();
+      if (currentView === 'player') {
+        exitPlayer();
+      }
       if (category === 'home') {
         showHome();
       } else if (category === 'anime' || category === 'Anime') {
         showAnimeSection();
       } else if (category === 'livetv' || category === 'Live TV') {
         showLiveTvSection();
+      } else if (category === 'series' || category === 'Series' || category === 'tv') {
+        filterCategory('tv');
+      } else if (category === 'movie' || category === 'movies' || category === 'Movies') {
+        filterCategory('movie');
       } else {
         filterCategory(category);
       }
@@ -4775,10 +4853,13 @@
       const centerControls = document.getElementById('center-hud-controls');
       if (centerControls) {
         if (loading && !isSeekingOperation) {
-          centerControls.classList.add('opacity-0', 'pointer-events-none');
+          if (!isHudVisible) centerControls.classList.add('opacity-0', 'pointer-events-none');
         } else if (isHudVisible) {
           centerControls.classList.remove('opacity-0', 'pointer-events-none');
         }
+      }
+      if (typeof updateBufferingLayout === 'function') {
+        updateBufferingLayout(isHudVisible);
       }
     }
 
@@ -4796,10 +4877,13 @@
         video.play();
         showPulse('play_arrow');
         updatePlayIcons(true);
+        resetHudTimeout();
       } else {
         video.pause();
         showPulse('pause');
         updatePlayIcons(false);
+        clearTimeout(hudHideTimer);
+        setHudVisibility(true);
       }
     }
 
@@ -6141,19 +6225,11 @@
         const now = Date.now();
         const isLive = !!currentLiveChannel;
 
-        // Screen Zones: Left 40%, Right 40%, Center 20%
-        let side = 'center';
-        if (relX < width * 0.40) {
-          side = 'left';
-        } else if (relX > width * 0.60) {
-          side = 'right';
-        }
-
-        // On Live TV streams, seeking is disabled (center double-tap toggles fullscreen, single tap toggles HUD)
+        // On Live TV streams, seeking is disabled (double-tap toggles fullscreen, single tap toggles HUD)
         if (isLive) {
           const diff = now - lastTapTime;
           const dist = Math.hypot((clientX || 0) - lastTapX, (clientY || 0) - lastTapY);
-          if (lastTapSide === 'center' && diff < DOUBLE_TAP_WINDOW && dist < MAX_DOUBLE_TAP_DIST) {
+          if (diff < DOUBLE_TAP_WINDOW && dist < MAX_DOUBLE_TAP_DIST) {
             if (singleTapTimer) {
               clearTimeout(singleTapTimer);
               singleTapTimer = null;
@@ -6172,36 +6248,8 @@
           return;
         }
 
-        // Center Zone Tap: Double tap toggles fullscreen, single tap toggles HUD
-        if (side === 'center') {
-          if (isSeekingActive) {
-            clearTimeout(accumulationResetTimer);
-            isSeekingActive = false;
-            accumulatedSeconds = 0;
-          }
-
-          const diff = now - lastTapTime;
-          const dist = Math.hypot((clientX || 0) - lastTapX, (clientY || 0) - lastTapY);
-          const isCenterDoubleTap = (lastTapSide === 'center') && (diff < DOUBLE_TAP_WINDOW) && (dist < MAX_DOUBLE_TAP_DIST);
-
-          if (isCenterDoubleTap) {
-            if (singleTapTimer) {
-              clearTimeout(singleTapTimer);
-              singleTapTimer = null;
-            }
-            lastTapSide = null;
-            lastTapTime = 0;
-            toggleFullscreen();
-          } else {
-            lastTapSide = 'center';
-            lastTapTime = now;
-            lastTapX = clientX || 0;
-            lastTapY = clientY || 0;
-            if (singleTapTimer) clearTimeout(singleTapTimer);
-            singleTapTimer = setTimeout(executeSingleTap, DOUBLE_TAP_WINDOW);
-          }
-          return;
-        }
+        // Screen Zones: Left half (seek -10s) vs Right half (seek +10s)
+        const side = (relX < width * 0.50) ? 'left' : 'right';
 
         // VOD / Series / Anime: Left or Right Double-Tap Seeking
         // Fast path: Repeated multi-tap accumulation on the same side (+10s, +20s, +30s...)
@@ -6344,30 +6392,56 @@
     // HUD AUTO-HIDE & DYNAMIC ELEVATION TIMING ENGINE
     // -------------------------------------------------------------
     let isHudVisible = true;
+    function updateBufferingLayout(hudVisible) {
+      const ring = document.getElementById('buffering-spinner-ring');
+      const badge = document.getElementById('buffering-status-badge');
+      if (!ring || !badge) return;
+      if (hudVisible) {
+        ring.classList.add('opacity-0');
+        badge.classList.remove('mt-4');
+        badge.classList.add('mt-24', 'sm:mt-28');
+      } else {
+        ring.classList.remove('opacity-0');
+        badge.classList.remove('mt-24', 'sm:mt-28');
+        badge.classList.add('mt-4');
+      }
+    }
+
     function setHudVisibility(visible) {
       const hud = document.getElementById('player-hud');
       if (!hud) return;
       isHudVisible = visible;
       hud.style.opacity = visible ? '1' : '0';
-      hud.style.pointerEvents = visible ? 'auto' : 'none';
+      const interactives = hud.querySelectorAll('.hud-interactive');
+      interactives.forEach(el => {
+        el.style.pointerEvents = visible ? 'auto' : 'none';
+      });
+      hud.style.pointerEvents = 'none';
       updateSubtitlePosition(visible);
+      updateBufferingLayout(visible);
     }
 
     function resetHudTimeout() {
       setHudVisibility(true);
       clearTimeout(hudHideTimer);
-      if (isPlaying) {
+      const video = document.getElementById('videoElement');
+      const isPaused = video ? video.paused : !isPlaying;
+      if (isPlaying && !isPaused) {
         hudHideTimer = setTimeout(() => {
           const subModal = document.getElementById('modal-subtitles');
           const setModal = document.getElementById('modal-settings');
           const epModal = document.getElementById('modal-episodes-drawer');
+          const resPopover = document.getElementById('popover-resolution');
+          const srvPopover = document.getElementById('popover-server');
           const isAnyModalOpen = (subModal && !subModal.classList.contains('translate-x-full')) ||
                                  (setModal && !setModal.classList.contains('translate-x-full')) ||
-                                 (epModal && !epModal.classList.contains('translate-x-full'));
-          if (!isAnyModalOpen) {
+                                 (epModal && !epModal.classList.contains('translate-x-full')) ||
+                                 (resPopover && !resPopover.classList.contains('hidden')) ||
+                                 (srvPopover && !srvPopover.classList.contains('hidden'));
+          if (!isAnyModalOpen && isPlaying && !isScrubbing && !isSeekingOperation) {
             setHudVisibility(false);
           }
-        }, 3500);
+        }, 3000);
       }
     }
 
@@ -6384,12 +6458,21 @@
 
     window.addEventListener('touchstart', (e) => {
       if (currentView === 'player') {
-        const isInteractive = e.target.closest('button, input, #scrubber-container, #modal-subtitles, #modal-settings, #modal-episodes-drawer, #popover-resolution');
+        const isInteractive = e.target.closest('button, input, #scrubber-container, #modal-subtitles, #modal-settings, #modal-episodes-drawer, #popover-resolution, #popover-server');
         if (isInteractive) {
           resetHudTimeout();
         }
       }
     }, { passive: true });
+
+    window.addEventListener('click', (e) => {
+      if (currentView === 'player') {
+        const isInteractive = e.target.closest('button, input, #scrubber-container, #modal-subtitles, #modal-settings, #modal-episodes-drawer, #popover-resolution, #popover-server');
+        if (isInteractive) {
+          resetHudTimeout();
+        }
+      }
+    });
 
     // -------------------------------------------------------------
     // KEYBOARD SHORTCUTS

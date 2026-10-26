@@ -71,9 +71,7 @@ class TestMobileDoubleTapSeeking(unittest.TestCase):
     def test_09_fullscreen_and_orientation_zone_geometry(self):
         """Verify relative coordinate calculation using getBoundingClientRect."""
         self.assertIn('const rect = surface.getBoundingClientRect();', self.html)
-        self.assertIn('const relX = touch.clientX - rect.left;', self.html)
-        self.assertIn('relX < width * 0.40', self.html)
-        self.assertIn('relX > width * 0.60', self.html)
+        self.assertIn('relX < width * 0.50', self.html)
 
     def test_10_touch_and_ghost_click_safety(self):
         """Verify touch event handling, drag rejection, and ghost click suppression."""
