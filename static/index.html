@@ -182,14 +182,14 @@
     /* Mobile Player Double-Tap Pop-Out Animation */
     @keyframes doubleTapPopOut {
       0% {
-        transform: scale(0.75);
-        opacity: 0.6;
-      }
-      40% {
-        transform: scale(1.18);
+        transform: scale(1);
         opacity: 1;
       }
-      70% {
+      40% {
+        transform: scale(1.22);
+        opacity: 1;
+      }
+      75% {
         transform: scale(0.96);
         opacity: 1;
       }
@@ -199,7 +199,7 @@
       }
     }
     .animate-double-tap-pop {
-      animation: doubleTapPopOut 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation: doubleTapPopOut 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     /* Screen Transitions */
@@ -1167,7 +1167,7 @@
 
       <!-- Double-Tap Seek Ripples (Left -10s, Right +10s YouTube-Style Glass Circles) -->
       <div id="double-tap-left" class="pointer-events-none absolute left-[12%] sm:left-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
-        <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
+        <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl">
           <div class="flex items-center space-x-0.5 text-white">
             <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_rewind</span>
             <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">replay</span>
@@ -1176,7 +1176,7 @@
         </div>
       </div>
       <div id="double-tap-right" class="pointer-events-none absolute right-[12%] sm:right-[18%] top-1/2 -translate-y-1/2 z-25 opacity-0 transition-opacity duration-200">
-        <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl scale-90 transition-transform">
+        <div class="double-tap-badge flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-2xl">
           <div class="flex items-center space-x-0.5 text-white">
             <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">forward_media</span>
             <span class="material-symbols-outlined text-lg sm:text-xl text-white/70">fast_forward</span>
@@ -5037,6 +5037,10 @@
     let pendingSeekTarget = null;
     let lastVirtualSeekTime = null;
     let virtualSeekResetTimer = null;
+    let accumulatedSeconds = 0;
+    let accumulationResetTimer = null;
+    let lastTapSide = null;
+    let lastTapTime = 0;
 
     function updateScrubberVisualsBySeconds(targetSec) {
       if (!currentTotalSeconds) return;
@@ -5305,6 +5309,25 @@
     function skipSeconds(delta, suppressPulse = false) {
       if (!suppressPulse) {
         showPulse(delta > 0 ? 'forward_10' : 'replay_10');
+        const side = delta > 0 ? 'right' : 'left';
+        if (isSeekingActive && lastTapSide === side) {
+          accumulatedSeconds += Math.abs(delta);
+        } else {
+          isSeekingActive = true;
+          accumulatedSeconds = Math.abs(delta);
+          lastTapSide = side;
+        }
+        clearTimeout(accumulationResetTimer);
+        accumulationResetTimer = setTimeout(() => {
+          isSeekingActive = false;
+          accumulatedSeconds = 0;
+          lastTapSide = null;
+          lastTapTime = 0;
+          lastVirtualSeekTime = null;
+        }, 1200);
+        if (typeof showDoubleTapFeedback === 'function') {
+          showDoubleTapFeedback(side, accumulatedSeconds);
+        }
       }
       const video = document.getElementById('videoElement');
       if (!video) return;
@@ -6146,12 +6169,12 @@
       const surface = document.getElementById('video-click-surface');
       if (!surface) return;
 
-      let lastTapTime = 0;
-      let lastTapSide = null;
+      lastTapTime = 0;
+      lastTapSide = null;
       let lastTapX = 0;
       let lastTapY = 0;
-      let accumulatedSeconds = 0;
-      let accumulationResetTimer = null;
+      accumulatedSeconds = 0;
+      accumulationResetTimer = null;
       let singleTapTimer = null;
       isSeekingActive = false;
 
@@ -6190,51 +6213,36 @@
 
         const badge = el.querySelector('.double-tap-badge');
         if (badge) {
-          badge.classList.remove('animate-double-tap-pop');
-          badge.classList.remove('scale-100');
-          badge.classList.add('scale-90');
           void badge.offsetWidth; // Force CSS reflow for repeated pops
-          badge.classList.remove('scale-90');
-          badge.classList.add('scale-100');
-          badge.classList.add('animate-double-tap-pop');
-
-          if (typeof badge.animate === 'function') {
-            if (badge._popAnim) {
-              badge._popAnim.cancel();
-            }
-            // Continuous pop-out: when already visible, stay 100% solid opacity without dipping
-            const keyframes = isAlreadyVisible ? [
-              { transform: 'scale(1.0)', opacity: 1 },
-              { transform: 'scale(1.22)', opacity: 1, offset: 0.35 },
-              { transform: 'scale(0.96)', opacity: 1, offset: 0.7 },
-              { transform: 'scale(1.0)', opacity: 1 }
-            ] : [
-              { transform: 'scale(0.85)', opacity: 0.85 },
-              { transform: 'scale(1.22)', opacity: 1, offset: 0.4 },
-              { transform: 'scale(0.96)', opacity: 1, offset: 0.7 },
-              { transform: 'scale(1.0)', opacity: 1 }
-            ];
-
-            badge._popAnim = badge.animate(keyframes, {
-              duration: 320,
-              easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-              fill: 'forwards'
-            });
+          if (badge._popAnim) {
+            badge._popAnim.cancel();
           }
+          // Dynamic pop-out animation without opacity dipping
+          const keyframes = isAlreadyVisible ? [
+            { transform: 'scale(1.0)', opacity: 1 },
+            { transform: 'scale(1.22)', opacity: 1, offset: 0.35 },
+            { transform: 'scale(0.96)', opacity: 1, offset: 0.7 },
+            { transform: 'scale(1.0)', opacity: 1 }
+          ] : [
+            { transform: 'scale(0.85)', opacity: 0.85 },
+            { transform: 'scale(1.22)', opacity: 1, offset: 0.4 },
+            { transform: 'scale(0.96)', opacity: 1, offset: 0.7 },
+            { transform: 'scale(1.0)', opacity: 1 }
+          ];
+
+          badge._popAnim = badge.animate(keyframes, {
+            duration: 320,
+            easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+          });
         }
 
         clearTimeout(el._fadeTimer);
         el._fadeTimer = setTimeout(() => {
           el.classList.remove('opacity-100');
           el.classList.add('opacity-0');
-          if (badge) {
-            badge.classList.remove('animate-double-tap-pop');
-            badge.classList.remove('scale-100');
-            badge.classList.add('scale-90');
-            if (badge._popAnim) {
-              badge._popAnim.cancel();
-              badge._popAnim = null;
-            }
+          if (badge && badge._popAnim) {
+            badge._popAnim.cancel();
+            badge._popAnim = null;
           }
         }, SEEK_ACCUMULATION_TIMEOUT);
       }
